@@ -1,0 +1,11 @@
+
+wizard_femail:
+Finished to add bones.
+But it's failured about weighting of arm's clothing.
+
+wizard_femail(editing):
+Oct 20 finished file.
+At first, please use this file.
+Deleted the clothing of upper body version to avoid weighting problem.
+
+Last edit Oct 20, 2020

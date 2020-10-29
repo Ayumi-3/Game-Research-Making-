@@ -1,0 +1,47 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Obstacle : MonoBehaviour
+{
+    private GameObject Player;
+    private PlayerMotor motor;
+    private TargetSpawner spawner;
+    private float distanceZ;
+
+    private void Start()
+    {
+        Player = GameObject.FindGameObjectWithTag("Player");
+        motor = Player.GetComponent<PlayerMotor>();
+        spawner = Player.GetComponent<TargetSpawner>();
+        //anim = GetComponent<Animator>();
+    }
+
+    private void Update()
+    {
+        distanceZ = Player.transform.position.z - gameObject.transform.position.z;
+        if (distanceZ > 6)
+        {
+            spawner.TargetCount--;
+            Destroy(gameObject, 0.0f);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Player")
+        {
+            motor.PauseRunning();
+            GameControl.Instance.GetObstacle();
+            StartCoroutine(waitTime());
+        }
+    }
+
+    private IEnumerator waitTime()
+    {
+        yield return new WaitForSeconds(1.0f);
+        GameControl.Instance.ExistTarget();
+        Destroy(gameObject, 0.5f);
+        spawner.TargetCount--;
+    }
+}

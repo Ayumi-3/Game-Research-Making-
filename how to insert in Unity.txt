@@ -1,0 +1,6 @@
+How to set in Unity
+1. Move date to Asset and drag to Unity
+2. "Inspecter" -> "Select" -> "Rig" -> Avatar Definition : "Create From This Model", "Root node : "Armature" -> Apply
+3. Put animation from Assets (name: Armature|Damage) to Inspecter.
+ After that, Animator Controller is changed from "None(Runtime Animator Controller)" to name of model file.
+4. Animator Tab, you can make the animation flow.

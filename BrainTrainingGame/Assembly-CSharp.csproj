@@ -67,6 +67,7 @@
     <Compile Include="Assets\Scripts\Game\CameraMotor.cs" />
     <Compile Include="Assets\Scripts\Game\ColorsPicker.cs" />
     <Compile Include="Assets\Scripts\Game\GameControl.cs" />
+    <Compile Include="Assets\Scripts\Game\GameSetting.cs" />
     <Compile Include="Assets\Scripts\Game\HealthBar.cs" />
     <Compile Include="Assets\Scripts\Game\MonsterMotor.cs" />
     <Compile Include="Assets\Scripts\Game\Obstacle.cs" />
@@ -75,10 +76,11 @@
     <Compile Include="Assets\Scripts\Game\SimpleCameraController.cs" />
     <Compile Include="Assets\Scripts\Game\Target.cs" />
     <Compile Include="Assets\Scripts\Game\TargetSpawner.cs" />
+    <Compile Include="Assets\Scripts\GetPlayerName.cs" />
     <Compile Include="Assets\Scripts\LoadSceneOnClick.cs" />
     <Compile Include="Assets\Scripts\MainMenu\MenuManager.cs" />
     <Compile Include="Assets\Scripts\Welcome\CanvasControl.cs" />
-    <Compile Include="Assets\Scripts\Welcome\CheckIn.cs" />
+    <Compile Include="Assets\Scripts\Welcome\Enter.cs" />
     <Compile Include="Assets\Scripts\Welcome\Register.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Reference Include="UnityEngine">

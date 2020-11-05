@@ -7,14 +7,9 @@ using CsvHelper;
 
 public class DataManager : MonoBehaviour
 {
-    //public static DataManager Instance { set; get; }
-    //
-    //private void Awake()
-    //{
-    //    Instance = this;
-    //}
+    private FileMode mode;
 
-    public void WriteData(string dir, string csvPath, Dictionary<string, string> data)
+    public void WriteData(string dir, string csvPath, Dictionary<string, string> data, bool overWrite, bool writeHeader)
     {
         // check if directory exist
         if (!Directory.Exists(dir))
@@ -22,14 +17,22 @@ public class DataManager : MonoBehaviour
             Directory.CreateDirectory(dir);
            
         }
-        // check if file exists, if not create with header
-        if (!File.Exists(dir))
+        
+        if (overWrite)
         {
-            
-            // create new csv file
-            using (var ftw = new FileStream(csvPath, FileMode.Append))
-            using (var sw = new StreamWriter(ftw))
-            using (var wt = new CsvWriter(sw, System.Globalization.CultureInfo.CurrentCulture))
+            mode = FileMode.Create;
+        }
+        else
+        {
+            mode = FileMode.Append;
+        }
+        
+        // create new csv file
+        using (var ftw = new FileStream(csvPath, mode))
+        using (var sw = new StreamWriter(ftw))
+        using (var wt = new CsvWriter(sw, System.Globalization.CultureInfo.CurrentCulture))
+        {
+            if (writeHeader)
             {
                 foreach (string key in data.Keys)
                 {
@@ -37,20 +40,8 @@ public class DataManager : MonoBehaviour
                 }
 
                 wt.NextRecord();
-
-                // close all
-                wt.Dispose();
-                sw.Close();
-                ftw.Close();
             }
 
-            Debug.Log("File at path '" + csvPath + "' is created with headers.");
-        }
-
-        using (var ftw = new FileStream(csvPath, FileMode.Append))
-        using (var sw = new StreamWriter(ftw))
-        using (var wt = new CsvWriter(sw, System.Globalization.CultureInfo.CurrentCulture))
-        {
             foreach (string val in data.Values)
             {
                 wt.WriteField(val);
@@ -63,5 +54,26 @@ public class DataManager : MonoBehaviour
             sw.Close();
             ftw.Close();
         }
+    }
+
+    public List<string> ReadPlayerName(string csvPath)
+    {
+        List<string> playerName = new List<string>();
+        string value;
+
+        using (TextReader ftr = File.OpenText(csvPath))
+        {
+            var rt = new CsvReader(ftr, System.Globalization.CultureInfo.CurrentCulture);
+            rt.Configuration.HasHeaderRecord = false;
+            while (rt.Read())
+            {
+                for(int i = 0; rt.TryGetField<string>(i, out value); i++)
+                {
+                    playerName.Add(value);
+                }
+            }
+        }
+
+        return playerName;
     }
 }

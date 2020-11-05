@@ -1,18 +1,31 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MenuManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public GetPlayerName getPlayerName;
+    public Text WelcomeText;
+    public string DataDir;
+
+    private string dataPath = @"Data/";
+    private string playerName;
+
+    private void Start()
     {
-        
+        playerName = getPlayerName.GetPlayer();
+
+        WelcomeText.text = "Welcome, " + playerName;
+        DataDir = dataPath + playerName + "/";
+        if (!Directory.Exists(DataDir))
+        {
+            Directory.CreateDirectory(DataDir);
+        }
+        Debug.Log("Finish start MenuManager");
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    
+
 }

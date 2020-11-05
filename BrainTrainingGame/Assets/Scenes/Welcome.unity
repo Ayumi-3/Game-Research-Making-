@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -484,6 +484,8 @@ GameObject:
   - component: {fileID: 669610421}
   - component: {fileID: 669610420}
   - component: {fileID: 669610424}
+  - component: {fileID: 669610426}
+  - component: {fileID: 669610425}
   m_Layer: 5
   m_Name: MainCanvas
   m_TagString: CanvasControl
@@ -590,6 +592,32 @@ MonoBehaviour:
   RegisterCanvas: {fileID: 1025966659}
   PlayerName: Guest
   WelcomeText: {fileID: 564202679}
+  dataManager: {fileID: 669610426}
+  loadScene: {fileID: 669610425}
+--- !u!114 &669610425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 669610419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fda5e1321ae1ab34a82f08e5ac0c98d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &669610426
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 669610419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb4d811759c8d4a4d9c397fcff7ba751, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &691879753
 GameObject:
   m_ObjectHideFlags: 0
@@ -1349,7 +1377,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Start
+  m_Text: 'Enter
 
 '
 --- !u!222 &1154354206
@@ -2046,7 +2074,6 @@ GameObject:
   - component: {fileID: 1905281336}
   - component: {fileID: 1905281335}
   - component: {fileID: 1905281338}
-  - component: {fileID: 1905281339}
   m_Layer: 5
   m_Name: Save
   m_TagString: Untagged
@@ -2118,7 +2145,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1905281338}
-        m_MethodName: SaveData
+        m_MethodName: SavePlayerName
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2178,18 +2205,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NameInput: {fileID: 1847322338}
---- !u!114 &1905281339
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1905281333}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb4d811759c8d4a4d9c397fcff7ba751, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1932862301
 GameObject:
   m_ObjectHideFlags: 0
@@ -2306,7 +2321,7 @@ GameObject:
   - component: {fileID: 1963527835}
   - component: {fileID: 1963527838}
   m_Layer: 5
-  m_Name: StartButton
+  m_Name: EnterButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2376,12 +2391,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1963527838}
-        m_MethodName: LoadByIndex
-        m_Mode: 3
+        m_MethodName: OnClick
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 1
+          m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -2432,7 +2447,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1963527833}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fda5e1321ae1ab34a82f08e5ac0c98d1, type: 3}
+  m_Script: {fileID: 11500000, guid: 0649b5989acede54ebda4479864188b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1994372485

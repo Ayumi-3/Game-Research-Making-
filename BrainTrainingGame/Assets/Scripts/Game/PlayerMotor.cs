@@ -11,7 +11,7 @@ public class PlayerMotor : MonoBehaviour
 
     // movement
     private CharacterController controller;
-    private float speed = 7.0f;
+    public float speed = 7.0f;
     private int desiredLane = 3; // 5Lanes
     private void Start()
     {

@@ -14,9 +14,16 @@ public class GameControl : MonoBehaviour
     public static GameControl Instance { set; get; }
 
     private bool isGameStarted = false;
-    private PlayerMotor motor;
+    private PlayerMotor player;
     private TargetSpawner targetSpawner;
     private MonsterMotor monsterMotor;
+    private GameSetting gameSetting;
+
+    public Canvas ScoreCanvas;
+    public Canvas MonsterHPCanvas;
+    public Canvas GameSettingCanvas;
+    public Canvas CountDownCanvas;
+    public Text CountDownText;
 
     // UI and UI fields
     public Text scoreText;
@@ -33,32 +40,43 @@ public class GameControl : MonoBehaviour
     public Text playerBillboard;
     public Text monsterBillboard;
 
+    private Dictionary<string, string> settingData = new Dictionary<string, string>();
+    private bool isAdaptive;
+    private float thresholdPoint;
+    private bool isConectedToGtec;
+    private bool isFinishSetting = false;
+
     private void Awake()
     {
         Instance = this;
-        motor = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMotor>();
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMotor>();
         targetSpawner = GameObject.FindGameObjectWithTag("Player").GetComponent<TargetSpawner>();
         monsterMotor = GameObject.FindGameObjectWithTag("Monster").GetComponent<MonsterMotor>();
+        gameSetting = GameObject.FindGameObjectWithTag("GameControl").GetComponent<GameSetting>();
         scoreText.text = "Score: " + score.ToString("0");
         playerBillboard.text = "";
         monsterBillboard.text = "";
-        monsterHP = maxMonsterHP;
-        monsterHealthBar.SetMaxHealth(maxMonsterHP);
+        CountDownText.text = "";
+
+        ScoreCanvas.gameObject.SetActive(false);
+        MonsterHPCanvas.gameObject.SetActive(false);
+        GameSettingCanvas.gameObject.SetActive(true);
+        CountDownCanvas.gameObject.SetActive(false);
     }
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.UpArrow) && !isGameStarted)
+        if(isFinishSetting && !isGameStarted)
         {
             isGameStarted = true;
-            motor.StartRunning();
+            player.StartRunning();
             targetSpawner.StartRunning();
             monsterMotor.StartRunning();
+            isFinishSetting = false;
         }
         
         if(isGameStarted)
         {
-            
             if (Input.GetKeyDown(KeyCode.Space) && targetIsAttackable)
             {
                 targetIsAttackable = false;
@@ -81,9 +99,11 @@ public class GameControl : MonoBehaviour
 
             if (!isGameStarted)
             {
-                motor.PauseRunning();
+                player.PauseRunning();
                 targetSpawner.PauseRunning();
                 monsterMotor.PauseRunning();
+                //Game ending
+                GameSettingCanvas.gameObject.SetActive(false);
             }
         }
         
@@ -119,6 +139,49 @@ public class GameControl : MonoBehaviour
         billboard.text = "";
     }
 
+    public void StartOnClick()
+    {
+        settingData = gameSetting.GetSetting();
+
+        maxMonsterHP = int.Parse(settingData["MonsterMaxHp"]);
+        monsterHP = maxMonsterHP;
+        monsterHealthBar.SetMaxHealth(maxMonsterHP);
+
+        player.speed = float.Parse(settingData["PlayerSpeed"]);
+        ColorsPicker.Instance.colorMaxNumber = int.Parse(settingData["NumberOfColor"]);
+        targetSpawner.obstacleChance = float.Parse(settingData["ObstacleAppearance"]) / 100.0f;
+        targetSpawner.targetDistance = float.Parse(settingData["TargetDistance"]);
+        isAdaptive = (settingData["AdaptiveToggle"] == "true");
+        if (isAdaptive)
+        {
+            thresholdPoint = float.Parse(settingData["ThresholdPoint"]);
+        }
+        isConectedToGtec = (settingData["ConnectToGtecToggle"] == "true");
+        StartCoroutine(countDown());
+    }
+
+    private IEnumerator countDown()
+    {
+        GameSettingCanvas.gameObject.SetActive(false);
+        CountDownCanvas.gameObject.SetActive(true);
+        for (int i = 3; i > 0; i--)
+        {
+            CountDownText.text = i.ToString("0");
+            yield return new WaitForSeconds(1.0f);
+        }
+
+        CountDownText.text = "Ready";
+        yield return new WaitForSeconds(1.0f);
+
+        CountDownText.text = "START";
+        yield return new WaitForSeconds(1.0f);
+
+        CountDownCanvas.gameObject.SetActive(false);
+        ScoreCanvas.gameObject.SetActive(true);
+        MonsterHPCanvas.gameObject.SetActive(true);
+        isFinishSetting = true;
+    }
+
     public void GetTarget(int colorFlag, bool isAttackable)
     {
         monsterColorFlag = monsterMotor.colorFlag;
@@ -131,7 +194,7 @@ public class GameControl : MonoBehaviour
     {
         if (isGameStarted)
         {
-            motor.StartRunning();
+            player.StartRunning();
         }
     }
 

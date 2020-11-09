@@ -6,8 +6,6 @@ public class TargetSpawner : MonoBehaviour
 {
     private const float LANE_DISTANCE = 3.0f;
 
-    //private PlayerMotor motor;
-
     public GameObject target;
     public GameObject obstacle;
     public Transform player;

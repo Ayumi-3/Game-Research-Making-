@@ -73,7 +73,9 @@
     <Compile Include="Assets\Scripts\Game\Obstacle.cs" />
     <Compile Include="Assets\Scripts\Game\PlaneMotor.cs" />
     <Compile Include="Assets\Scripts\Game\PlayerMotor.cs" />
+    <Compile Include="Assets\Scripts\Game\SetDefault.cs" />
     <Compile Include="Assets\Scripts\Game\SimpleCameraController.cs" />
+    <Compile Include="Assets\Scripts\Game\Start.cs" />
     <Compile Include="Assets\Scripts\Game\Target.cs" />
     <Compile Include="Assets\Scripts\Game\TargetSpawner.cs" />
     <Compile Include="Assets\Scripts\GetPlayerName.cs" />

@@ -5,7 +5,7 @@ using UnityEngine;
 public class MonsterController : MonoBehaviour
 {
     public Transform lookAt; // player
-    public Vector3 offset = new Vector3(0, 2.3f, 13.0f);
+    public Vector3 offset = new Vector3(0, 0, 8.0f);
     public GameObject AroundObject;
 
     private bool isRunning = false;

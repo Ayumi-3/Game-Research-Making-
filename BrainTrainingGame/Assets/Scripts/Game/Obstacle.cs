@@ -5,14 +5,14 @@ using UnityEngine;
 public class Obstacle : MonoBehaviour
 {
     private GameObject Player;
-    private PlayerMotor motor;
+    private PlayerController motor;
     private TargetSpawner spawner;
     private float distanceZ;
 
     private void Start()
     {
         Player = GameObject.FindGameObjectWithTag("Player");
-        motor = Player.GetComponent<PlayerMotor>();
+        motor = Player.GetComponent<PlayerController>();
         spawner = Player.GetComponent<TargetSpawner>();
         //anim = GetComponent<Animator>();
     }

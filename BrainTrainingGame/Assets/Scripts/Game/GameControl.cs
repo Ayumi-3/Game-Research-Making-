@@ -14,9 +14,9 @@ public class GameControl : MonoBehaviour
     public static GameControl Instance { set; get; }
 
     private bool isGameStarted = false;
-    private PlayerMotor player;
+    private PlayerController player;
     private TargetSpawner targetSpawner;
-    private MonsterMotor monsterMotor;
+    private MonsterController monsterController;
     private GameSetting gameSetting;
 
     public Canvas ScoreCanvas;
@@ -57,9 +57,9 @@ public class GameControl : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerMotor>();
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         targetSpawner = GameObject.FindGameObjectWithTag("Player").GetComponent<TargetSpawner>();
-        monsterMotor = GameObject.FindGameObjectWithTag("Monster").GetComponent<MonsterMotor>();
+        monsterController = GameObject.FindGameObjectWithTag("Monster").GetComponent<MonsterController>();
         gameSetting = GameObject.FindGameObjectWithTag("GameControl").GetComponent<GameSetting>();
         scoreText.text = "Score: " + score.ToString("0");
         playerBillboard.text = "";
@@ -79,7 +79,7 @@ public class GameControl : MonoBehaviour
             isGameStarted = true;
             player.StartRunning();
             targetSpawner.StartRunning();
-            monsterMotor.StartRunning();
+            monsterController.StartRunning();
             isFinishSetting = false;
         }
         
@@ -133,7 +133,7 @@ public class GameControl : MonoBehaviour
             {
                 player.PauseRunning();
                 targetSpawner.PauseRunning();
-                monsterMotor.PauseRunning();
+                monsterController.PauseRunning();
                 //Game ending
                 GameSettingCanvas.gameObject.SetActive(false);
             }
@@ -240,7 +240,7 @@ public class GameControl : MonoBehaviour
 
     public void GetTarget(int colorFlag, bool isAttackable)
     {
-        monsterColorFlag = monsterMotor.colorFlag;
+        monsterColorFlag = monsterController.colorFlag;
         targetColorFlag = colorFlag;
 
         targetIsAttackable = isAttackable;

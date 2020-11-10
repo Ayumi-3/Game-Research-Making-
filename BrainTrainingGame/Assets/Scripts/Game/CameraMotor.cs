@@ -5,7 +5,7 @@ using UnityEngine;
 public class CameraMotor : MonoBehaviour
 {
     public Transform lookAt; // player
-    public Vector3 offset = new Vector3(0, 10.3f, -4.0f);
+    public Vector3 offset = new Vector3(0, 11.0f, -4.0f);
     public float tiltAngle = 45.0f;
 
     private float tlitAroundX;

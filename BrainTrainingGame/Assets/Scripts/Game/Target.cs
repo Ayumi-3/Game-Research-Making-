@@ -6,7 +6,7 @@ public class Target : MonoBehaviour
 {
     private Animator anim;
     private GameObject Player;
-    private PlayerMotor motor;
+    private PlayerController motor;
     private TargetSpawner spawner;
     private int colorFlag = 1;
     private Color32 objectMat;
@@ -16,7 +16,7 @@ public class Target : MonoBehaviour
     private void Start()
     {
         Player = GameObject.FindGameObjectWithTag("Player");
-        motor = Player.GetComponent<PlayerMotor>();
+        motor = Player.GetComponent<PlayerController>();
         spawner = Player.GetComponent<TargetSpawner>();
         //anim = GetComponent<Animator>();
     }

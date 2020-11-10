@@ -27,8 +27,7 @@ public class GameControl : MonoBehaviour
 
     // UI and UI fields
     public Text scoreText;
-    private float score = 0.0f, targetScore = 0.0f;
-    private int lastScore = 0;
+    private float score = 0.0f;
     private int monsterColorFlag = 0;
     private int targetColorFlag = 0;
     private bool targetIsAttackable = false;
@@ -45,6 +44,15 @@ public class GameControl : MonoBehaviour
     private float thresholdPoint;
     private bool isConectedToGtec;
     private bool isFinishSetting = false;
+    
+    private float adaptiveTimer;
+    private float timeInterval = 10.0f;
+    private float pointRatio;
+    private float playerSpeed;
+    public float SpeedUp = 3.0f;
+
+    private float allTarget;
+    private float scoredTarget;
 
     private void Awake()
     {
@@ -84,16 +92,40 @@ public class GameControl : MonoBehaviour
                 {
                     updateScore(TARGET_SCORE_AMOUNT);
                     updateMonsterHP(MONSTER_HP_DECREASE);
+                    countTarget(true);
                 }
                 else
                 {
                     updateScore(-TARGET_SCORE_AMOUNT);
                     updateMonsterHP(MONSTER_HP_INCREASE);
+                    countTarget(false);
                 }
 
                 if (monsterHP <= 0) //game stop
                 {
                     isGameStarted = false;
+                }
+            }
+
+            if (isAdaptive)
+            {
+                adaptiveTimer += Time.deltaTime;
+                if (adaptiveTimer > timeInterval)
+                {
+                    adaptiveTimer = 0.0f;
+                    pointRatio = scoredTarget / allTarget;
+                    playerSpeed = player.speed;
+                    if (pointRatio > thresholdPoint)
+                    {
+                        playerSpeed += SpeedUp;
+                    }
+                    else
+                    {
+                        playerSpeed -= 1.0f;
+                    }
+                    playerSpeed = Mathf.Clamp(playerSpeed, 1.0f, 20.0f);
+                    player.speed = playerSpeed;
+                    Debug.Log(pointRatio + " | " + player.speed);
                 }
             }
 
@@ -107,6 +139,19 @@ public class GameControl : MonoBehaviour
             }
         }
         
+    }
+
+    private void clearVariables()
+    {
+        scoreText.text = "Score: " + score.ToString("0");
+        playerBillboard.text = "";
+        monsterBillboard.text = "";
+        CountDownText.text = "";
+
+        score = 0.0f;
+        allTarget = 0.0f;
+        scoredTarget = 0.0f;
+        adaptiveTimer = 0.0f;
     }
 
     private void updateScore(int addScore)
@@ -139,8 +184,18 @@ public class GameControl : MonoBehaviour
         billboard.text = "";
     }
 
+    private void countTarget(bool isScored)
+    {
+        allTarget += 1.0f;
+        if (isScored)
+        {
+            scoredTarget += 1.0f;
+        }
+    }
+
     public void StartOnClick()
     {
+        clearVariables();
         settingData = gameSetting.GetSetting();
 
         maxMonsterHP = int.Parse(settingData["MonsterMaxHp"]);
@@ -154,7 +209,8 @@ public class GameControl : MonoBehaviour
         isAdaptive = (settingData["AdaptiveToggle"] == "true");
         if (isAdaptive)
         {
-            thresholdPoint = float.Parse(settingData["ThresholdPoint"]);
+            thresholdPoint = float.Parse(settingData["ThresholdPoint"]) / 100.0f;
+            Debug.Log("Adaptive threshold: " + thresholdPoint);
         }
         isConectedToGtec = (settingData["ConnectToGtecToggle"] == "true");
         StartCoroutine(countDown());
@@ -201,10 +257,19 @@ public class GameControl : MonoBehaviour
     public void CannotGetTarget()
     {
         updateScore(MISS_TARGET_SCORE_AMOUNT);
+        countTarget(false);
     }
     
     public void GetObstacle()
     {
         updateScore(OBSTACLE_HIT);
+        countTarget(false);
     }
+
+    public void DidntGetObatacle()
+    {
+        countTarget(true);
+    }
+
+    
 }

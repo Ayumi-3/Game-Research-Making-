@@ -57,9 +57,9 @@ public class GameSetting : MonoBehaviour
         SettingData["NumberOfColor"] = NumberOfColorInput.text;
         SettingData["ObstacleAppearance"] = ObstacleAppearanceInput.text;
         SettingData["TargetDistance"] = TargetDistanceInput.text;
-        SettingData["AdaptiveToggle"] = AdaptiveToggle.isOn.ToString();
+        SettingData["AdaptiveToggle"] = AdaptiveToggle.isOn.ToString().ToLower();
         SettingData["ThresholdPoint"] = ThresholdPointInput.text;
-        SettingData["ConnectToGtecToggle"] = ConnectToGtecToggle.isOn.ToString();
+        SettingData["ConnectToGtecToggle"] = ConnectToGtecToggle.isOn.ToString().ToLower();
         return SettingData;
     }
 

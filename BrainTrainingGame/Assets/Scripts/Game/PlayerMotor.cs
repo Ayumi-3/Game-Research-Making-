@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerMotor : MonoBehaviour
 {
     private const float LANE_DISTANCE = 3.0f;
-    private const float TURN_SPEED = 7.0f;
+    private const float TURN_SPEED = 0.05f;
 
     private bool isRunning = false;
 
@@ -13,6 +13,10 @@ public class PlayerMotor : MonoBehaviour
     private CharacterController controller;
     public float speed = 7.0f;
     private int desiredLane = 3; // 5Lanes
+
+    //Animator
+    private Animator anim;
+
     private void Start()
     {
         controller = GetComponent<CharacterController>();

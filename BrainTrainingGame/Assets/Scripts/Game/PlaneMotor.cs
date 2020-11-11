@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlaneMotor : MonoBehaviour
 {
-    public Transform PlayerTransform;
+    private Transform PlayerTransform;
 
     private void Start()
     {

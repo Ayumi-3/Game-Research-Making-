@@ -17,10 +17,16 @@ public class PlayerController : MonoBehaviour
     //Animator
     private Animator anim;
 
+    private Transform monsterTransform;
+    private SideObjectSpawner objectSpawner;
+
     private void Start()
     {
         controller = GetComponent<CharacterController>();
         anim = GetComponent<Animator>();
+
+        monsterTransform = GameObject.FindGameObjectWithTag("Monster").transform;
+        objectSpawner = GameObject.FindGameObjectWithTag("SideObject").GetComponent<SideObjectSpawner>();
         PauseRunning();
     }
     private void Update()
@@ -76,6 +82,8 @@ public class PlayerController : MonoBehaviour
         anim.SetBool("Walk", true);
         anim.SetBool("Rest", false);
         anim.SetBool("Attack", false);
+
+        objectSpawner.IsScrolling = true;
     }
 
     public void PauseRunning()
@@ -84,6 +92,8 @@ public class PlayerController : MonoBehaviour
         anim.SetBool("Walk", false);
         anim.SetBool("Rest", true);
         anim.SetBool("Attack", false);
+
+        objectSpawner.IsScrolling = false;
     }
 
     public void Attack()
@@ -91,5 +101,13 @@ public class PlayerController : MonoBehaviour
         anim.SetBool("Walk", false);
         anim.SetBool("Rest", false);
         anim.SetBool("Attack", true);
+
+        transform.LookAt(monsterTransform.position);
+    }
+
+    public void SetDefault()
+    {
+        transform.position = new Vector3(0.0f, 0.0f, 0.0f);
+        transform.rotation = Quaternion.Euler(new Vector3(0.0f, 0.0f, 0.0f));
     }
 }

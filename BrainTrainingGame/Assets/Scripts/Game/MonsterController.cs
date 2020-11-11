@@ -8,6 +8,8 @@ public class MonsterController : MonoBehaviour
     public Vector3 offset = new Vector3(0, 0, 8.0f);
     public GameObject AroundObject;
 
+    private Vector3 DefaultPosition = new Vector3(0.0f, 0.0f, 8.0f);
+
     private Animator anim;
 
     private bool isRunning = false;
@@ -32,7 +34,7 @@ public class MonsterController : MonoBehaviour
     {
         Vector3 desiredPosition = lookAt.position + offset;
         desiredPosition.x = 0;
-        transform.position = Vector3.Lerp(transform.position, desiredPosition, Time.deltaTime);
+        transform.position = Vector3.Lerp(transform.position, desiredPosition, 0.1f);
     }
 
     private void Update()
@@ -84,4 +86,8 @@ public class MonsterController : MonoBehaviour
         anim.SetBool("Damage", false);
     }
     
+    public void SetDefault()
+    {
+        transform.position = DefaultPosition;
+    }
 }

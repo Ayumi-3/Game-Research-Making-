@@ -5,6 +5,7 @@ using UnityEngine;
 public class TargetSpawner : MonoBehaviour
 {
     private const float LANE_DISTANCE = 3.0f;
+    private const float DISTANCE_TO_RESPAWN = 60.0f;
 
     public GameObject target;
     public GameObject obstacle;
@@ -20,6 +21,11 @@ public class TargetSpawner : MonoBehaviour
     private Vector3 currentPosition;
     private float obstacleRand;
 
+    private void Start()
+    {
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
+    }
+
     private void Update()
     {
         if (!isRunning)
@@ -27,7 +33,6 @@ public class TargetSpawner : MonoBehaviour
         
         if (TargetCount == 0)
         {
-            player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
             currentPosition = new Vector3(target.transform.position.x, target.transform.position.y, player.position.z);
             tempLane = (int)Mathf.Ceil(Random.Range(0.0f, 5.0f));
             laneRandom();
@@ -35,7 +40,7 @@ public class TargetSpawner : MonoBehaviour
             Instantiate(target, new Vector3(currentPosition.x, currentPosition.y, currentPosition.z), Quaternion.identity);
             TargetCount++;
         }
-        else if (TargetCount < maxTarget)
+        else if (currentPosition.z < player.position.z + DISTANCE_TO_RESPAWN)
         {
             currentPosition = new Vector3(0.0f, 0.0f, currentPosition.z);
             tempLane = randomLane;
@@ -92,5 +97,23 @@ public class TargetSpawner : MonoBehaviour
     public void PauseRunning()
     {
         isRunning = false;
+    }
+
+    public void ClearTarget()
+    {
+        GameObject[] targets = GameObject.FindGameObjectsWithTag("Target");
+        GameObject[] obstacles = GameObject.FindGameObjectsWithTag("Obstacle");
+
+        foreach(GameObject obj in targets)
+        {
+            Destroy(obj);
+        }
+        foreach (GameObject obj in obstacles)
+        {
+            Destroy(obj);
+        }
+
+        TargetCount = 0;
+        
     }
 }

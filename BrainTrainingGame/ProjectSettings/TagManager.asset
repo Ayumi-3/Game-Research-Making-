@@ -9,6 +9,7 @@ TagManager:
   - Obstacle
   - CanvasControl
   - GameControl
+  - SideObject
   layers:
   - Default
   - TransparentFX

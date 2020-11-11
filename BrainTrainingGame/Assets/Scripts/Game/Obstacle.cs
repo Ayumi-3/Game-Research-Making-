@@ -20,7 +20,7 @@ public class Obstacle : MonoBehaviour
     private void Update()
     {
         distanceZ = Player.transform.position.z - gameObject.transform.position.z;
-        if (distanceZ > 6)
+        if (distanceZ > 3)
         {
             spawner.TargetCount--;
             Destroy(gameObject, 0.0f);

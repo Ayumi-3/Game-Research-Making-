@@ -72,8 +72,10 @@
     <Compile Include="Assets\Scripts\Game\MonsterController.cs" />
     <Compile Include="Assets\Scripts\Game\Obstacle.cs" />
     <Compile Include="Assets\Scripts\Game\PlaneMotor.cs" />
+    <Compile Include="Assets\Scripts\Game\PlayAgain.cs" />
     <Compile Include="Assets\Scripts\Game\PlayerController.cs" />
     <Compile Include="Assets\Scripts\Game\SetDefault.cs" />
+    <Compile Include="Assets\Scripts\Game\SideObjectSpawner.cs" />
     <Compile Include="Assets\Scripts\Game\SimpleCameraController.cs" />
     <Compile Include="Assets\Scripts\Game\Start.cs" />
     <Compile Include="Assets\Scripts\Game\Target.cs" />
@@ -85,6 +87,7 @@
     <Compile Include="Assets\Scripts\Welcome\Enter.cs" />
     <Compile Include="Assets\Scripts\Welcome\Register.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
+    <None Include="Assets\Artworks\BendWorld.shader" />
     <Reference Include="UnityEngine">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.13f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>

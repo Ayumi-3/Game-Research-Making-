@@ -18,13 +18,12 @@ public class Target : MonoBehaviour
         Player = GameObject.FindGameObjectWithTag("Player");
         motor = Player.GetComponent<PlayerController>();
         spawner = Player.GetComponent<TargetSpawner>();
-        //anim = GetComponent<Animator>();
     }
 
     private void Update()
     {
         distanceZ = Player.transform.position.z - gameObject.transform.position.z;
-        if (distanceZ > 6)
+        if (distanceZ > 3)
         {
             spawner.TargetCount--;
             GameControl.Instance.CannotGetTarget();
@@ -50,7 +49,7 @@ public class Target : MonoBehaviour
 
     private IEnumerator waitForAttack()
     {
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(0.5f);
         GameControl.Instance.ExistTarget();
         GameControl.Instance.GetTarget(colorFlag, false);
         Destroy(gameObject, 0.5f);

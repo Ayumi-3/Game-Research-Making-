@@ -18,12 +18,16 @@ public class GameControl : MonoBehaviour
     private TargetSpawner targetSpawner;
     private MonsterController monsterController;
     private GameSetting gameSetting;
+    private SideObjectSpawner objectSpawner;
+    private CameraMotor cameraMotor;
 
     public Canvas ScoreCanvas;
     public Canvas MonsterHPCanvas;
     public Canvas GameSettingCanvas;
     public Canvas CountDownCanvas;
     public Text CountDownText;
+    public Canvas GameEndCanvas;
+    public Text GameEndScoreText;
 
     // UI and UI fields
     public Text scoreText;
@@ -61,15 +65,16 @@ public class GameControl : MonoBehaviour
         targetSpawner = GameObject.FindGameObjectWithTag("Player").GetComponent<TargetSpawner>();
         monsterController = GameObject.FindGameObjectWithTag("Monster").GetComponent<MonsterController>();
         gameSetting = GameObject.FindGameObjectWithTag("GameControl").GetComponent<GameSetting>();
-        scoreText.text = "Score: " + score.ToString("0");
-        playerBillboard.text = "";
-        monsterBillboard.text = "";
-        CountDownText.text = "";
+        objectSpawner = GameObject.FindGameObjectWithTag("SideObject").GetComponent<SideObjectSpawner>();
+        cameraMotor = FindObjectOfType<CameraMotor>();
+
+        clearVariables();
 
         ScoreCanvas.gameObject.SetActive(false);
         MonsterHPCanvas.gameObject.SetActive(false);
         GameSettingCanvas.gameObject.SetActive(true);
         CountDownCanvas.gameObject.SetActive(false);
+        GameEndCanvas.gameObject.SetActive(false);
     }
 
     private void Update()
@@ -127,7 +132,7 @@ public class GameControl : MonoBehaviour
                     }
                     playerSpeed = Mathf.Clamp(playerSpeed, 1.0f, 20.0f);
                     player.speed = playerSpeed;
-                    Debug.Log(pointRatio + " | " + player.speed);
+                    objectSpawner.ScrollSpeed = -player.speed;
                 }
             }
 
@@ -136,8 +141,9 @@ public class GameControl : MonoBehaviour
                 player.PauseRunning();
                 targetSpawner.PauseRunning();
                 monsterController.PauseRunning();
-                //Game ending
-                GameSettingCanvas.gameObject.SetActive(false);
+                cameraMotor.IsRunning = false;
+                GameEndScoreText.text = "Your Score: " + score.ToString("0");
+                GameEndCanvas.gameObject.SetActive(true);
             }
         }
         
@@ -197,7 +203,6 @@ public class GameControl : MonoBehaviour
 
     public void StartOnClick()
     {
-        clearVariables();
         settingData = gameSetting.GetSetting();
 
         maxMonsterHP = int.Parse(settingData["MonsterMaxHp"]);
@@ -205,6 +210,7 @@ public class GameControl : MonoBehaviour
         monsterHealthBar.SetMaxHealth(maxMonsterHP);
 
         player.speed = float.Parse(settingData["PlayerSpeed"]);
+        objectSpawner.ScrollSpeed = -player.speed;
         ColorsPicker.Instance.colorMaxNumber = int.Parse(settingData["NumberOfColor"]);
         targetSpawner.obstacleChance = float.Parse(settingData["ObstacleAppearance"]) / 100.0f;
         targetSpawner.targetDistance = float.Parse(settingData["TargetDistance"]);
@@ -215,6 +221,8 @@ public class GameControl : MonoBehaviour
             Debug.Log("Adaptive threshold: " + thresholdPoint);
         }
         isConectedToGtec = (settingData["ConnectToGtecToggle"] == "true");
+
+        cameraMotor.IsRunning = true;
         StartCoroutine(countDown());
     }
 
@@ -271,6 +279,24 @@ public class GameControl : MonoBehaviour
     public void DidntGetObatacle()
     {
         countTarget(true);
+    }
+
+    public void PlayAgain()
+    {
+        targetSpawner.ClearTarget();
+        cameraMotor.SetDefault();
+        player.SetDefault();
+        monsterController.SetDefault();
+        objectSpawner.SetDefault();
+
+        clearVariables();
+        ScoreCanvas.gameObject.SetActive(false);
+        MonsterHPCanvas.gameObject.SetActive(false);
+        GameSettingCanvas.gameObject.SetActive(true);
+        CountDownCanvas.gameObject.SetActive(false);
+        GameEndCanvas.gameObject.SetActive(false);
+
+
     }
 
     

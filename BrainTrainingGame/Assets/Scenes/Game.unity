@@ -945,7 +945,7 @@ PrefabInstance:
     - target: {fileID: 6454579710348817565, guid: f0c031f859d314e4280eb20863c7884e,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 100
+      value: 15
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f0c031f859d314e4280eb20863c7884e, type: 3}
@@ -2441,6 +2441,25 @@ MonoBehaviour:
   m_ChildControlHeight: 0
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
+--- !u!1 &967008416 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6454579710348817561, guid: f0c031f859d314e4280eb20863c7884e,
+    type: 3}
+  m_PrefabInstance: {fileID: 351221744}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &967008417
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 967008416}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1047046d8faa05d42ab4eaf14074f91a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PlayerTransform: {fileID: 0}
 --- !u!1 &968678351
 GameObject:
   m_ObjectHideFlags: 0

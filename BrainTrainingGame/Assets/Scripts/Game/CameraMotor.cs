@@ -5,8 +5,8 @@ using UnityEngine;
 public class CameraMotor : MonoBehaviour
 {
     public Transform lookAt; // player
-    public Vector3 offset = new Vector3(0, 11.0f, -4.0f);
-    public float tiltAngle = 45.0f;
+    public Vector3 offset = new Vector3(0, 11.5f, -4.5f);
+    public float tiltAngle = 41.0f;
 
     private float tlitAroundX;
     private Quaternion rotate;
@@ -14,8 +14,8 @@ public class CameraMotor : MonoBehaviour
     private void Start()
     {
         transform.position = lookAt.position + offset;
-        tlitAroundX = Input.GetAxis("Vertical") * tiltAngle;
-        rotate = Quaternion.Euler(tlitAroundX, 0.0f, 0.0f);
+        //tlitAroundX = Input.GetAxis("Vertical") * tiltAngle;
+        rotate = Quaternion.Euler(tiltAngle, 0.0f, 0.0f);
         transform.rotation = Quaternion.Slerp(transform.rotation, rotate, Time.deltaTime);
     }
 

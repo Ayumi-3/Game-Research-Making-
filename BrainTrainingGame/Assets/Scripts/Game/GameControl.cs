@@ -87,9 +87,11 @@ public class GameControl : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Space) && targetIsAttackable)
             {
+                player.Attack();
                 targetIsAttackable = false;
                 if (monsterColorFlag != targetColorFlag)
                 {
+                    monsterController.Damage();
                     updateScore(TARGET_SCORE_AMOUNT);
                     updateMonsterHP(MONSTER_HP_DECREASE);
                     countTarget(true);

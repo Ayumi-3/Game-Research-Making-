@@ -327,7 +327,7 @@ GameObject:
   - component: {fileID: 4194485172993854927}
   m_Layer: 0
   m_Name: Monster
-  m_TagString: Untagged
+  m_TagString: Monster
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -396,7 +396,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lookAt: {fileID: 0}
-  offset: {x: 0, y: 2.3, z: 13}
+  offset: {x: 0, y: 0, z: 10}
   AroundObject: {fileID: 3959974533036488417}
   colorFlag: 0
 --- !u!1 &5125992300484984009
@@ -671,7 +671,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 69ab6f450ba898c4689524a4adb705bc,
         type: 3}
       propertyPath: m_Name
-      value: enemy_around_object
+      value: around_object
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 69ab6f450ba898c4689524a4adb705bc, type: 3}

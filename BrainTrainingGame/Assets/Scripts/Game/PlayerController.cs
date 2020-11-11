@@ -21,6 +21,7 @@ public class PlayerController : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         anim = GetComponent<Animator>();
+        PauseRunning();
     }
     private void Update()
     {
@@ -72,13 +73,23 @@ public class PlayerController : MonoBehaviour
     public void StartRunning()
     {
         isRunning = true;
-        anim.SetTrigger("Walk");
+        anim.SetBool("Walk", true);
+        anim.SetBool("Rest", false);
+        anim.SetBool("Attack", false);
     }
 
     public void PauseRunning()
     {
         isRunning = false;
-        anim.SetTrigger("Pause");
+        anim.SetBool("Walk", false);
+        anim.SetBool("Rest", true);
+        anim.SetBool("Attack", false);
     }
 
+    public void Attack()
+    {
+        anim.SetBool("Walk", false);
+        anim.SetBool("Rest", false);
+        anim.SetBool("Attack", true);
+    }
 }

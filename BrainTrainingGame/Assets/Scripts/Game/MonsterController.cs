@@ -8,6 +8,8 @@ public class MonsterController : MonoBehaviour
     public Vector3 offset = new Vector3(0, 0, 8.0f);
     public GameObject AroundObject;
 
+    private Animator anim;
+
     private bool isRunning = false;
     private float rand;
     public int colorFlag = 0;
@@ -16,6 +18,9 @@ public class MonsterController : MonoBehaviour
 
     private void Start()
     {
+        anim = GetComponent<Animator>();
+        anim.SetBool("Damage", false);
+
         transform.position = lookAt.position + offset;
 
         rand = Random.Range(0.0f, ColorsPicker.Instance.colorMaxNumber);
@@ -67,5 +72,16 @@ public class MonsterController : MonoBehaviour
     {
         isRunning = false;
     }
+    public void Damage()
+    {
+        anim.SetBool("Damage", true);
+        StartCoroutine(WaitDamageAnimation());
+    }
 
+    private IEnumerator WaitDamageAnimation()
+    {
+        yield return new WaitForSeconds(0.5f);
+        anim.SetBool("Damage", false);
+    }
+    
 }

@@ -20,12 +20,10 @@ public class TargetSpawner : MonoBehaviour
     private Vector3 currentPosition;
     private float obstacleRand;
 
-
     private void Update()
     {
         if (!isRunning)
             return;
-        
         
         if (TargetCount == 0)
         {
@@ -33,6 +31,7 @@ public class TargetSpawner : MonoBehaviour
             currentPosition = new Vector3(target.transform.position.x, target.transform.position.y, player.position.z);
             tempLane = (int)Mathf.Ceil(Random.Range(0.0f, 5.0f));
             laneRandom();
+            currentPosition.z += 5;
             Instantiate(target, new Vector3(currentPosition.x, currentPosition.y, currentPosition.z), Quaternion.identity);
             TargetCount++;
         }
@@ -49,7 +48,7 @@ public class TargetSpawner : MonoBehaviour
             }
             else
             {
-                Instantiate(obstacle, new Vector3(currentPosition.x, currentPosition.y, currentPosition.z), Quaternion.identity);
+                Instantiate(obstacle, new Vector3(currentPosition.x, currentPosition.y, currentPosition.z), Quaternion.Euler(-90.0f, 0.0f, 0.0f));
             }
             
             TargetCount++;

@@ -5,7 +5,7 @@ using UnityEngine;
 public class TargetSpawner : MonoBehaviour
 {
     private const float LANE_DISTANCE = 3.0f;
-    private const float DISTANCE_TO_RESPAWN = 60.0f;
+    private const float DISTANCE_TO_RESPAWN = 30.0f;
 
     public GameObject target;
     public GameObject obstacle;
@@ -40,7 +40,7 @@ public class TargetSpawner : MonoBehaviour
             Instantiate(target, new Vector3(currentPosition.x, currentPosition.y, currentPosition.z), Quaternion.identity);
             TargetCount++;
         }
-        else if (currentPosition.z < player.position.z + DISTANCE_TO_RESPAWN)
+        else if (TargetCount < maxTarget) //currentPosition.z < player.position.z + DISTANCE_TO_RESPAWN
         {
             currentPosition = new Vector3(0.0f, 0.0f, currentPosition.z);
             tempLane = randomLane;

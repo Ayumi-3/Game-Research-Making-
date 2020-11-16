@@ -83,6 +83,9 @@
     <Compile Include="Assets\Scripts\GetPlayerName.cs" />
     <Compile Include="Assets\Scripts\LoadSceneOnClick.cs" />
     <Compile Include="Assets\Scripts\MainMenu\MenuManager.cs" />
+    <Compile Include="Assets\Scripts\Pointer.cs" />
+    <Compile Include="Assets\Scripts\VRInputModule.cs" />
+    <Compile Include="Assets\Scripts\ViveInput.cs" />
     <Compile Include="Assets\Scripts\Welcome\CanvasControl.cs" />
     <Compile Include="Assets\Scripts\Welcome\Enter.cs" />
     <Compile Include="Assets\Scripts\Welcome\Register.cs" />

@@ -1,9 +1,1 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
 ﻿{"cameraMode":{"drawMode":0,"name":"Shaded","section":"Shading Mode"},"sceneLighting":true,"audioPlay":false,"sceneViewState":{"showFog":true,"showMaterialUpdate":false,"showSkybox":true,"showFlares":true,"showImageEffects":true,"showParticleSystems":true},"in2DMode":false,"pivot":{"x":-1.7079715728759766,"y":2.048471450805664,"z":-0.33990001678466799},"rotation":{"x":0.17136099934577943,"y":-0.058197375386953357,"z":0.010140091180801392,"w":0.9834685921669006},"size":2.922375202178955,"orthographic":false}
-=======
-﻿{"cameraMode":{"drawMode":0,"name":"Shaded","section":"Shading Mode"},"sceneLighting":true,"audioPlay":false,"sceneViewState":{"showFog":true,"showMaterialUpdate":false,"showSkybox":true,"showFlares":true,"showImageEffects":true,"showParticleSystems":true},"in2DMode":false,"pivot":{"x":2.2362594604492189,"y":2.779989242553711,"z":3.528984546661377},"rotation":{"x":0.15163858234882356,"y":0.5437248349189758,"z":-0.10063821077346802,"w":0.8193293809890747},"size":5.417665958404541,"orthographic":false}
->>>>>>> parent of 16c4fbf7... Add monster bilboard and update prefeb
-=======
-﻿{"cameraMode":{"drawMode":0,"name":"Shaded","section":"Shading Mode"},"sceneLighting":true,"audioPlay":false,"sceneViewState":{"showFog":true,"showMaterialUpdate":false,"showSkybox":true,"showFlares":true,"showImageEffects":true,"showParticleSystems":true},"in2DMode":false,"pivot":{"x":0.4488534927368164,"y":3.291335105895996,"z":9.236000061035157},"rotation":{"x":0.19664081931114198,"y":-0.028535684570670129,"z":0.005723139271140099,"w":0.9800732731819153},"size":5.589864730834961,"orthographic":false}
->>>>>>> parent of 1e15897a... Set controller and change some canvas

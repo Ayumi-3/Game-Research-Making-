@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using Valve.VR;
 
 public class GameControl : MonoBehaviour
 {
@@ -91,7 +90,7 @@ public class GameControl : MonoBehaviour
         
         if(isGameStarted)
         {
-            if (SteamVR_Actions._default.GrabPinch.GetStateDown(SteamVR_Input_Sources.Any) && targetIsAttackable)//(Input.GetKeyDown(KeyCode.Space) && targetIsAttackable)
+            if (Input.GetKeyDown(KeyCode.Space) && targetIsAttackable)
             {
                 player.Attack();
                 targetIsAttackable = false;

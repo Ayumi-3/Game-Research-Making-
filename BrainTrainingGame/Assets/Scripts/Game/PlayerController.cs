@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Valve.VR;
 
 public class PlayerController : MonoBehaviour
 {
@@ -21,9 +20,6 @@ public class PlayerController : MonoBehaviour
     private Transform monsterTransform;
     private SideObjectSpawner objectSpawner;
 
-    public SteamVR_Action_Vector2 TouchAction;
-    private Vector2 touchValue;
-
     private void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -39,24 +35,10 @@ public class PlayerController : MonoBehaviour
             return;
 
         // Gather the inputs on which lane we should be
-        //if (Input.GetKeyDown(KeyCode.LeftArrow))
-        //    MoveLane(false);
-        //if (Input.GetKeyDown(KeyCode.RightArrow))
-        //    MoveLane(true);
-        if (SteamVR_Actions._default.Teleport.GetStateDown(SteamVR_Input_Sources.Any))
-        {
-            touchValue = TouchAction.GetAxis(SteamVR_Input_Sources.Any);
-
-            if (touchValue.x < -0.2f)
-            {
-                MoveLane(false);
-            }
-            if (touchValue.x > 0.2f)
-            {
-                MoveLane(true);
-            }
-        }
-        
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+            MoveLane(false);
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+            MoveLane(true);
 
         // Calculate where we should be in the future
         Vector3 targetPosition = transform.position.z * Vector3.forward;

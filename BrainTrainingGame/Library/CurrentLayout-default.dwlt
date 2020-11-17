@@ -21,7 +21,11 @@ MonoBehaviour:
   m_ShowMode: 4
   m_Title: 
   m_RootView: {fileID: 2}
+<<<<<<< HEAD
   m_MinSize: {x: 875, y: 300}
+=======
+  m_MinSize: {x: 875, y: 542}
+>>>>>>> parent of 16c4fbf7... Add monster bilboard and update prefeb
   m_MaxSize: {x: 10000, y: 10000}
   m_Maximized: 1
 --- !u!114 &2
@@ -44,9 +48,15 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
+<<<<<<< HEAD
     width: 1920
     height: 997
   m_MinSize: {x: 875, y: 300}
+=======
+    width: 1536
+    height: 781
+  m_MinSize: {x: 875, y: 542}
+>>>>>>> parent of 16c4fbf7... Add monster bilboard and update prefeb
   m_MaxSize: {x: 10000, y: 10000}
 --- !u!114 &3
 MonoBehaviour:
@@ -111,12 +121,21 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 30
+<<<<<<< HEAD
     width: 1920
     height: 947
   m_MinSize: {x: 709, y: 492}
   m_MaxSize: {x: 18004, y: 14042}
   vertical: 0
   controlID: 96
+=======
+    width: 1536
+    height: 731
+  m_MinSize: {x: 708, y: 492}
+  m_MaxSize: {x: 18003, y: 14042}
+  vertical: 0
+  controlID: 156
+>>>>>>> parent of 16c4fbf7... Add monster bilboard and update prefeb
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -136,12 +155,21 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
+<<<<<<< HEAD
     width: 1092
     height: 947
   m_MinSize: {x: 201, y: 342}
   m_MaxSize: {x: 4001, y: 8042}
   vertical: 1
   controlID: 35
+=======
+    width: 874
+    height: 731
+  m_MinSize: {x: 201, y: 321}
+  m_MaxSize: {x: 4001, y: 8021}
+  vertical: 1
+  controlID: 101
+>>>>>>> parent of 16c4fbf7... Add monster bilboard and update prefeb
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -163,13 +191,21 @@ MonoBehaviour:
     height: 663
   m_MinSize: {x: 201, y: 221}
   m_MaxSize: {x: 4001, y: 4021}
+<<<<<<< HEAD
   m_ActualView: {fileID: 18}
+=======
+  m_ActualView: {fileID: 16}
+>>>>>>> parent of 16c4fbf7... Add monster bilboard and update prefeb
   m_Panes:
   - {fileID: 17}
   - {fileID: 18}
   - {fileID: 16}
   - {fileID: 19}
   - {fileID: 14}
+<<<<<<< HEAD
+=======
+  - {fileID: 17}
+>>>>>>> parent of 16c4fbf7... Add monster bilboard and update prefeb
   m_Selected: 1
   m_LastSelected: 0
 --- !u!114 &8
@@ -218,12 +254,21 @@ MonoBehaviour:
     serializedVersion: 2
     x: 1092
     y: 0
+<<<<<<< HEAD
     width: 415
     height: 947
   m_MinSize: {x: 232, y: 492}
   m_MaxSize: {x: 10002, y: 14042}
   vertical: 1
   controlID: 97
+=======
+    width: 332
+    height: 731
+  m_MinSize: {x: 232, y: 492}
+  m_MaxSize: {x: 10002, y: 14042}
+  vertical: 1
+  controlID: 53
+>>>>>>> parent of 16c4fbf7... Add monster bilboard and update prefeb
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -592,9 +637,15 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
+<<<<<<< HEAD
     m_Target: {x: -1.7079716, y: 2.0484715, z: -0.33990002}
     speed: 2
     m_Value: {x: -1.7079716, y: 2.0484715, z: -0.33990002}
+=======
+    m_Target: {x: -0.35834122, y: 2.127021, z: 0.14960727}
+    speed: 2
+    m_Value: {x: -0.35834122, y: 2.127021, z: 0.14960727}
+>>>>>>> parent of 16c4fbf7... Add monster bilboard and update prefeb
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -640,6 +691,7 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
+<<<<<<< HEAD
     m_Target: {x: 0.171361, y: -0.058197375, z: 0.010140091, w: 0.9834686}
     speed: 2
     m_Value: {x: 0.17135544, y: -0.058195487, z: 0.010139762, w: 0.9834367}
@@ -647,6 +699,15 @@ MonoBehaviour:
     m_Target: 2.9223752
     speed: 2
     m_Value: 2.9223752
+=======
+    m_Target: {x: 0.09091513, y: 0.10079837, z: -0.009252487, w: 0.9907304}
+    speed: 2
+    m_Value: {x: 0.09091248, y: 0.10079543, z: -0.009252218, w: 0.9907016}
+  m_Size:
+    m_Target: 1.5874586
+    speed: 2
+    m_Value: 1.8874586
+>>>>>>> parent of 16c4fbf7... Add monster bilboard and update prefeb
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -752,9 +813,15 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
+<<<<<<< HEAD
       m_SelectedIDs: 4a8d0100
       m_LastClickedID: 101706
       m_ExpandedIDs: 98e5feffdce5feff0ae6feffaae7feffa4effeff36f0feff3ef4feff2af9feff10fafeffb238ffffbe38fffff038ffff743affffde40ffff7471ffffb8f9ffffc6f9ffff66fbffff204400003a8c0100c28c01008e8d0100e48d0100
+=======
+      m_SelectedIDs: 76e1ffff
+      m_LastClickedID: -7818
+      m_ExpandedIDs: 5ae3ffffaaebffffc6eeffff28efffff4cf2ffff60fbffff4e5e0000685e0000725e0000
+>>>>>>> parent of 16c4fbf7... Add monster bilboard and update prefeb
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -822,14 +889,22 @@ MonoBehaviour:
   m_StartGridSize: 16
   m_LastFolders: []
   m_LastFoldersGridSize: 16
+<<<<<<< HEAD
   m_LastProjectPath: D:\Farm\Git\Game-Research-Making-\BrainTrainingGame
+=======
+  m_LastProjectPath: D:\GitHub\Game-Research-Making-\BrainTrainingGame
+>>>>>>> parent of 16c4fbf7... Add monster bilboard and update prefeb
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 7.3051357}
     m_SelectedIDs: 5a3b0000
     m_LastClickedID: 15194
+<<<<<<< HEAD
     m_ExpandedIDs: 000000007441000076490000784900007a4900007c4900007e49000080490000824900008449000086490000884900008a4900008c4900008e49000090490000924900009449000096490000984900009a4900009c490000
+=======
+    m_ExpandedIDs: 000000005c4100002e49000030490000324900003449000036490000384900003a4900003c4900003e49000040490000424900004449000046490000484900004a4900004c4900004e49000050490000
+>>>>>>> parent of 16c4fbf7... Add monster bilboard and update prefeb
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -854,6 +929,7 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_AssetTreeState:
+<<<<<<< HEAD
     scrollPos: {x: 0, y: 240}
     m_SelectedIDs: 
     m_LastClickedID: 0
@@ -862,13 +938,27 @@ MonoBehaviour:
       m_UserAcceptedRename: 0
       m_Name: MainMenu
       m_OriginalName: MainMenu
+=======
+    scrollPos: {x: 0, y: 67}
+    m_SelectedIDs: 
+    m_LastClickedID: 0
+    m_ExpandedIDs: ffffffff000000005c4100002e49000030490000324900003449000036490000384900003a4900003c49000040490000424900004449000046490000484900004a4900004c4900004e49000050490000b4490000
+    m_RenameOverlay:
+      m_UserAcceptedRename: 0
+      m_Name: Game
+      m_OriginalName: Game
+>>>>>>> parent of 16c4fbf7... Add monster bilboard and update prefeb
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
+<<<<<<< HEAD
       m_UserData: 18948
+=======
+      m_UserData: 21328
+>>>>>>> parent of 16c4fbf7... Add monster bilboard and update prefeb
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
       m_OriginalEventType: 0

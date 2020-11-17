@@ -116,7 +116,7 @@ MonoBehaviour:
   m_MinSize: {x: 709, y: 492}
   m_MaxSize: {x: 18004, y: 14042}
   vertical: 0
-  controlID: 96
+  controlID: 171
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -594,7 +594,7 @@ MonoBehaviour:
   m_Position:
     m_Target: {x: -1.7079716, y: 2.0484715, z: -0.33990002}
     speed: 2
-    m_Value: {x: -1.7079716, y: 2.0484715, z: -0.33990002}
+    m_Value: {x: 0, y: 4.8630004, z: 9.236}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -642,11 +642,11 @@ MonoBehaviour:
   m_Rotation:
     m_Target: {x: 0.171361, y: -0.058197375, z: 0.010140091, w: 0.9834686}
     speed: 2
-    m_Value: {x: -0.171361, y: 0.05819738, z: -0.010140091, w: -0.98346865}
+    m_Value: {x: 0.17135544, y: -0.058195487, z: 0.010139762, w: 0.9834367}
   m_Size:
     m_Target: 2.9223752
     speed: 2
-    m_Value: 2.9223752
+    m_Value: 8.59999
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -816,7 +816,8 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SkipHidden: 0
     m_SearchArea: 1
-    m_Folders: []
+    m_Folders:
+    - Assets/Prefab/Monster
   m_ViewMode: 0
   m_StartGridSize: 16
   m_LastFolders: []
@@ -853,24 +854,24 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_AssetTreeState:
-    scrollPos: {x: 0, y: 383}
+    scrollPos: {x: 0, y: 83}
     m_SelectedIDs: 
     m_LastClickedID: 0
     m_ExpandedIDs: ffffffff00000000f43e0000fe46000000470000024700000447000006470000084700000a4700000c4700000e47000010470000124700001447000016470000184700001a4700001c4700001e470000204700002247000024470000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: 
-      m_OriginalName: 
+      m_Name: Monster2
+      m_OriginalName: Monster2
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 0
+      m_UserData: 17572
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 11
+      m_OriginalEventType: 0
       m_IsRenamingFilename: 1
       m_ClientGUIView: {fileID: 11}
     m_SearchString: 

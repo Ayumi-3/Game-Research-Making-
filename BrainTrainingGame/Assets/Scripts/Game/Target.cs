@@ -12,12 +12,14 @@ public class Target : MonoBehaviour
     private Color32 objectMat;
     private float rand;
     private float distanceZ;
+    private AudioSource audioSource;
 
     private void Start()
     {
         Player = GameObject.FindGameObjectWithTag("Player");
         motor = Player.GetComponent<PlayerController>();
         spawner = Player.GetComponent<TargetSpawner>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -31,26 +33,30 @@ public class Target : MonoBehaviour
         }
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        //audioSource.Play();
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if(other.tag == "Player")
         {
+            audioSource.Play();
             //anim.SetTrigger("Collected");
-            motor.PauseRunning();
+            //motor.PauseRunning();
             rand = Random.Range(0.0f, ColorsPicker.Instance.colorMaxNumber);
             colorFlag = (int)Mathf.Ceil(rand);
             gameObject.GetComponent<Renderer>().material.color = ColorsPicker.Instance.Colors[colorFlag - 1];
             GameControl.Instance.GetTarget(colorFlag, true);
             StartCoroutine(waitForAttack());
-            
-
         }
     }
 
     private IEnumerator waitForAttack()
     {
         yield return new WaitForSeconds(0.5f);
-        GameControl.Instance.ExistTarget();
+        //GameControl.Instance.ExistTarget();
         GameControl.Instance.GetTarget(colorFlag, false);
         Destroy(gameObject, 0.5f);
         spawner.TargetCount--;

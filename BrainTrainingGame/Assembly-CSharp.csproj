@@ -127,6 +127,7 @@
     <None Include="Assets\ViveSR\Shaders\Unlit-Alpha2Gray.shader" />
     <None Include="Assets\Artworks\BendWorld.shader" />
     <None Include="Assets\ViveSR\Shaders\DartBoardShader.shader" />
+    <None Include="Assets\Casual Jingles - 022420\Notes.txt" />
     <Reference Include="UnityEngine">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.13f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>

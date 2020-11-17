@@ -116,11 +116,21 @@ public class PlayerController : MonoBehaviour
 
     public void Attack()
     {
+        transform.LookAt(monsterTransform.position);
+
         anim.SetBool("Walk", false);
         anim.SetBool("Rest", false);
         anim.SetBool("Attack", true);
+        
+        StartCoroutine(WaitAttackAnimation());
+    }
 
-        transform.LookAt(monsterTransform.position);
+    private IEnumerator WaitAttackAnimation()
+    {
+        yield return new WaitForSeconds(0.3f);
+        anim.SetBool("Walk", true);
+        anim.SetBool("Rest", false);
+        anim.SetBool("Attack", false);
     }
 
     public void SetDefault()

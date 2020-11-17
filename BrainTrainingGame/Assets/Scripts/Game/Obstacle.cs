@@ -31,7 +31,7 @@ public class Obstacle : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            motor.PauseRunning();
+            //motor.PauseRunning();
             GameControl.Instance.GetObstacle();
             StartCoroutine(waitTime());
         }
@@ -40,7 +40,7 @@ public class Obstacle : MonoBehaviour
     private IEnumerator waitTime()
     {
         yield return new WaitForSeconds(1.0f);
-        GameControl.Instance.ExistTarget();
+        //GameControl.Instance.ExistTarget();
         Destroy(gameObject, 0.5f);
         spawner.TargetCount--;
     }

@@ -6,7 +6,12 @@ public class MonsterController : MonoBehaviour
 {
     public Transform lookAt; // player
     public Vector3 offset = new Vector3(0, 0, 8.0f);
-    public GameObject AroundObject;
+    public Renderer JewelRenderer;
+    public Renderer MonsterRenderer;
+    public Material MonsterMaterialNormal;
+    public Material MonsterMaterialDamage;
+
+    private Material[] jewelMaterials;
 
     private Vector3 DefaultPosition = new Vector3(0.0f, 0.0f, 8.0f);
 
@@ -22,12 +27,14 @@ public class MonsterController : MonoBehaviour
     {
         anim = GetComponent<Animator>();
         anim.SetBool("Damage", false);
+        anim.SetBool("Walk", false);
 
         transform.position = lookAt.position + offset;
 
         rand = Random.Range(0.0f, ColorsPicker.Instance.colorMaxNumber);
         colorFlag = (int)Mathf.Ceil(rand);
-        AroundObject.GetComponent<Renderer>().material.color = ColorsPicker.Instance.Colors[colorFlag - 1];
+        jewelMaterials = JewelRenderer.materials;
+        jewelMaterials[1].color = ColorsPicker.Instance.Colors[colorFlag - 1];
     }
 
     private void LateUpdate()
@@ -59,8 +66,8 @@ public class MonsterController : MonoBehaviour
             rand = Random.Range(0.0f, ColorsPicker.Instance.colorMaxNumber);
             colorFlag = (int)Mathf.Ceil(rand);
         } while (tempFlag == colorFlag);
-
-        AroundObject.GetComponent<Renderer>().material.color = ColorsPicker.Instance.Colors[colorFlag - 1];
+        
+        jewelMaterials[1].color = ColorsPicker.Instance.Colors[colorFlag - 1];
         yield return new WaitForSeconds(5.0f);
         isChangeColor = false;
     }
@@ -68,14 +75,20 @@ public class MonsterController : MonoBehaviour
     public void StartRunning()
     {
         isRunning = true;
+        anim.SetBool("Walk", true);
+        anim.SetBool("Damage", false);
     }
 
     public void PauseRunning()
     {
         isRunning = false;
+        anim.SetBool("Walk", false);
+        anim.SetBool("Damage", true);
     }
     public void Damage()
     {
+        MonsterRenderer.material = MonsterMaterialDamage;
+        anim.SetBool("Walk", false);
         anim.SetBool("Damage", true);
         StartCoroutine(WaitDamageAnimation());
     }
@@ -83,7 +96,9 @@ public class MonsterController : MonoBehaviour
     private IEnumerator WaitDamageAnimation()
     {
         yield return new WaitForSeconds(0.5f);
+        anim.SetBool("Walk", true);
         anim.SetBool("Damage", false);
+        MonsterRenderer.material = MonsterMaterialNormal;
     }
     
     public void SetDefault()

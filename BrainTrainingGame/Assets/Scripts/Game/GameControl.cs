@@ -91,7 +91,7 @@ public class GameControl : MonoBehaviour
         
         if(isGameStarted)
         {
-            if (SteamVR_Actions._default.GrabPinch.GetStateDown(SteamVR_Input_Sources.Any) && targetIsAttackable)//(Input.GetKeyDown(KeyCode.Space) && targetIsAttackable)
+            if /*(SteamVR_Actions._default.GrabPinch.GetStateDown(SteamVR_Input_Sources.Any) && targetIsAttackable)*/(Input.GetKeyDown(KeyCode.Space) && targetIsAttackable)
             {
                 player.Attack();
                 targetIsAttackable = false;

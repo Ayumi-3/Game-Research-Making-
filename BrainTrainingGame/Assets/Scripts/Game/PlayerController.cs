@@ -39,11 +39,11 @@ public class PlayerController : MonoBehaviour
             return;
 
         // Gather the inputs on which lane we should be
-        //if (Input.GetKeyDown(KeyCode.LeftArrow))
-        //    MoveLane(false);
-        //if (Input.GetKeyDown(KeyCode.RightArrow))
-        //    MoveLane(true);
-        if (SteamVR_Actions._default.Teleport.GetStateDown(SteamVR_Input_Sources.Any))
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+            MoveLane(false);
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+            MoveLane(true);
+        /*if (SteamVR_Actions._default.Teleport.GetStateDown(SteamVR_Input_Sources.Any))
         {
             touchValue = TouchAction.GetAxis(SteamVR_Input_Sources.Any);
 
@@ -55,7 +55,7 @@ public class PlayerController : MonoBehaviour
             {
                 MoveLane(true);
             }
-        }
+        }*/
         
 
         // Calculate where we should be in the future

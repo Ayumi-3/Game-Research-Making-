@@ -8,6 +8,7 @@ public class Obstacle : MonoBehaviour
     private PlayerController motor;
     private TargetSpawner spawner;
     private float distanceZ;
+    private AudioSource audioSource;
 
     private void Start()
     {
@@ -15,6 +16,7 @@ public class Obstacle : MonoBehaviour
         motor = Player.GetComponent<PlayerController>();
         spawner = Player.GetComponent<TargetSpawner>();
         //anim = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -31,6 +33,7 @@ public class Obstacle : MonoBehaviour
     {
         if (other.tag == "Player")
         {
+            audioSource.Play();
             //motor.PauseRunning();
             GameControl.Instance.GetObstacle();
             Destroy(gameObject, 1f);

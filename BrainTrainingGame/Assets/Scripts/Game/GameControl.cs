@@ -60,6 +60,8 @@ public class GameControl : MonoBehaviour
     private float allTarget;
     private float scoredTarget;
 
+    private AudioSource audioSource;
+
     private void Awake()
     {
         Instance = this;
@@ -69,6 +71,7 @@ public class GameControl : MonoBehaviour
         gameSetting = GameObject.FindGameObjectWithTag("GameControl").GetComponent<GameSetting>();
         objectSpawner = GameObject.FindGameObjectWithTag("SideObject").GetComponent<SideObjectSpawner>();
         cameraMotor = FindObjectOfType<CameraMotor>();
+        audioSource = GetComponent<AudioSource>();
 
         clearVariables();
 
@@ -94,10 +97,10 @@ public class GameControl : MonoBehaviour
         {
             if /*(SteamVR_Actions._default.GrabPinch.GetStateDown(SteamVR_Input_Sources.Any) && targetIsAttackable)*/(Input.GetKeyDown(KeyCode.Space) && targetIsAttackable)
             {
-                player.Attack();
                 targetIsAttackable = false;
                 if (monsterColorFlag != targetColorFlag)
                 {
+                    player.Attack(true);
                     monsterController.Damage();
                     updateScore(TARGET_SCORE_AMOUNT);
                     updateMonsterHP(MONSTER_HP_DECREASE);
@@ -105,6 +108,7 @@ public class GameControl : MonoBehaviour
                 }
                 else
                 {
+                    player.Attack(false);
                     updateScore(-TARGET_SCORE_AMOUNT);
                     updateMonsterHP(MONSTER_HP_INCREASE);
                     countTarget(false);
@@ -113,6 +117,7 @@ public class GameControl : MonoBehaviour
                 if (monsterHP <= 0) //game stop
                 {
                     isGameStarted = false;
+                    audioSource.Pause();
                 }
             }
 
@@ -310,6 +315,8 @@ public class GameControl : MonoBehaviour
         GameSettingCanvas.gameObject.SetActive(true);
         CountDownCanvas.gameObject.SetActive(false);
         GameEndCanvas.gameObject.SetActive(false);
+
+        audioSource.Play();
 
 
     }

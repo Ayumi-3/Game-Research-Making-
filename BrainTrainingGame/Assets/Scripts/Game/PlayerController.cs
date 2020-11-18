@@ -26,10 +26,15 @@ public class PlayerController : MonoBehaviour
     public SteamVR_Action_Vector2 TouchAction;
     private Vector2 touchValue;
 
+    private AudioSource audioSource;
+    public AudioClip GetPointSound;
+    public AudioClip NotGetPointSound;
+
     private void Start()
     {
         controller = GetComponent<CharacterController>();
         anim = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
 
         monsterTransform = GameObject.FindGameObjectWithTag("Monster").transform;
         objectSpawner = GameObject.FindGameObjectWithTag("SideObject").GetComponent<SideObjectSpawner>();
@@ -129,11 +134,19 @@ public class PlayerController : MonoBehaviour
         objectSpawner.IsScrolling = false;
     }
 
-    public void Attack()
+    public void Attack(bool getPoint)
     {
         transform.LookAt(monsterTransform.position);
 
         anim.SetTrigger("Attack");
+        if (getPoint)
+        {
+            audioSource.PlayOneShot(GetPointSound);
+        }
+        else
+        {
+            audioSource.PlayOneShot(NotGetPointSound);
+        }
     }
 
     public void Fall()

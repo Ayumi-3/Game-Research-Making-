@@ -36,6 +36,7 @@ public class GameControl : MonoBehaviour
     private int monsterColorFlag = 0;
     private int targetColorFlag = 0;
     private bool targetIsAttackable = false;
+    public GameObject PlayerSphere;
 
     public HealthBar monsterHealthBar;
     public int maxMonsterHP = 300;
@@ -249,12 +250,24 @@ public class GameControl : MonoBehaviour
         isFinishSetting = true;
     }
 
-    public void GetTarget(int colorFlag, bool isAttackable)
+    public void GetTarget(int colorFlag)
     {
         monsterColorFlag = monsterController.colorFlag;
         targetColorFlag = colorFlag;
 
-        targetIsAttackable = isAttackable;
+        PlayerSphere.GetComponent<Renderer>().material.color = ColorsPicker.Instance.Colors[colorFlag - 1];
+
+        targetIsAttackable = true;
+        StartCoroutine(waitForAttack());
+    }
+
+    private IEnumerator waitForAttack()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        PlayerSphere.GetComponent<Renderer>().material.color = Color.white;
+        targetIsAttackable = false;
+
     }
 
     public void ExistTarget()
@@ -275,6 +288,7 @@ public class GameControl : MonoBehaviour
     {
         updateScore(OBSTACLE_HIT);
         countTarget(false);
+        player.Fall();
     }
 
     public void DidntGetObatacle()

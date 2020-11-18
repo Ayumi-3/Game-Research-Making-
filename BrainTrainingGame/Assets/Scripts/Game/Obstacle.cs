@@ -33,15 +33,8 @@ public class Obstacle : MonoBehaviour
         {
             //motor.PauseRunning();
             GameControl.Instance.GetObstacle();
-            StartCoroutine(waitTime());
+            Destroy(gameObject, 1f);
+            spawner.TargetCount--;
         }
-    }
-
-    private IEnumerator waitTime()
-    {
-        yield return new WaitForSeconds(1.0f);
-        //GameControl.Instance.ExistTarget();
-        Destroy(gameObject, 0.5f);
-        spawner.TargetCount--;
     }
 }

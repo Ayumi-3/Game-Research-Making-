@@ -48,18 +48,10 @@ public class Target : MonoBehaviour
             rand = Random.Range(0.0f, ColorsPicker.Instance.colorMaxNumber);
             colorFlag = (int)Mathf.Ceil(rand);
             gameObject.GetComponent<Renderer>().material.color = ColorsPicker.Instance.Colors[colorFlag - 1];
-            GameControl.Instance.GetTarget(colorFlag, true);
-            StartCoroutine(waitForAttack());
+            GameControl.Instance.GetTarget(colorFlag);
+            Destroy(gameObject, 0.5f);
+            spawner.TargetCount--;
         }
-    }
-
-    private IEnumerator waitForAttack()
-    {
-        yield return new WaitForSeconds(0.5f);
-        //GameControl.Instance.ExistTarget();
-        GameControl.Instance.GetTarget(colorFlag, false);
-        Destroy(gameObject, 0.5f);
-        spawner.TargetCount--;
     }
     
 }

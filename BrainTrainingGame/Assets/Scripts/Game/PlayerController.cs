@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     private const float TURN_SPEED = 0.05f;
 
     private bool isRunning = false;
+    private bool isRest = true;
 
     // movement
     private CharacterController controller;
@@ -17,6 +18,7 @@ public class PlayerController : MonoBehaviour
 
     //Animator
     private Animator anim;
+    private float randAction;
 
     private Transform monsterTransform;
     private SideObjectSpawner objectSpawner;
@@ -32,11 +34,24 @@ public class PlayerController : MonoBehaviour
         monsterTransform = GameObject.FindGameObjectWithTag("Monster").transform;
         objectSpawner = GameObject.FindGameObjectWithTag("SideObject").GetComponent<SideObjectSpawner>();
         PauseRunning();
+
     }
     private void Update()
     {
         if (!isRunning)
+        {
+            randAction = Random.Range(0.0f, 1.0f);
+            if (randAction < 0.3f)
+            {
+                anim.SetTrigger("Idle1");
+
+            }
+            else if (randAction < 0.6f)
+            {
+                anim.SetTrigger("Idle2");
+            }
             return;
+        }
 
         // Gather the inputs on which lane we should be
         if (Input.GetKeyDown(KeyCode.LeftArrow))
@@ -85,6 +100,8 @@ public class PlayerController : MonoBehaviour
             dir.y = 0;
             transform.forward = Vector3.Lerp(transform.forward, dir, TURN_SPEED);
         }
+        
+
 
     }
 
@@ -99,7 +116,6 @@ public class PlayerController : MonoBehaviour
         isRunning = true;
         anim.SetBool("Walk", true);
         anim.SetBool("Rest", false);
-        anim.SetBool("Attack", false);
 
         objectSpawner.IsScrolling = true;
     }
@@ -109,7 +125,6 @@ public class PlayerController : MonoBehaviour
         isRunning = false;
         anim.SetBool("Walk", false);
         anim.SetBool("Rest", true);
-        anim.SetBool("Attack", false);
 
         objectSpawner.IsScrolling = false;
     }
@@ -118,19 +133,12 @@ public class PlayerController : MonoBehaviour
     {
         transform.LookAt(monsterTransform.position);
 
-        anim.SetBool("Walk", false);
-        anim.SetBool("Rest", false);
-        anim.SetBool("Attack", true);
-        
-        StartCoroutine(WaitAttackAnimation());
+        anim.SetTrigger("Attack");
     }
 
-    private IEnumerator WaitAttackAnimation()
+    public void Fall()
     {
-        yield return new WaitForSeconds(0.3f);
-        anim.SetBool("Walk", true);
-        anim.SetBool("Rest", false);
-        anim.SetBool("Attack", false);
+        anim.SetTrigger("Fall");
     }
 
     public void SetDefault()

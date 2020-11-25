@@ -62,7 +62,6 @@ public class GameControl : MonoBehaviour
 
     private AudioSource audioSource;
 
-
     private void Awake()
     {
         Instance = this;

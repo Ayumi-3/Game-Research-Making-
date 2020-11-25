@@ -13,8 +13,6 @@ public class UDPReceiver : MonoBehaviour
     private Thread _ReceiveThread;
     private IReceiverObserver _Observer;
 
-    public float UDPdata;
-
     void Start()
     {
         Initialize();
@@ -50,15 +48,14 @@ public class UDPReceiver : MonoBehaviour
             {
                 IPEndPoint anyIP = new IPEndPoint(IPAddress.Any, 0);
                 byte[] data = _ReceiveClient.Receive(ref anyIP);
-                UDPdata = (float)BitConverter.ToDouble(data, 0);
 
-                //double[] values = new double[data.Length / 8];
-                //Buffer.BlockCopy(data, 0, values, 0, values.Length * 8);
-                //
-                //if (_Observer != null)
-                //    _Observer.OnDataReceived(values);
-                //
-                //Debug.Log(">>>>");
+                double[] values = new double[data.Length / 8];
+                Buffer.BlockCopy(data, 0, values, 0, values.Length * 8);
+
+                if (_Observer != null)
+                    _Observer.OnDataReceived(values);
+
+                Debug.Log(">>>>");
             }
             catch (Exception err)
             {

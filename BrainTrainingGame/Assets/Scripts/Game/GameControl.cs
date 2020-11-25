@@ -24,6 +24,7 @@ public class GameControl : MonoBehaviour
     private CameraMotor cameraMotor;
     private DataManager dataManager;
     private GetPlayerName getPlayerName;
+    private CommunicationController communicationController;
 
     public Canvas ScoreCanvas;
     public Canvas MonsterHPCanvas;
@@ -83,6 +84,7 @@ public class GameControl : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         dataManager = GetComponent<DataManager>();
         getPlayerName = GetComponent<GetPlayerName>();
+        communicationController = GetComponent<CommunicationController>();
 
         clearVariables();
 
@@ -252,6 +254,8 @@ public class GameControl : MonoBehaviour
 
         csvName = dataDir + "GameDataRecord_" + System.DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".csv";
         dataManager.WriteData(dataDir, csvName, settingData, true, true);
+        GameDataRecord(true, 0);
+        //communicationController.SendTriggerToMatlab(true);
 
         cameraMotor.IsRunning = true;
         StartCoroutine(countDown());
@@ -345,9 +349,25 @@ public class GameControl : MonoBehaviour
 
     }
 
-    public void GameDataRecord()
+    public void GameDataRecord(bool isFirst, int moveleft)
     {
-        GamePlayData["GtecTime"] = "";
+        GamePlayData["GtecTime"] = communicationController.ReceivedData.ToString();
+        GamePlayData["UnityTime"] = System.DateTime.Now.ToString("HHmmss.fff");
+        GamePlayData["MoveLeft"] = moveleft.ToString();
+
+        bool putHeader;
+
+        if (isFirst)
+        {
+            putHeader = true;
+        }
+        else
+        {
+            putHeader = false;
+        }
+
+        dataManager.WriteData(dataDir, csvName, GamePlayData, false, putHeader);
+
     }
     
 }

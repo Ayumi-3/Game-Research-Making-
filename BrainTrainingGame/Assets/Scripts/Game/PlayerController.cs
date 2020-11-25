@@ -62,11 +62,12 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             MoveLane(false);
-            GameControl.Instance.GameDataRecord(false, 1);
+            GameControl.Instance.GameDataRecord(false, "1", "0", "1", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
         }
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             MoveLane(true);
+            GameControl.Instance.GameDataRecord(false, "0", "1", "1", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
         }
 
         /*if (SteamVR_Actions._default.Teleport.GetStateDown(SteamVR_Input_Sources.Any))

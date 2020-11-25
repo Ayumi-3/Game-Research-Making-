@@ -254,7 +254,7 @@ public class GameControl : MonoBehaviour
 
         csvName = dataDir + "GameDataRecord_" + System.DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".csv";
         dataManager.WriteData(dataDir, csvName, settingData, true, true);
-        GameDataRecord(true, 0);
+        GameDataRecord(true, "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
         //communicationController.SendTriggerToMatlab(true);
 
         cameraMotor.IsRunning = true;
@@ -349,24 +349,32 @@ public class GameControl : MonoBehaviour
 
     }
 
-    public void GameDataRecord(bool isFirst, int moveleft)
+    public void GameDataRecord(bool isFirst, string moveLeft, string moveRight, string buttonDown, string buttonUp,
+        string playerPosition, string getTarget, string targetPosition, string attackable, string attack, string monsterColorId,
+        string targetColorId, string avoidObstacle, string obstaclePosition, string monsterColorChange, string score,
+        string monsterId, string monsterHpPercent)
     {
         GamePlayData["GtecTime"] = communicationController.ReceivedData.ToString();
         GamePlayData["UnityTime"] = System.DateTime.Now.ToString("HHmmss.fff");
-        GamePlayData["MoveLeft"] = moveleft.ToString();
+        GamePlayData["MoveLeft"] = moveLeft;
+        GamePlayData["MoveRight"] = moveRight;
+        GamePlayData["ButtonDown"] = buttonDown;
+        GamePlayData["ButtonUp"] = buttonUp;
+        GamePlayData["PlayerPosition"] = playerPosition;
+        GamePlayData["GetTarget"] = getTarget;
+        GamePlayData["TargetPosition"] = targetPosition;
+        GamePlayData["Attackable"] = attackable;
+        GamePlayData["Attack"] = attack;
+        GamePlayData["MonsterColorId"] = monsterColorId;
+        GamePlayData["TargetColorId"] = targetColorId;
+        GamePlayData["AvoidObstacle"] = avoidObstacle;
+        GamePlayData["ObstaclePosition"] = obstaclePosition;
+        GamePlayData["MonsterColorChange"] = monsterColorChange;
+        GamePlayData["Score"] = score;
+        GamePlayData["MonsterId"] = monsterId;
+        GamePlayData["MonsterHpPercent"] = monsterHpPercent;
 
-        bool putHeader;
-
-        if (isFirst)
-        {
-            putHeader = true;
-        }
-        else
-        {
-            putHeader = false;
-        }
-
-        dataManager.WriteData(dataDir, csvName, GamePlayData, false, putHeader);
+        dataManager.WriteData(dataDir, csvName, GamePlayData, false, isFirst);
 
     }
     

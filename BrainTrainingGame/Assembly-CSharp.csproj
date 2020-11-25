@@ -68,6 +68,7 @@
     <Compile Include="Assets\Scripts\Game\CameraMotor.cs" />
     <Compile Include="Assets\Scripts\Game\ColorsPicker.cs" />
     <Compile Include="Assets\Scripts\Game\GameControl.cs" />
+    <Compile Include="Assets\Scripts\Game\GameDataRecord.cs" />
     <Compile Include="Assets\Scripts\Game\GameSetting.cs" />
     <Compile Include="Assets\Scripts\Game\HealthBar.cs" />
     <Compile Include="Assets\Scripts\Game\MonsterController.cs" />

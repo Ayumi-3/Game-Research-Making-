@@ -1,0 +1,2 @@
+MonsterMaxHp,PlayerSpeed,NumberOfColor,ObstacleAppearance,TargetDistance,AdaptiveToggle,ThresholdPoint,ConnectToGtecToggle
+300,7,3,20,6,false,80,false

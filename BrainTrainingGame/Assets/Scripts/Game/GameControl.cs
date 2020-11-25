@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 using Valve.VR;
@@ -21,6 +22,9 @@ public class GameControl : MonoBehaviour
     private GameSetting gameSetting;
     private SideObjectSpawner objectSpawner;
     private CameraMotor cameraMotor;
+    private DataManager dataManager;
+    private GetPlayerName getPlayerName;
+    private CommunicationController communicationController;
 
     public Canvas ScoreCanvas;
     public Canvas MonsterHPCanvas;
@@ -62,6 +66,12 @@ public class GameControl : MonoBehaviour
 
     private AudioSource audioSource;
 
+    private string dataPath = @"Data/";
+    private string playerName;
+    private string dataDir;
+    private string csvName;
+    public Dictionary<string, string> GamePlayData = new Dictionary<string, string>();
+
     private void Awake()
     {
         Instance = this;
@@ -72,6 +82,9 @@ public class GameControl : MonoBehaviour
         objectSpawner = GameObject.FindGameObjectWithTag("SideObject").GetComponent<SideObjectSpawner>();
         cameraMotor = FindObjectOfType<CameraMotor>();
         audioSource = GetComponent<AudioSource>();
+        dataManager = GetComponent<DataManager>();
+        getPlayerName = GetComponent<GetPlayerName>();
+        communicationController = GetComponent<CommunicationController>();
 
         clearVariables();
 
@@ -80,6 +93,14 @@ public class GameControl : MonoBehaviour
         GameSettingCanvas.gameObject.SetActive(true);
         CountDownCanvas.gameObject.SetActive(false);
         GameEndCanvas.gameObject.SetActive(false);
+
+        // Get player name, get folder path, create folder if not exist
+        playerName = getPlayerName.GetPlayer();
+        dataDir = dataPath + playerName + "/";
+        if (!Directory.Exists(dataDir))
+        {
+            Directory.CreateDirectory(dataDir);
+        }
     }
 
     private void Update()
@@ -167,6 +188,8 @@ public class GameControl : MonoBehaviour
         allTarget = 0.0f;
         scoredTarget = 0.0f;
         adaptiveTimer = 0.0f;
+
+        settingData.Clear();
     }
 
     private void updateScore(int addScore)
@@ -228,6 +251,11 @@ public class GameControl : MonoBehaviour
             Debug.Log("Adaptive threshold: " + thresholdPoint);
         }
         isConectedToGtec = (settingData["ConnectToGtecToggle"] == "true");
+
+        csvName = dataDir + "GameDataRecord_" + System.DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".csv";
+        dataManager.WriteData(dataDir, csvName, settingData, true, true);
+        GameDataRecord(true, "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
+        //communicationController.SendTriggerToMatlab(true);
 
         cameraMotor.IsRunning = true;
         StartCoroutine(countDown());
@@ -321,5 +349,33 @@ public class GameControl : MonoBehaviour
 
     }
 
+    public void GameDataRecord(bool isFirst, string moveLeft, string moveRight, string buttonDown, string buttonUp,
+        string playerPosition, string getTarget, string targetPosition, string attackable, string attack, string monsterColorId,
+        string targetColorId, string avoidObstacle, string obstaclePosition, string monsterColorChange, string score,
+        string monsterId, string monsterHpPercent)
+    {
+        GamePlayData["GtecTime"] = communicationController.ReceivedData.ToString();
+        GamePlayData["UnityTime"] = System.DateTime.Now.ToString("HHmmss.fff");
+        GamePlayData["MoveLeft"] = moveLeft;
+        GamePlayData["MoveRight"] = moveRight;
+        GamePlayData["ButtonDown"] = buttonDown;
+        GamePlayData["ButtonUp"] = buttonUp;
+        GamePlayData["PlayerPosition"] = playerPosition;
+        GamePlayData["GetTarget"] = getTarget;
+        GamePlayData["TargetPosition"] = targetPosition;
+        GamePlayData["Attackable"] = attackable;
+        GamePlayData["Attack"] = attack;
+        GamePlayData["MonsterColorId"] = monsterColorId;
+        GamePlayData["TargetColorId"] = targetColorId;
+        GamePlayData["AvoidObstacle"] = avoidObstacle;
+        GamePlayData["ObstaclePosition"] = obstaclePosition;
+        GamePlayData["MonsterColorChange"] = monsterColorChange;
+        GamePlayData["Score"] = score;
+        GamePlayData["MonsterId"] = monsterId;
+        GamePlayData["MonsterHpPercent"] = monsterHpPercent;
+
+        dataManager.WriteData(dataDir, csvName, GamePlayData, false, isFirst);
+
+    }
     
 }

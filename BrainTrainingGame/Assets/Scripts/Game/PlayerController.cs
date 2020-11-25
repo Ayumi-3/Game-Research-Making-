@@ -60,9 +60,16 @@ public class PlayerController : MonoBehaviour
 
         // Gather the inputs on which lane we should be
         if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
             MoveLane(false);
+            GameControl.Instance.GameDataRecord(false, "1", "0", "1", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
+        }
         if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
             MoveLane(true);
+            GameControl.Instance.GameDataRecord(false, "0", "1", "1", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
+        }
+
         /*if (SteamVR_Actions._default.Teleport.GetStateDown(SteamVR_Input_Sources.Any))
         {
             touchValue = TouchAction.GetAxis(SteamVR_Input_Sources.Any);

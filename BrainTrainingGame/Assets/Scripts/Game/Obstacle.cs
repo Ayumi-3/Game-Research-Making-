@@ -15,7 +15,6 @@ public class Obstacle : MonoBehaviour
         Player = GameObject.FindGameObjectWithTag("Player");
         motor = Player.GetComponent<PlayerController>();
         spawner = Player.GetComponent<TargetSpawner>();
-        //anim = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
     }
 
@@ -25,6 +24,7 @@ public class Obstacle : MonoBehaviour
         if (distanceZ > 3)
         {
             spawner.TargetCount--;
+            GameControl.Instance.DidntGetObatacle(Player.transform, gameObject.transform);
             Destroy(gameObject, 0.0f);
         }
     }
@@ -34,7 +34,6 @@ public class Obstacle : MonoBehaviour
         if (other.tag == "Player")
         {
             audioSource.Play();
-            //motor.PauseRunning();
             GameControl.Instance.GetObstacle();
             Destroy(gameObject, 1f);
             spawner.TargetCount--;

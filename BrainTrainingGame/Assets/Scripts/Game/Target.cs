@@ -28,14 +28,9 @@ public class Target : MonoBehaviour
         if (distanceZ > 3)
         {
             spawner.TargetCount--;
-            GameControl.Instance.CannotGetTarget();
+            GameControl.Instance.CannotGetTarget(Player.transform, gameObject.transform);
             Destroy(gameObject, 0.0f);
         }
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        //audioSource.Play();
     }
 
     private void OnTriggerEnter(Collider other)

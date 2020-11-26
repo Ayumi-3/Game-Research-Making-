@@ -68,6 +68,9 @@ public class MonsterController : MonoBehaviour
         } while (tempFlag == colorFlag);
         
         jewelMaterials[1].color = ColorsPicker.Instance.Colors[colorFlag - 1];
+
+        GameControl.Instance.MonsterChangeColor();
+
         yield return new WaitForSeconds(5.0f);
         isChangeColor = false;
     }

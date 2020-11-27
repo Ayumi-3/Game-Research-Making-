@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class GameSetting : MonoBehaviour
 {
+    public InputField TimeInput;
     public InputField MonsterMaxHpInput;
     public InputField PlayerSpeedInput;
     public InputField NumberOfColorInput;
@@ -19,6 +20,7 @@ public class GameSetting : MonoBehaviour
 
     private void Start()
     {
+        DefaultData["Time"] = "300";
         DefaultData["MonsterMaxHp"] = "300";
         DefaultData["PlayerSpeed"] = "7";
         DefaultData["NumberOfColor"] = "3";
@@ -28,6 +30,7 @@ public class GameSetting : MonoBehaviour
         DefaultData["ThresholdPoint"] = "80";
         DefaultData["ConnectToGtecToggle"] = "false";
 
+        TimeInput.text = DefaultData["Time"];
         MonsterMaxHpInput.text = DefaultData["MonsterMaxHp"];
         PlayerSpeedInput.text = DefaultData["PlayerSpeed"];
         NumberOfColorInput.text = DefaultData["NumberOfColor"];
@@ -40,6 +43,7 @@ public class GameSetting : MonoBehaviour
 
     public void SetDefault()
     {
+        TimeInput.text = DefaultData["Time"];
         MonsterMaxHpInput.text = DefaultData["MonsterMaxHp"];
         PlayerSpeedInput.text = DefaultData["PlayerSpeed"];
         NumberOfColorInput.text = DefaultData["NumberOfColor"];
@@ -52,6 +56,7 @@ public class GameSetting : MonoBehaviour
 
     public Dictionary<string, string> GetSetting()
     {
+        SettingData["Time"] = TimeInput.text;
         SettingData["MonsterMaxHp"] = MonsterMaxHpInput.text;
         SettingData["PlayerSpeed"] = PlayerSpeedInput.text;
         SettingData["NumberOfColor"] = NumberOfColorInput.text;

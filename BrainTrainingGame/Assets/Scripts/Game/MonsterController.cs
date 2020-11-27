@@ -26,7 +26,6 @@ public class MonsterController : MonoBehaviour
     private void Start()
     {
         anim = GetComponent<Animator>();
-        anim.SetBool("Damage", false);
         anim.SetBool("Walk", false);
 
         transform.position = lookAt.position + offset;
@@ -71,7 +70,7 @@ public class MonsterController : MonoBehaviour
 
         GameControl.Instance.MonsterChangeColor();
 
-        yield return new WaitForSeconds(5.0f);
+        yield return new WaitForSeconds(3.0f);
         isChangeColor = false;
     }
 
@@ -79,29 +78,29 @@ public class MonsterController : MonoBehaviour
     {
         isRunning = true;
         anim.SetBool("Walk", true);
-        anim.SetBool("Damage", false);
     }
 
     public void PauseRunning()
     {
         isRunning = false;
-        anim.SetBool("Walk", false);
-        anim.SetBool("Damage", true);
+        //anim.SetBool("Walk", false);
     }
     public void Damage()
     {
         MonsterRenderer.material = MonsterMaterialDamage;
-        anim.SetBool("Walk", false);
-        anim.SetBool("Damage", true);
+        anim.SetTrigger("Damage");
         StartCoroutine(WaitDamageAnimation());
     }
 
     private IEnumerator WaitDamageAnimation()
     {
         yield return new WaitForSeconds(0.5f);
-        anim.SetBool("Walk", true);
-        anim.SetBool("Damage", false);
         MonsterRenderer.material = MonsterMaterialNormal;
+    }
+
+    public void Dead()
+    {
+        anim.SetTrigger("Die");
     }
     
     public void SetDefault()

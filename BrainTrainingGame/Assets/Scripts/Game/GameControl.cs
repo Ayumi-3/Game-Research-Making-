@@ -28,20 +28,24 @@ public class GameControl : MonoBehaviour
     private CommunicationController communicationController;
 
     public Canvas ScoreCanvas;
+    public Canvas TimeLeftCanvas;
     public Canvas MonsterHPCanvas;
     public Canvas GameSettingCanvas;
     public Canvas CountDownCanvas;
     public Text CountDownText;
     public Canvas GameEndCanvas;
+    public Canvas GameEndMonitorCanvas;
     public Text GameEndScoreText;
 
     // UI and UI fields
     public Text scoreText;
+    public Text timeLeftText;
     private float score = 0.0f;
     private int monsterColorFlag = 0;
     private int targetColorFlag = 0;
     private bool targetIsAttackable = false;
-    public GameObject PlayerSphere;
+    public GameObject PlayerClothColor;
+    public GameObject PlayerHatColor;
 
     public HealthBar monsterHealthBar;
     public int maxMonsterHP = 300;
@@ -77,6 +81,9 @@ public class GameControl : MonoBehaviour
     private string csvName;
     public Dictionary<string, string> GamePlayData = new Dictionary<string, string>();
 
+    private float maxTime;
+    private float timeRemain;
+
     private void Awake()
     {
         Instance = this;
@@ -94,9 +101,11 @@ public class GameControl : MonoBehaviour
         clearVariables();
 
         ScoreCanvas.gameObject.SetActive(false);
+        TimeLeftCanvas.gameObject.SetActive(false);
         MonsterHPCanvas.gameObject.SetActive(false);
         GameSettingCanvas.gameObject.SetActive(true);
         CountDownCanvas.gameObject.SetActive(false);
+        GameEndMonitorCanvas.gameObject.SetActive(false);
         GameEndCanvas.gameObject.SetActive(false);
 
         // Get player name, get folder path, create folder if not exist
@@ -106,6 +115,9 @@ public class GameControl : MonoBehaviour
         {
             Directory.CreateDirectory(dataDir);
         }
+
+        PlayerClothColor.GetComponent<Renderer>().material.color = Color.white;
+        PlayerHatColor.GetComponent<Renderer>().material.color = Color.white;
     }
 
     private void Update()
@@ -146,11 +158,12 @@ public class GameControl : MonoBehaviour
                         "0", "0", "0", (-TARGET_SCORE_AMOUNT).ToString(), "0", ((float)monsterHP / (float)maxMonsterHP * 100.0f).ToString());
                 }
 
-                if (monsterHP <= 0) //game stop
+                if (monsterHP <= 0) 
                 {
+                    MonsterHPCanvas.gameObject.SetActive(false);
+                    monsterController.Dead();
                     GameDataRecord(false, "DefeatedMonster", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
-                    isGameStarted = false;
-                    audioSource.Pause();
+                    //audioSource.Pause();
                 }
             }
 
@@ -176,6 +189,27 @@ public class GameControl : MonoBehaviour
                 }
             }
 
+            if (timeRemain > 0.0f)
+            {
+                timeRemain -= Time.deltaTime;
+                float min, sec;
+                min = Mathf.Floor(timeRemain / 60f);
+                sec = timeRemain - (min * 60f);
+                timeLeftText.text = min.ToString() + ":" + sec.ToString("f");
+            }
+            else //game stop
+            {
+                GameDataRecord(false, "TimesUp", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
+                isGameStarted = false;
+            }
+
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                Debug.Log("Manually stop game");
+                GameDataRecord(false, "ManuallyStopGame", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
+                isGameStarted = false;
+            }
+
             if (!isGameStarted)
             {
                 player.PauseRunning();
@@ -191,7 +225,7 @@ public class GameControl : MonoBehaviour
 
     private void clearVariables()
     {
-        scoreText.text = "Score: " + score.ToString("0");
+        scoreText.text = score.ToString("0");
         playerBillboard.text = "";
         monsterBillboard.text = "";
         CountDownText.text = "";
@@ -212,6 +246,9 @@ public class GameControl : MonoBehaviour
     {
         settingData = gameSetting.GetSetting();
 
+        maxTime = float.Parse(settingData["Time"]);
+        timeRemain = maxTime;
+
         maxMonsterHP = int.Parse(settingData["MonsterMaxHp"]);
         monsterHP = maxMonsterHP;
         monsterHealthBar.SetMaxHealth(maxMonsterHP);
@@ -229,12 +266,14 @@ public class GameControl : MonoBehaviour
         }
         isConectedToGtec = (settingData["ConnectToGtecToggle"] == "true");
 
+        // set start record data
         csvName = dataDir + "GameDataRecord_" + System.DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".csv";
         dataManager.WriteData(dataDir, csvName, settingData, true, true);
         GameDataRecord(true, "StartGame", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
         //communicationController.SendTriggerToMatlab(true);
 
         cameraMotor.IsRunning = true;
+        player.Ready();
         StartCoroutine(countDown());
     }
 
@@ -253,9 +292,10 @@ public class GameControl : MonoBehaviour
 
         CountDownText.text = "START";
         yield return new WaitForSeconds(1.0f);
-
+        
         CountDownCanvas.gameObject.SetActive(false);
         ScoreCanvas.gameObject.SetActive(true);
+        TimeLeftCanvas.gameObject.SetActive(true);
         MonsterHPCanvas.gameObject.SetActive(true);
         isFinishSetting = true;
     }
@@ -263,7 +303,7 @@ public class GameControl : MonoBehaviour
     private void updateScore(int addScore)
     {
         score += addScore;
-        scoreText.text = "Score: " + score.ToString("0");
+        scoreText.text = score.ToString("0");
         StartCoroutine(showBillboard(playerBillboard, addScore));
     }
 
@@ -322,7 +362,8 @@ public class GameControl : MonoBehaviour
         monsterColorFlag = monsterController.colorFlag;
         targetColorFlag = colorFlag;
 
-        PlayerSphere.GetComponent<Renderer>().material.color = ColorsPicker.Instance.Colors[colorFlag - 1];
+        PlayerClothColor.GetComponent<Renderer>().material.color = ColorsPicker.Instance.Colors[colorFlag - 1];
+        PlayerHatColor.GetComponent<Renderer>().material.color = ColorsPicker.Instance.Colors[colorFlag - 1];
         countTargetNavigationTaskPoint(true);
 
         GameDataRecord(false, "GetTarget", "0", "0", "0", "0", "0",
@@ -337,7 +378,8 @@ public class GameControl : MonoBehaviour
     {
         yield return new WaitForSeconds(0.5f); // wait for response time
 
-        PlayerSphere.GetComponent<Renderer>().material.color = Color.white;
+        PlayerClothColor.GetComponent<Renderer>().material.color = Color.white;
+        PlayerHatColor.GetComponent<Renderer>().material.color = Color.white;
 
         if (targetIsAttackable)
         {
@@ -406,6 +448,7 @@ public class GameControl : MonoBehaviour
 
         clearVariables();
         ScoreCanvas.gameObject.SetActive(false);
+        TimeLeftCanvas.gameObject.SetActive(false);
         MonsterHPCanvas.gameObject.SetActive(false);
         GameSettingCanvas.gameObject.SetActive(true);
         CountDownCanvas.gameObject.SetActive(false);

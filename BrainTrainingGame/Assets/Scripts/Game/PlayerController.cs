@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
     private const float TURN_SPEED = 0.05f;
 
     private bool isRunning = false;
-    private bool isRest = true;
+    private bool isReady = false;
 
     // movement
     private CharacterController controller;
@@ -39,21 +39,24 @@ public class PlayerController : MonoBehaviour
         monsterTransform = GameObject.FindGameObjectWithTag("Monster").transform;
         objectSpawner = GameObject.FindGameObjectWithTag("SideObject").GetComponent<SideObjectSpawner>();
         PauseRunning();
+        isReady = false;
 
     }
     private void Update()
     {
         if (!isRunning)
         {
-            randAction = Random.Range(0.0f, 1.0f);
-            if (randAction < 0.3f)
+            if (!isReady)
             {
-                anim.SetTrigger("Idle1");
-            
-            }
-            else if (randAction < 0.6f)
-            {
-                anim.SetTrigger("Idle2");
+                randAction = Random.Range(0.0f, 1.0f);
+                if (randAction < 0.3f)
+                {
+                    anim.SetTrigger("Idle1");
+                }
+                else if (randAction < 0.6f)
+                {
+                    anim.SetTrigger("Idle2");
+                }
             }
             return;
         }
@@ -144,9 +147,6 @@ public class PlayerController : MonoBehaviour
             dir.y = 0;
             transform.forward = Vector3.Lerp(transform.forward, dir, TURN_SPEED);
         }
-        
-
-
     }
 
     private void MoveLane(bool goingRight)
@@ -154,7 +154,7 @@ public class PlayerController : MonoBehaviour
         desiredLane += (goingRight) ? 1 : -1;
         desiredLane = Mathf.Clamp(desiredLane, 1, 5);
     }
-
+    
     public void StartRunning()
     {
         isRunning = true;
@@ -169,8 +169,16 @@ public class PlayerController : MonoBehaviour
         isRunning = false;
         anim.SetBool("Walk", false);
         anim.SetBool("Rest", true);
+        isReady = false;
 
         objectSpawner.IsScrolling = false;
+    }
+
+    public void Ready()
+    {
+        isReady = true;
+        anim.ResetTrigger("Idle1");
+        anim.ResetTrigger("Idle2");
     }
 
     public void Attack(bool getPoint)

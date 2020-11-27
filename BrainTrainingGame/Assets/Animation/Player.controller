@@ -7,7 +7,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Armature|Idling1
+  m_Name: Idling1
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -21,7 +21,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 5549479965498638009, guid: 94bd8ada5228ce145be589b15691fef1,
+  m_Motion: {fileID: 5549479965498638009, guid: f8e62ef5d45a0324d9183357424cf044,
     type: 3}
   m_Tag: 
   m_SpeedParameter: 
@@ -45,7 +45,7 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25
+  m_TransitionDuration: 0.5
   m_TransitionOffset: 0
   m_ExitTime: 1
   m_HasExitTime: 1
@@ -60,7 +60,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Armature|Attack2
+  m_Name: Attack
   m_Speed: 2
   m_CycleOffset: 0
   m_Transitions:
@@ -75,7 +75,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: -729247239487951332, guid: 94bd8ada5228ce145be589b15691fef1,
+  m_Motion: {fileID: -729247239487951332, guid: f8e62ef5d45a0324d9183357424cf044,
     type: 3}
   m_Tag: 
   m_SpeedParameter: 
@@ -99,7 +99,7 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25
+  m_TransitionDuration: 0.5
   m_TransitionOffset: 0
   m_ExitTime: 0
   m_HasExitTime: 0
@@ -124,7 +124,7 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25
+  m_TransitionDuration: 0.5
   m_TransitionOffset: 0
   m_ExitTime: 0
   m_HasExitTime: 0
@@ -229,7 +229,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Armature|Idling2
+  m_Name: Idling2
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -243,7 +243,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: -5673684558401205685, guid: 94bd8ada5228ce145be589b15691fef1,
+  m_Motion: {fileID: -5673684558401205685, guid: f8e62ef5d45a0324d9183357424cf044,
     type: 3}
   m_Tag: 
   m_SpeedParameter: 
@@ -307,7 +307,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Armature|State
+  m_Name: State
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -322,7 +322,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 1312424255589178923, guid: 94bd8ada5228ce145be589b15691fef1,
+  m_Motion: {fileID: 1312424255589178923, guid: f8e62ef5d45a0324d9183357424cf044,
     type: 3}
   m_Tag: 
   m_SpeedParameter: 
@@ -419,7 +419,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Armature|Walk
+  m_Name: Walk
   m_Speed: 3
   m_CycleOffset: 0
   m_Transitions:
@@ -435,7 +435,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 8349542763059015795, guid: 94bd8ada5228ce145be589b15691fef1,
+  m_Motion: {fileID: 8349542763059015795, guid: f8e62ef5d45a0324d9183357424cf044,
     type: 3}
   m_Tag: 
   m_SpeedParameter: 
@@ -449,7 +449,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Armature|Falling
+  m_Name: Falling
   m_Speed: 2
   m_CycleOffset: 0
   m_Transitions:
@@ -464,7 +464,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 6881873686158965456, guid: 94bd8ada5228ce145be589b15691fef1,
+  m_Motion: {fileID: 6881873686158965456, guid: f8e62ef5d45a0324d9183357424cf044,
     type: 3}
   m_Tag: 
   m_SpeedParameter: 
@@ -488,7 +488,7 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25
+  m_TransitionDuration: 0.5
   m_TransitionOffset: 0
   m_ExitTime: 1
   m_HasExitTime: 1

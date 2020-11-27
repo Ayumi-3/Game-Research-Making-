@@ -18,6 +18,15 @@ ModelImporter:
   - first:
       74: 7275811190770590844
     second: Hat|State
+  - first:
+      74: 6881873686158965456
+    second: Armature|Falling
+  - first:
+      74: 5549479965498638009
+    second: Armature|Idling1
+  - first:
+      74: -5673684558401205685
+    second: Armature|Idling2
   externalObjects: {}
   materials:
     materialImportMode: 1

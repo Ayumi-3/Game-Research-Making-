@@ -63,12 +63,14 @@ public class GameControl : MonoBehaviour
     private float thresholdPoint;
     private bool isConectedToGtec;
     private bool isFinishSetting = false;
+    private int gameMode;
     
     private float adaptiveTimer;
     private float timeInterval = 10.0f;
     private float pointRatio;
     private float playerSpeed;
     public float SpeedUp = 3.0f;
+    private float windowResponseTime = 0.5f;
 
     private float allTarget;
     private float scoredTarget;
@@ -206,13 +208,13 @@ public class GameControl : MonoBehaviour
 
             if (!isTimePause)
             {
+                timeRemain -= Time.deltaTime;
                 if (timeRemain > 0.0f)
                 {
-                    timeRemain -= Time.deltaTime;
                     float min, sec;
                     min = Mathf.Floor(timeRemain / 60f);
                     sec = timeRemain - (min * 60f);
-                    timeLeftText.text = min.ToString() + ":" + sec.ToString(".000");
+                    timeLeftText.text = min.ToString() + ":" + sec.ToString("00.000");
                 }
                 else //game stop
                 {
@@ -253,8 +255,6 @@ public class GameControl : MonoBehaviour
     private IEnumerator waitDeadMonsterAnimation()
     {
         yield return new WaitForSeconds(1.5f);
-        monsterHP = maxMonsterHP;
-        monsterHealthBar.SetMaxHealth(maxMonsterHP);
         prepareMonster();
         MonsterHPCanvas.gameObject.SetActive(true);
         playerController.StartRunning();
@@ -266,7 +266,6 @@ public class GameControl : MonoBehaviour
     {
         scoreText.text = score.ToString("0");
         playerBillboard.text = "";
-        //monsterBillboard.text = "";
         CountDownText.text = "";
 
         score = 0.0f;
@@ -287,12 +286,12 @@ public class GameControl : MonoBehaviour
     {
         settingData = gameSetting.GetSetting();
 
+        gameMode = int.Parse(settingData["Mode"]);
+
         maxTime = float.Parse(settingData["Time"]);
         timeRemain = maxTime;
 
         maxMonsterHP = int.Parse(settingData["MonsterMaxHp"]);
-        monsterHP = maxMonsterHP;
-        monsterHealthBar.SetMaxHealth(maxMonsterHP);
 
         playerController.speed = float.Parse(settingData["PlayerSpeed"]);
         objectSpawner.ScrollSpeed = -playerController.speed;
@@ -316,6 +315,8 @@ public class GameControl : MonoBehaviour
 
         // Prepare Monster
         prepareMonster();
+
+        timeLeftText.text = "0:00.000";
 
         cameraMotor.IsRunning = true;
         playerController.Ready();
@@ -351,7 +352,9 @@ public class GameControl : MonoBehaviour
         monsterSpawner.SpawnMonster();
         monsterController = GameObject.FindGameObjectWithTag("Monster").GetComponent<MonsterController>();
         monsterBillboard = GameObject.FindGameObjectWithTag("Monster").GetComponentInChildren<Text>();
-        monsterBillboard.text = ""; 
+        monsterBillboard.text = "";
+        monsterHP = maxMonsterHP;
+        monsterHealthBar.SetMaxHealth(maxMonsterHP);
         GameDataRecord(false, "SpawnedMonster", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", monsterId.ToString(), "0");
     }
 
@@ -412,13 +415,19 @@ public class GameControl : MonoBehaviour
         }
     }
 
-    public void GetTarget(int colorFlag) // Reach the target
+    public void GetTarget() // Reach the target
     {
+        float rand;
+        int colorFlag;
+        rand = Random.Range(0.0f, ColorsPicker.Instance.colorMaxNumber);
+        colorFlag = (int)Mathf.Ceil(rand);
+        gameObject.GetComponent<Renderer>().material.color = ColorsPicker.Instance.Colors[colorFlag - 1];
+
         monsterColorFlag = monsterController.colorFlag;
         targetColorFlag = colorFlag;
 
-        PlayerClothColor.GetComponent<Renderer>().material.color = ColorsPicker.Instance.Colors[colorFlag - 1];
-        PlayerHatColor.GetComponent<Renderer>().material.color = ColorsPicker.Instance.Colors[colorFlag - 1];
+        PlayerClothColor.GetComponent<Renderer>().material.color = ColorsPicker.Instance.Colors[targetColorFlag - 1];
+        PlayerHatColor.GetComponent<Renderer>().material.color = ColorsPicker.Instance.Colors[targetColorFlag - 1];
         countTargetNavigationTaskPoint(true);
 
         GameDataRecord(false, "GetTarget", "0", "0", "0", "0", "0",
@@ -431,7 +440,7 @@ public class GameControl : MonoBehaviour
 
     private IEnumerator waitForAttack()
     {
-        yield return new WaitForSeconds(0.5f); // wait for response time
+        yield return new WaitForSeconds(windowResponseTime); // wait for response time
 
         PlayerClothColor.GetComponent<Renderer>().material.color = Color.white;
         PlayerHatColor.GetComponent<Renderer>().material.color = Color.white;
@@ -495,11 +504,11 @@ public class GameControl : MonoBehaviour
 
     public void PlayAgain()
     {
-        targetSpawner.ClearTarget();
-        cameraMotor.SetDefault();
         playerController.SetDefault();
-        monsterController.SetDefault();
-        //objectSpawner.SetDefault();
+        cameraMotor.SetDefault();
+        targetSpawner.ClearTarget();
+        monsterController.DestroyMonster();
+        objectSpawner.SetDefault();
 
         clearVariables();
         ScoreCanvas.gameObject.SetActive(false);
@@ -507,6 +516,7 @@ public class GameControl : MonoBehaviour
         GameSettingCanvas.gameObject.SetActive(true);
         CountDownCanvas.gameObject.SetActive(false);
         GameEndCanvas.gameObject.SetActive(false);
+        GameEndMonitorCanvas.gameObject.SetActive(false);
 
         audioSource.Play();
     }

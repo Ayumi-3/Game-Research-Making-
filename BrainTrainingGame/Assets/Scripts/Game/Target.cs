@@ -40,10 +40,10 @@ public class Target : MonoBehaviour
             audioSource.Play();
             //anim.SetTrigger("Collected");
             //motor.PauseRunning();
-            rand = Random.Range(0.0f, ColorsPicker.Instance.colorMaxNumber);
-            colorFlag = (int)Mathf.Ceil(rand);
-            gameObject.GetComponent<Renderer>().material.color = ColorsPicker.Instance.Colors[colorFlag - 1];
-            GameControl.Instance.GetTarget(colorFlag);
+            //rand = Random.Range(0.0f, ColorsPicker.Instance.colorMaxNumber);
+            //colorFlag = (int)Mathf.Ceil(rand);
+            //gameObject.GetComponent<Renderer>().material.color = ColorsPicker.Instance.Colors[colorFlag - 1];
+            GameControl.Instance.GetTarget();
             Destroy(gameObject, 0.5f);
             spawner.TargetCount--;
         }

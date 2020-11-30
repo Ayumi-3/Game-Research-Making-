@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class MenuManager : MonoBehaviour
 {
+    public Canvas BaselineCanvas;
     public GetPlayerName getPlayerName;
     public Text WelcomeText;
     public string DataDir;
@@ -15,6 +16,8 @@ public class MenuManager : MonoBehaviour
 
     private void Start()
     {
+        BaselineCanvas.gameObject.SetActive(false);
+
         playerName = getPlayerName.GetPlayer();
 
         WelcomeText.text = "Welcome, " + playerName;

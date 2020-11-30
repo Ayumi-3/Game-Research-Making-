@@ -40,12 +40,21 @@ public class SideObjectSpawner : MonoBehaviour
 
     public void SetDefault()
     {
-        transform.position = new Vector3(0.0f, 0.0f, 0.0f);
-        foreach(Transform child in transform)
+        //transform.position = new Vector3(0.0f, 0.0f, 0.0f);
+        /*foreach(Transform child in transform)
         {
             child.position += new Vector3(0.0f, 0.0f, scrollLocation);
-        }
+        }*/
+        
+        IsScrolling = true;
+        StartCoroutine(waitScrolling());
 
+    }
+
+    private IEnumerator waitScrolling()
+    {
+        yield return new WaitForSeconds(0.01f);
+        IsScrolling = false;
     }
 
 }

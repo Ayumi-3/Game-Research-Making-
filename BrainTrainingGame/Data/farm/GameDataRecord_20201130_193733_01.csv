@@ -1,0 +1,14 @@
+Time,MonsterMaxHp,PlayerSpeed,NumberOfColor,ObstacleAppearance,TargetDistance,AdaptiveToggle,ThresholdPoint,ConnectToGtecToggle
+5,300,7,3,20,6,false,80,false
+GtecTime,UnityTime,GameEvent,MoveLeft,MoveRight,ButtonDown,ButtonUp,PlayerPosition,GetTarget,TargetPosition,Attackable,Attack,MonsterColorId,TargetColorId,AvoidObstacle,ObstaclePosition,MonsterColorChange,GetScore,MonsterId,MonsterHpPercent,Score
+0,19-37-33.614,StartGame,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+0,19-37-33.619,SpawnedMonster,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0
+0,19-37-38.617,MonsterChangeColor,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0
+0,19-37-40.622,MissTarget,0,0,0,0,0,-1,3,0,0,0,0,0,0,0,-5,0,0,-5
+0,19-37-41.475,MissTarget,0,0,0,0,0,-1,6,0,0,0,0,0,0,0,-5,0,0,-10
+0,19-37-41.634,MonsterChangeColor,0,0,0,0,0,0,0,0,0,2,0,0,0,1,0,0,0,-10
+0,19-37-42.334,MissTarget,0,0,0,0,0,-1,3,0,0,0,0,0,0,0,-5,0,0,-15
+0,19-37-42.677,GetTarget,0,0,0,0,0,1,0,0,0,2,2,0,0,0,0,0,0,-15
+0,19-37-43.176,AvoidResponse,0,0,0,0,0,0,0,-1,0,2,2,0,0,0,5,0,0,-10
+0,19-37-43.620,TimesUp,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-10
+0,19-37-43.624,TotalScore,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,-10

@@ -86,6 +86,7 @@
     <Compile Include="Assets\Scripts\GetPlayerName.cs" />
     <Compile Include="Assets\Scripts\IReceiverObserver.cs" />
     <Compile Include="Assets\Scripts\LoadSceneOnClick.cs" />
+    <Compile Include="Assets\Scripts\MainMenu\BaselineController.cs" />
     <Compile Include="Assets\Scripts\MainMenu\MenuManager.cs" />
     <Compile Include="Assets\Scripts\Pointer.cs" />
     <Compile Include="Assets\Scripts\Read2UDP.cs" />

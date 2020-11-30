@@ -100,7 +100,6 @@ public class MonsterController : MonoBehaviour
         {
             MonsterRenderer.material = MonsterMaterialNormal;
         }
-        
     }
 
     public void Dead()
@@ -109,8 +108,8 @@ public class MonsterController : MonoBehaviour
         Destroy(gameObject, 1f);
     }
 
-    public void SetDefault()
+    public void DestroyMonster()
     {
-        transform.position = DefaultPosition;
+        Destroy(gameObject, 0.0f);
     }
 }

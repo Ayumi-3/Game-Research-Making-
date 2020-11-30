@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class GameSetting : MonoBehaviour
 {
+    public Dropdown ModeDropdown;
     public InputField TimeInput;
     public InputField MonsterMaxHpInput;
     public InputField PlayerSpeedInput;
@@ -20,6 +21,7 @@ public class GameSetting : MonoBehaviour
 
     private void Start()
     {
+        DefaultData["Mode"] = "1";
         DefaultData["Time"] = "300";
         DefaultData["MonsterMaxHp"] = "300";
         DefaultData["PlayerSpeed"] = "7";
@@ -30,6 +32,8 @@ public class GameSetting : MonoBehaviour
         DefaultData["ThresholdPoint"] = "80";
         DefaultData["ConnectToGtecToggle"] = "false";
 
+        int modeIndex = int.Parse(DefaultData["Mode"]);
+        ModeDropdown.options[modeIndex].text = ModeDropdown.options[modeIndex].text;
         TimeInput.text = DefaultData["Time"];
         MonsterMaxHpInput.text = DefaultData["MonsterMaxHp"];
         PlayerSpeedInput.text = DefaultData["PlayerSpeed"];
@@ -43,6 +47,7 @@ public class GameSetting : MonoBehaviour
 
     public void SetDefault()
     {
+        ModeDropdown.options[1].text = ModeDropdown.options[1].text;
         TimeInput.text = DefaultData["Time"];
         MonsterMaxHpInput.text = DefaultData["MonsterMaxHp"];
         PlayerSpeedInput.text = DefaultData["PlayerSpeed"];
@@ -56,6 +61,7 @@ public class GameSetting : MonoBehaviour
 
     public Dictionary<string, string> GetSetting()
     {
+        SettingData["Mode"] = ModeDropdown.value.ToString("0");
         SettingData["Time"] = TimeInput.text;
         SettingData["MonsterMaxHp"] = MonsterMaxHpInput.text;
         SettingData["PlayerSpeed"] = PlayerSpeedInput.text;

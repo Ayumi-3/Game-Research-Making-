@@ -72,6 +72,7 @@
     <Compile Include="Assets\Scripts\Game\GameSetting.cs" />
     <Compile Include="Assets\Scripts\Game\HealthBar.cs" />
     <Compile Include="Assets\Scripts\Game\MonsterController.cs" />
+    <Compile Include="Assets\Scripts\Game\MonsterSpawner.cs" />
     <Compile Include="Assets\Scripts\Game\Obstacle.cs" />
     <Compile Include="Assets\Scripts\Game\PlaneMotor.cs" />
     <Compile Include="Assets\Scripts\Game\PlayAgain.cs" />

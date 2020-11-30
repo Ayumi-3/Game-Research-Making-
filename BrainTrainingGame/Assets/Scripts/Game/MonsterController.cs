@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MonsterController : MonoBehaviour
 {
-    public Transform lookAt; // player
+    private Transform lookAt; // player
     public Vector3 offset = new Vector3(0, 0, 8.0f);
     public Renderer JewelRenderer;
     public Renderer MonsterRenderer;
@@ -23,12 +23,13 @@ public class MonsterController : MonoBehaviour
     private int tempFlag;
     private bool isChangeColor = false;
 
-    private void Start()
+    private void Awake()
     {
         anim = GetComponent<Animator>();
         anim.SetBool("Walk", false);
 
-        transform.position = lookAt.position + offset;
+        lookAt = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
+        //transform.position = lookAt.position + offset;
 
         rand = Random.Range(0.0f, ColorsPicker.Instance.colorMaxNumber);
         colorFlag = (int)Mathf.Ceil(rand);
@@ -83,7 +84,7 @@ public class MonsterController : MonoBehaviour
     public void PauseRunning()
     {
         isRunning = false;
-        //anim.SetBool("Walk", false);
+        anim.SetBool("Walk", false);
     }
     public void Damage()
     {
@@ -95,14 +96,19 @@ public class MonsterController : MonoBehaviour
     private IEnumerator WaitDamageAnimation()
     {
         yield return new WaitForSeconds(0.5f);
-        MonsterRenderer.material = MonsterMaterialNormal;
+        if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Die"))
+        {
+            MonsterRenderer.material = MonsterMaterialNormal;
+        }
+        
     }
 
     public void Dead()
     {
         anim.SetTrigger("Die");
+        Destroy(gameObject, 1f);
     }
-    
+
     public void SetDefault()
     {
         transform.position = DefaultPosition;

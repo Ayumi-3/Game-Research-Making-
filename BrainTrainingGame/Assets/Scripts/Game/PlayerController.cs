@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour
         anim = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
 
-        monsterTransform = GameObject.FindGameObjectWithTag("Monster").transform;
+        
         objectSpawner = GameObject.FindGameObjectWithTag("SideObject").GetComponent<SideObjectSpawner>();
         PauseRunning();
         isReady = false;
@@ -161,6 +161,7 @@ public class PlayerController : MonoBehaviour
         anim.SetBool("Walk", true);
         anim.SetBool("Rest", false);
 
+        monsterTransform = GameObject.FindGameObjectWithTag("Monster").transform;
         objectSpawner.IsScrolling = true;
     }
 

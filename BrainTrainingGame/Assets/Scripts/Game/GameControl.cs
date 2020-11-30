@@ -17,8 +17,9 @@ public class GameControl : MonoBehaviour
     public static GameControl Instance { set; get; }
 
     private bool isGameStarted = false;
-    private PlayerController player;
+    private PlayerController playerController;
     private TargetSpawner targetSpawner;
+    private MonsterSpawner monsterSpawner;
     private MonsterController monsterController;
     private GameSetting gameSetting;
     private SideObjectSpawner objectSpawner;
@@ -28,17 +29,18 @@ public class GameControl : MonoBehaviour
     private CommunicationController communicationController;
 
     public Canvas ScoreCanvas;
-    public Canvas TimeLeftCanvas;
     public Canvas MonsterHPCanvas;
     public Canvas GameSettingCanvas;
     public Canvas CountDownCanvas;
     public Text CountDownText;
     public Canvas GameEndCanvas;
-    public Canvas GameEndMonitorCanvas;
     public Text GameEndScoreText;
+    public Canvas GameEndMonitorCanvas;
+    public Text GameEndMonitorScoreText;
 
     // UI and UI fields
     public Text scoreText;
+    public Text defeatedText;
     public Text timeLeftText;
     private float score = 0.0f;
     private int monsterColorFlag = 0;
@@ -46,13 +48,15 @@ public class GameControl : MonoBehaviour
     private bool targetIsAttackable = false;
     public GameObject PlayerClothColor;
     public GameObject PlayerHatColor;
+    private int sessionNo;
 
     public HealthBar monsterHealthBar;
     public int maxMonsterHP = 300;
     private int monsterHP = 0;
+    private int monsterId = 0;
 
     public Text playerBillboard;
-    public Text monsterBillboard;
+    private Text monsterBillboard;
 
     private Dictionary<string, string> settingData = new Dictionary<string, string>();
     private bool isAdaptive;
@@ -83,13 +87,15 @@ public class GameControl : MonoBehaviour
 
     private float maxTime;
     private float timeRemain;
+    private bool isTimePause;
 
     private void Awake()
     {
         Instance = this;
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         targetSpawner = GameObject.FindGameObjectWithTag("Player").GetComponent<TargetSpawner>();
-        monsterController = GameObject.FindGameObjectWithTag("Monster").GetComponent<MonsterController>();
+        monsterSpawner = GameObject.FindGameObjectWithTag("Player").GetComponent<MonsterSpawner>();
+        //monsterController = GameObject.FindGameObjectWithTag("Monster").GetComponent<MonsterController>();
         gameSetting = GameObject.FindGameObjectWithTag("GameControl").GetComponent<GameSetting>();
         objectSpawner = GameObject.FindGameObjectWithTag("SideObject").GetComponent<SideObjectSpawner>();
         cameraMotor = FindObjectOfType<CameraMotor>();
@@ -101,7 +107,6 @@ public class GameControl : MonoBehaviour
         clearVariables();
 
         ScoreCanvas.gameObject.SetActive(false);
-        TimeLeftCanvas.gameObject.SetActive(false);
         MonsterHPCanvas.gameObject.SetActive(false);
         GameSettingCanvas.gameObject.SetActive(true);
         CountDownCanvas.gameObject.SetActive(false);
@@ -118,6 +123,8 @@ public class GameControl : MonoBehaviour
 
         PlayerClothColor.GetComponent<Renderer>().material.color = Color.white;
         PlayerHatColor.GetComponent<Renderer>().material.color = Color.white;
+
+        sessionNo = 0;
     }
 
     private void Update()
@@ -125,7 +132,7 @@ public class GameControl : MonoBehaviour
         if(isFinishSetting && !isGameStarted)
         {
             isGameStarted = true;
-            player.StartRunning();
+            playerController.StartRunning();
             targetSpawner.StartRunning();
             monsterController.StartRunning();
             isFinishSetting = false;
@@ -138,31 +145,39 @@ public class GameControl : MonoBehaviour
                 targetIsAttackable = false;
                 if (monsterColorFlag != targetColorFlag) // Corectly response to right color
                 {
-                    player.Attack(true);
+                    playerController.Attack(true);
                     monsterController.Damage();
                     updateScore(TARGET_SCORE_AMOUNT);
                     updateMonsterHP(MONSTER_HP_DECREASE);
                     countColorDiscriminationTaskPoint(true);
                     GameDataRecord(false, "ResponseToRightColor", "0", "0", "0", "0", "0",
                         "0", "0", "1", "1", monsterColorFlag.ToString(), targetColorFlag.ToString(),
-                        "0", "0", "0", TARGET_SCORE_AMOUNT.ToString(), "0", ((float)monsterHP/(float)maxMonsterHP*100.0f).ToString());
+                        "0", "0", "0", TARGET_SCORE_AMOUNT.ToString(), monsterId.ToString(), ((float)monsterHP/(float)maxMonsterHP*100.0f).ToString());
                 }
                 else // Response to wrong color
                 {
-                    player.Attack(false);
+                    playerController.Attack(false);
                     updateScore(-TARGET_SCORE_AMOUNT);
                     updateMonsterHP(MONSTER_HP_INCREASE);
                     countColorDiscriminationTaskPoint(false);
                     GameDataRecord(false, "ResponseToWrongColor", "0", "0", "0", "0", "0",
                         "0", "0", "-1", "1", monsterColorFlag.ToString(), targetColorFlag.ToString(),
-                        "0", "0", "0", (-TARGET_SCORE_AMOUNT).ToString(), "0", ((float)monsterHP / (float)maxMonsterHP * 100.0f).ToString());
+                        "0", "0", "0", (-TARGET_SCORE_AMOUNT).ToString(), monsterId.ToString(), ((float)monsterHP / (float)maxMonsterHP * 100.0f).ToString());
                 }
 
-                if (monsterHP <= 0) 
+                if (monsterHP <= 0) //monster is dead
                 {
+                    defeatedText.text = monsterId.ToString("0");
+                    isTimePause = true;
                     MonsterHPCanvas.gameObject.SetActive(false);
                     monsterController.Dead();
-                    GameDataRecord(false, "DefeatedMonster", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
+                    GameDataRecord(false, "DefeatedMonster", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", monsterId.ToString(), "0");
+
+                    playerController.PauseRunning();
+                    playerController.Ready();
+
+                    StartCoroutine(waitDeadMonsterAnimation());
+
                     //audioSource.Pause();
                 }
             }
@@ -174,7 +189,7 @@ public class GameControl : MonoBehaviour
                 {
                     adaptiveTimer = 0.0f;
                     pointRatio = scoredTarget / allTarget;
-                    playerSpeed = player.speed;
+                    playerSpeed = playerController.speed;
                     if (pointRatio > thresholdPoint)
                     {
                         playerSpeed += SpeedUp;
@@ -184,24 +199,29 @@ public class GameControl : MonoBehaviour
                         playerSpeed -= 1.0f;
                     }
                     playerSpeed = Mathf.Clamp(playerSpeed, 1.0f, 20.0f);
-                    player.speed = playerSpeed;
-                    objectSpawner.ScrollSpeed = -player.speed;
+                    playerController.speed = playerSpeed;
+                    objectSpawner.ScrollSpeed = -playerController.speed;
                 }
             }
 
-            if (timeRemain > 0.0f)
+            if (!isTimePause)
             {
-                timeRemain -= Time.deltaTime;
-                float min, sec;
-                min = Mathf.Floor(timeRemain / 60f);
-                sec = timeRemain - (min * 60f);
-                timeLeftText.text = min.ToString() + ":" + sec.ToString("f");
+                if (timeRemain > 0.0f)
+                {
+                    timeRemain -= Time.deltaTime;
+                    float min, sec;
+                    min = Mathf.Floor(timeRemain / 60f);
+                    sec = timeRemain - (min * 60f);
+                    timeLeftText.text = min.ToString() + ":" + sec.ToString(".000");
+                }
+                else //game stop
+                {
+                    timeLeftText.text = "0:00.000";
+                    GameDataRecord(false, "TimesUp", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
+                    isGameStarted = false;
+                }
             }
-            else //game stop
-            {
-                GameDataRecord(false, "TimesUp", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
-                isGameStarted = false;
-            }
+
 
             if (Input.GetKeyDown(KeyCode.Escape))
             {
@@ -212,22 +232,41 @@ public class GameControl : MonoBehaviour
 
             if (!isGameStarted)
             {
-                player.PauseRunning();
+                playerController.PauseRunning();
                 targetSpawner.PauseRunning();
                 monsterController.PauseRunning();
                 cameraMotor.IsRunning = false;
-                GameEndScoreText.text = "Your Score: " + score.ToString("0");
+                if (monsterHP > 0)
+                {
+                    monsterId--;
+                }
+                GameDataRecord(false, "TotalScore", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", monsterId.ToString(), "0");
+                GameEndScoreText.text = "Your Score: " + score.ToString("0") + "\nDefeated Monsters: " + monsterId.ToString("0");
                 GameEndCanvas.gameObject.SetActive(true);
+                GameEndMonitorScoreText.text = "Sessions: " + sessionNo.ToString("0") + "\nScore: " + score.ToString("0") + "\nDefeated Monsters: " + monsterId.ToString("0");
+                GameEndMonitorCanvas.gameObject.SetActive(true);
             }
         }
         
+    }
+
+    private IEnumerator waitDeadMonsterAnimation()
+    {
+        yield return new WaitForSeconds(1.5f);
+        monsterHP = maxMonsterHP;
+        monsterHealthBar.SetMaxHealth(maxMonsterHP);
+        prepareMonster();
+        MonsterHPCanvas.gameObject.SetActive(true);
+        playerController.StartRunning();
+        monsterController.StartRunning();
+        isTimePause = false;
     }
 
     private void clearVariables()
     {
         scoreText.text = score.ToString("0");
         playerBillboard.text = "";
-        monsterBillboard.text = "";
+        //monsterBillboard.text = "";
         CountDownText.text = "";
 
         score = 0.0f;
@@ -238,6 +277,8 @@ public class GameControl : MonoBehaviour
         scoreCDTPoint = 0.0f;
         allTNTPoint = 0.0f;
         scoredTNTPoint = 0.0f;
+
+        monsterId = 0;
 
         settingData.Clear();
     }
@@ -253,8 +294,8 @@ public class GameControl : MonoBehaviour
         monsterHP = maxMonsterHP;
         monsterHealthBar.SetMaxHealth(maxMonsterHP);
 
-        player.speed = float.Parse(settingData["PlayerSpeed"]);
-        objectSpawner.ScrollSpeed = -player.speed;
+        playerController.speed = float.Parse(settingData["PlayerSpeed"]);
+        objectSpawner.ScrollSpeed = -playerController.speed;
         ColorsPicker.Instance.colorMaxNumber = int.Parse(settingData["NumberOfColor"]);
         targetSpawner.obstacleChance = float.Parse(settingData["ObstacleAppearance"]) / 100.0f;
         targetSpawner.targetDistance = float.Parse(settingData["TargetDistance"]);
@@ -266,14 +307,18 @@ public class GameControl : MonoBehaviour
         }
         isConectedToGtec = (settingData["ConnectToGtecToggle"] == "true");
 
+        sessionNo++;
         // set start record data
-        csvName = dataDir + "GameDataRecord_" + System.DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".csv";
+        csvName = dataDir + "GameDataRecord_" + System.DateTime.Now.ToString("yyyyMMdd_HHmmss") + "_" + sessionNo.ToString("00") + ".csv";
         dataManager.WriteData(dataDir, csvName, settingData, true, true);
         GameDataRecord(true, "StartGame", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
         //communicationController.SendTriggerToMatlab(true);
 
+        // Prepare Monster
+        prepareMonster();
+
         cameraMotor.IsRunning = true;
-        player.Ready();
+        playerController.Ready();
         StartCoroutine(countDown());
     }
 
@@ -295,9 +340,19 @@ public class GameControl : MonoBehaviour
         
         CountDownCanvas.gameObject.SetActive(false);
         ScoreCanvas.gameObject.SetActive(true);
-        TimeLeftCanvas.gameObject.SetActive(true);
         MonsterHPCanvas.gameObject.SetActive(true);
         isFinishSetting = true;
+        isTimePause = false;
+    }
+
+    private void prepareMonster()
+    {
+        monsterId++;
+        monsterSpawner.SpawnMonster();
+        monsterController = GameObject.FindGameObjectWithTag("Monster").GetComponent<MonsterController>();
+        monsterBillboard = GameObject.FindGameObjectWithTag("Monster").GetComponentInChildren<Text>();
+        monsterBillboard.text = ""; 
+        GameDataRecord(false, "SpawnedMonster", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", monsterId.ToString(), "0");
     }
 
     private void updateScore(int addScore)
@@ -420,7 +475,7 @@ public class GameControl : MonoBehaviour
             "0", "0", "0", "0", "0", "0",
             "-1", "0", "0", OBSTACLE_HIT_SCORE_AMOUNT.ToString(), "0", "0");
 
-        player.Fall();
+        playerController.Fall();
     }
 
     public void DidntGetObatacle(Transform player, Transform obstacle) // Avoid obstacle
@@ -442,13 +497,12 @@ public class GameControl : MonoBehaviour
     {
         targetSpawner.ClearTarget();
         cameraMotor.SetDefault();
-        player.SetDefault();
+        playerController.SetDefault();
         monsterController.SetDefault();
-        objectSpawner.SetDefault();
+        //objectSpawner.SetDefault();
 
         clearVariables();
         ScoreCanvas.gameObject.SetActive(false);
-        TimeLeftCanvas.gameObject.SetActive(false);
         MonsterHPCanvas.gameObject.SetActive(false);
         GameSettingCanvas.gameObject.SetActive(true);
         CountDownCanvas.gameObject.SetActive(false);

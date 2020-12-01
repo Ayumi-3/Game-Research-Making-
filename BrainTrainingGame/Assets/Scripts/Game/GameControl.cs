@@ -66,18 +66,18 @@ public class GameControl : MonoBehaviour
     private int gameMode;
     
     private float adaptiveTimer;
-    private float timeInterval = 10.0f;
+    private float timeInterval = 60.0f;
     private float pointRatio;
     private float playerSpeed;
     public float SpeedUp = 3.0f;
-    private float windowResponseTime = 0.5f;
+    private float responseTimeWindow = 0.5f;
 
     private float allTarget;
     private float scoredTarget;
     private float allCDTPoint;
-    private float scoreCDTPoint;
-    private float allTNTPoint;
-    private float scoredTNTPoint;
+    private float scoredCDTPoint;
+    private float allTTTPoint;
+    private float scoredTTTPoint;
 
     private AudioSource audioSource;
 
@@ -90,6 +90,24 @@ public class GameControl : MonoBehaviour
     private float maxTime;
     private float timeRemain;
     private bool isTimePause;
+
+    //adaptive, level adjustment
+    private float[] CDTLevel;
+    private float[][] TTTLevel;
+    private float lvl1TimeWindow = 650.0f;
+    private float stepTimeWindow = 10.0f;
+    private int numberCDTLevel = 41;
+    private float[] targetInterval = { 1.2f, 1.0f, 0.8f };
+    private float minSpeed = 1.0f;
+    private float maxSpeed = 20.0f;
+    private int currentCDTLevel = 16;
+    private int currentTTTLevel = 20;
+    private float CDTThresholdAccuracy = 80.0f;
+    private float stepCDTAccuracy = 2.5f;
+    private int CDTLimitChangeLevel = 10;
+    private float TTTThresholdAccuracy = 80.0f;
+    private float stepTTTAccuracy = 2.0f;
+    private int TTTLimitChangeLevel = 10;
 
     private void Awake()
     {
@@ -127,6 +145,9 @@ public class GameControl : MonoBehaviour
         PlayerHatColor.GetComponent<Renderer>().material.color = Color.white;
 
         sessionNo = 0;
+
+        //setting task level
+        settingTaskLevel();
     }
 
     private void Update()
@@ -190,19 +211,13 @@ public class GameControl : MonoBehaviour
                 if (adaptiveTimer > timeInterval)
                 {
                     adaptiveTimer = 0.0f;
-                    pointRatio = scoredTarget / allTarget;
-                    playerSpeed = playerController.speed;
-                    if (pointRatio > thresholdPoint)
+
+                    CDTLevelAdjustment();
+
+                    if (gameMode == 1) // Multitask
                     {
-                        playerSpeed += SpeedUp;
+                        TTTLevelAdjustment();
                     }
-                    else
-                    {
-                        playerSpeed -= 1.0f;
-                    }
-                    playerSpeed = Mathf.Clamp(playerSpeed, 1.0f, 20.0f);
-                    playerController.speed = playerSpeed;
-                    objectSpawner.ScrollSpeed = -playerController.speed;
                 }
             }
 
@@ -273,9 +288,9 @@ public class GameControl : MonoBehaviour
         scoredTarget = 0.0f;
         adaptiveTimer = 0.0f;
         allCDTPoint = 0.0f;
-        scoreCDTPoint = 0.0f;
-        allTNTPoint = 0.0f;
-        scoredTNTPoint = 0.0f;
+        scoredCDTPoint = 0.0f;
+        allTTTPoint = 0.0f;
+        scoredTTTPoint = 0.0f;
 
         monsterId = 0;
 
@@ -301,10 +316,12 @@ public class GameControl : MonoBehaviour
         isAdaptive = (settingData["AdaptiveToggle"] == "true");
         if (isAdaptive)
         {
-            thresholdPoint = float.Parse(settingData["ThresholdPoint"]) / 100.0f;
-            Debug.Log("Adaptive threshold: " + thresholdPoint);
+            responseTimeWindow = CDTLevel[currentCDTLevel] / 1000.0f;
+
+            playerController.speed = TTTLevel[currentTTTLevel][0];
+            objectSpawner.ScrollSpeed = -playerController.speed;
+            targetSpawner.targetDistance = TTTLevel[currentTTTLevel][1];
         }
-        isConectedToGtec = (settingData["ConnectToGtecToggle"] == "true");
 
         sessionNo++;
         // set start record data
@@ -393,16 +410,16 @@ public class GameControl : MonoBehaviour
         allCDTPoint += 1.0f;
         if (isScored)
         {
-            scoreCDTPoint += 1.0f;
+            scoredCDTPoint += 1.0f;
         }
     }
 
-    private void countTargetNavigationTaskPoint(bool isScored)
+    private void countTargetTrackingTaskPoint(bool isScored)
     {
-        allTNTPoint += 1.0f;
+        allTTTPoint += 1.0f;
         if (isScored)
         {
-            scoredTNTPoint += 1.0f;
+            scoredTTTPoint += 1.0f;
         }
     }
 
@@ -413,6 +430,74 @@ public class GameControl : MonoBehaviour
         {
             scoredTarget += 1.0f;
         }
+    }
+
+    private void settingTaskLevel()
+    {
+        //Color Discrimination Task
+        int i = 0;
+        CDTLevel[0] = lvl1TimeWindow;
+        for (i = 1; i < numberCDTLevel; i++)
+        {
+            CDTLevel[i] = CDTLevel[i - 1] + stepTimeWindow;
+        }
+
+        //Target Tracking Task
+        float j;
+        int k, l = 0;
+        for (j = minSpeed; j <= maxSpeed; j++)
+        {
+            for (k = 0; k < targetInterval.Length; k++)
+            {
+                TTTLevel[l][0] = j;
+                TTTLevel[l][1] = j * targetInterval[k];
+                l++;
+            }
+        }
+    }
+
+    private void CDTLevelAdjustment() //Color Discrimination Task level adjustment
+    {
+        float currentAccuracy, accuracyDifferent;
+        int adjustLevel = 0;
+        currentAccuracy = scoredCDTPoint / allCDTPoint * 100.0f;
+        scoredCDTPoint = 0.0f;
+        allCDTPoint = 0.0f;
+        accuracyDifferent = currentAccuracy - CDTThresholdAccuracy;
+        if (Mathf.Abs(accuracyDifferent) > stepCDTAccuracy)
+        {
+            adjustLevel = (int)Mathf.Floor(accuracyDifferent / stepCDTAccuracy);
+            adjustLevel = Mathf.Clamp(adjustLevel, -CDTLimitChangeLevel, CDTLimitChangeLevel);
+
+            currentCDTLevel += adjustLevel;
+            currentCDTLevel = Mathf.Clamp(currentCDTLevel, 1, CDTLevel.Length);
+
+            responseTimeWindow = CDTLevel[currentCDTLevel] / 1000.0f;
+        }
+        Debug.Log("CDT:" + currentAccuracy + "|" + adjustLevel + "|" + currentCDTLevel + "|" + responseTimeWindow);
+    }
+
+    private void TTTLevelAdjustment() //Target Tracking Task level adjustment
+    {
+        float currentAccuracy, accuracyDifferent;
+        int adjustLevel = 0;
+        currentAccuracy = scoredTTTPoint / allTTTPoint * 100.0f;
+        scoredTTTPoint = 0.0f;
+        allTTTPoint = 0.0f;
+        accuracyDifferent = currentAccuracy - TTTThresholdAccuracy;
+        if (Mathf.Abs(accuracyDifferent) > stepTTTAccuracy)
+        {
+            adjustLevel = (int)Mathf.Floor(accuracyDifferent / stepTTTAccuracy);
+            adjustLevel = Mathf.Clamp(adjustLevel, -TTTLimitChangeLevel, TTTLimitChangeLevel);
+
+            currentTTTLevel += adjustLevel;
+            currentTTTLevel = Mathf.Clamp(currentTTTLevel, 1, TTTLevel.Length);
+
+            playerController.speed = TTTLevel[currentTTTLevel][0];
+            objectSpawner.ScrollSpeed = -playerController.speed;
+            targetSpawner.targetDistance = TTTLevel[currentTTTLevel][1];
+        }
+        Debug.Log("TTT:" + currentAccuracy + "|" + adjustLevel + "|" + currentTTTLevel + "|" + playerController.speed + "|" + targetSpawner.targetDistance);
     }
 
     public void GetTarget() // Reach the target
@@ -428,7 +513,7 @@ public class GameControl : MonoBehaviour
 
         PlayerClothColor.GetComponent<Renderer>().material.color = ColorsPicker.Instance.Colors[targetColorFlag - 1];
         PlayerHatColor.GetComponent<Renderer>().material.color = ColorsPicker.Instance.Colors[targetColorFlag - 1];
-        countTargetNavigationTaskPoint(true);
+        countTargetTrackingTaskPoint(true);
 
         GameDataRecord(false, "GetTarget", "0", "0", "0", "0", "0",
            "1", "0", "0", "0", monsterColorFlag.ToString(), targetColorFlag.ToString(),
@@ -440,7 +525,7 @@ public class GameControl : MonoBehaviour
 
     private IEnumerator waitForAttack()
     {
-        yield return new WaitForSeconds(windowResponseTime); // wait for response time
+        yield return new WaitForSeconds(responseTimeWindow); // wait for response time
 
         PlayerClothColor.GetComponent<Renderer>().material.color = Color.white;
         PlayerHatColor.GetComponent<Renderer>().material.color = Color.white;
@@ -470,7 +555,7 @@ public class GameControl : MonoBehaviour
     public void CannotGetTarget(Transform player, Transform target) // Miss the target
     {
         updateScore(MISS_TARGET_SCORE_AMOUNT);
-        countTargetNavigationTaskPoint(false);
+        countTargetTrackingTaskPoint(false);
         GameDataRecord(false, "MissTarget", "0", "0", "0", "0", player.position.x.ToString(),
             "-1", target.position.x.ToString(), "0", "0", "0", "0",
             "0", "0", "0", MISS_TARGET_SCORE_AMOUNT.ToString(), "0", "0");
@@ -479,7 +564,7 @@ public class GameControl : MonoBehaviour
     public void GetObstacle() // Hit obstacle
     {
         updateScore(OBSTACLE_HIT_SCORE_AMOUNT);
-        countTargetNavigationTaskPoint(false);
+        countTargetTrackingTaskPoint(false);
         GameDataRecord(false, "HitObstacle", "0", "0", "0", "0", "0",
             "0", "0", "0", "0", "0", "0",
             "-1", "0", "0", OBSTACLE_HIT_SCORE_AMOUNT.ToString(), "0", "0");
@@ -489,7 +574,7 @@ public class GameControl : MonoBehaviour
 
     public void DidntGetObatacle(Transform player, Transform obstacle) // Avoid obstacle
     {
-        countTargetNavigationTaskPoint(true);
+        countTargetTrackingTaskPoint(true);
         GameDataRecord(false, "AvoidObstacle", "0", "0", "0", "0", player.position.x.ToString(),
             "0", "0", "0", "0", "0", "0",
             "1", obstacle.position.x.ToString(), "0", "0", "0", "0");

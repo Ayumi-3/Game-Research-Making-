@@ -14,7 +14,6 @@ public class GameSetting : MonoBehaviour
     public InputField TargetDistanceInput;
     public Toggle AdaptiveToggle;
     public InputField ThresholdPointInput;
-    public Toggle ConnectToGtecToggle;
 
     private Dictionary<string, string> DefaultData = new Dictionary<string, string>();
     private Dictionary<string, string> SettingData = new Dictionary<string, string>();
@@ -28,9 +27,8 @@ public class GameSetting : MonoBehaviour
         DefaultData["NumberOfColor"] = "3";
         DefaultData["ObstacleAppearance"] = "20";
         DefaultData["TargetDistance"] = "6";
-        DefaultData["AdaptiveToggle"] = "false";
+        DefaultData["AdaptiveToggle"] = "true";
         DefaultData["ThresholdPoint"] = "80";
-        DefaultData["ConnectToGtecToggle"] = "false";
 
         int modeIndex = int.Parse(DefaultData["Mode"]);
         ModeDropdown.options[modeIndex].text = ModeDropdown.options[modeIndex].text;
@@ -42,7 +40,6 @@ public class GameSetting : MonoBehaviour
         TargetDistanceInput.text = DefaultData["TargetDistance"];
         AdaptiveToggle.isOn = (DefaultData["AdaptiveToggle"] == "true");
         ThresholdPointInput.text = "80";
-        ConnectToGtecToggle.isOn = (DefaultData["ConnectToGtecToggle"] == "true");
     }
 
     public void SetDefault()
@@ -56,7 +53,6 @@ public class GameSetting : MonoBehaviour
         TargetDistanceInput.text = DefaultData["TargetDistance"];
         AdaptiveToggle.isOn = (DefaultData["AdaptiveToggle"] == "true");
         ThresholdPointInput.text = "80";
-        ConnectToGtecToggle.isOn = (DefaultData["ConnectToGtecToggle"] == "true");
     }
 
     public Dictionary<string, string> GetSetting()
@@ -70,7 +66,6 @@ public class GameSetting : MonoBehaviour
         SettingData["TargetDistance"] = TargetDistanceInput.text;
         SettingData["AdaptiveToggle"] = AdaptiveToggle.isOn.ToString().ToLower();
         SettingData["ThresholdPoint"] = ThresholdPointInput.text;
-        SettingData["ConnectToGtecToggle"] = ConnectToGtecToggle.isOn.ToString().ToLower();
         return SettingData;
     }
 

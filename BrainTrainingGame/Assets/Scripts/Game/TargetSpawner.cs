@@ -10,7 +10,7 @@ public class TargetSpawner : MonoBehaviour
     public GameObject target;
     public GameObject obstacle;
     public Transform player;
-    public int maxTarget = 10;
+    public int maxTarget = 3;
     public float targetDistance = 6.0f;
     public float obstacleChance = 0.2f;
 

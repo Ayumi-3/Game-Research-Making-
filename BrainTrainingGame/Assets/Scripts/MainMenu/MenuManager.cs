@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class MenuManager : MonoBehaviour
 {
     public static MenuManager Instance { set; get; }
-
+    
     public GetPlayerName getPlayerName;
     public Text WelcomeText;
     public string DataDir;
@@ -16,6 +16,7 @@ public class MenuManager : MonoBehaviour
     private string playerName;
     private DataManager dataManager;
     private AudioSource audioSource;
+    private CommunicationController communicationController;
 
     // Baseline
     public Canvas BaselineCanvas;
@@ -27,6 +28,7 @@ public class MenuManager : MonoBehaviour
     private Dictionary<string, string> baselineData = new Dictionary<string, string>();
     private float timeRemain;
     private bool isRecording;
+    private int recordMode;
 
     private void Awake()
     {
@@ -34,6 +36,7 @@ public class MenuManager : MonoBehaviour
 
         dataManager = GetComponent<DataManager>();
         audioSource = GetComponent<AudioSource>();
+        communicationController = GetComponent<CommunicationController>();
 
         BaselineCanvas.gameObject.SetActive(false);
 
@@ -60,7 +63,8 @@ public class MenuManager : MonoBehaviour
             {
                 audioSource.Play();
                 isRecording = false;
-                baselineData["EndTime"] = System.DateTime.Now.ToString("HH-mm-ss.fff");
+                baselineData["GtecEndTime"] = communicationController.ReceivedData.ToString();
+                baselineData["UnityEndTime"] = System.DateTime.Now.ToString("HH-mm-ss.fff");
                 dataManager.WriteData(DataDir, baselineFile, baselineData, true, true);
                 BaselineText.text = "Finish";
                 StartCoroutine(showFinishText());
@@ -76,7 +80,7 @@ public class MenuManager : MonoBehaviour
 
     public void BaselineRecord()
     {
-        baselineFile = "Baseline_";
+        baselineFile = DataDir + "Baseline_";
         if (Mode.value == 0)
         {
             baselineFile += "EyesOpen_";
@@ -89,8 +93,7 @@ public class MenuManager : MonoBehaviour
         baselineFile += System.DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".csv";
         timeRemain = float.Parse(TimeInput.text);
         baselineData["SetTime"] = TimeInput.text;
-        baselineData["StartTime"] = System.DateTime.Now.ToString("HH-mm-ss.fff");
-
+        
         BaselineSettingCanvas.gameObject.SetActive(false);
 
         StartCoroutine(countDown());
@@ -112,6 +115,8 @@ public class MenuManager : MonoBehaviour
 
         BaselineText.text = "+";
 
+        baselineData["GtecStartTime"] = communicationController.ReceivedData.ToString();
+        baselineData["UnityStartTime"] = System.DateTime.Now.ToString("HH-mm-ss.fff");
         isRecording = true;
     }
 

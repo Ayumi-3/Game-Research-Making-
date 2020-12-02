@@ -90,9 +90,9 @@
     <Compile Include="Assets\Scripts\MainMenu\MenuManager.cs" />
     <Compile Include="Assets\Scripts\Pointer.cs" />
     <Compile Include="Assets\Scripts\Read2UDP.cs" />
+    <Compile Include="Assets\Scripts\RecordEyeData.cs" />
     <Compile Include="Assets\Scripts\UDPReceiver.cs" />
     <Compile Include="Assets\Scripts\UDPTransmitter.cs" />
-    <Compile Include="Assets\Scripts\VRInputModule.cs" />
     <Compile Include="Assets\Scripts\ViveInput.cs" />
     <Compile Include="Assets\Scripts\Welcome\CanvasControl.cs" />
     <Compile Include="Assets\Scripts\Welcome\Enter.cs" />

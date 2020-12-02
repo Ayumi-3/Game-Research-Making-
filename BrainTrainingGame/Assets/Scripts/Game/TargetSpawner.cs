@@ -10,7 +10,7 @@ public class TargetSpawner : MonoBehaviour
     public GameObject target;
     public GameObject obstacle;
     public Transform player;
-    public int maxTarget = 3;
+    public int maxTarget = 5;
     public float targetDistance = 6.0f;
     public float obstacleChance = 0.2f;
 
@@ -20,10 +20,12 @@ public class TargetSpawner : MonoBehaviour
     private Transform targetPosition;
     private Vector3 currentPosition;
     private float obstacleRand;
+    private int obstacleNumber = 0;
 
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
+        TargetCount = 0;
     }
 
     private void Update()
@@ -40,21 +42,32 @@ public class TargetSpawner : MonoBehaviour
             Instantiate(target, new Vector3(currentPosition.x, currentPosition.y, currentPosition.z), Quaternion.identity);
             TargetCount++;
         }
-        else if (TargetCount < maxTarget) //currentPosition.z < player.position.z + DISTANCE_TO_RESPAWN
+        else if (TargetCount < maxTarget) //currentPosition.z < player.position.z + (targetDistance * 3)
         {
             currentPosition = new Vector3(0.0f, 0.0f, currentPosition.z);
             tempLane = randomLane;
             laneRandom();
 
-            obstacleRand = Random.Range(0.0f, 1.0f);
-            if (obstacleRand >= obstacleChance)
+            if (obstacleNumber < 2)
             {
-                Instantiate(target, new Vector3(currentPosition.x, currentPosition.y, currentPosition.z), Quaternion.identity);
+                obstacleRand = Random.Range(0.0f, 1.0f);
+                if (obstacleRand >= obstacleChance)
+                {
+                    Instantiate(target, new Vector3(currentPosition.x, currentPosition.y, currentPosition.z), Quaternion.identity);
+                    obstacleNumber = 0;
+                }
+                else
+                {
+                    Instantiate(obstacle, new Vector3(currentPosition.x, currentPosition.y, currentPosition.z), Quaternion.Euler(-90.0f, 0.0f, 0.0f));
+                    obstacleNumber++;
+                }
             }
             else
             {
-                Instantiate(obstacle, new Vector3(currentPosition.x, currentPosition.y, currentPosition.z), Quaternion.Euler(-90.0f, 0.0f, 0.0f));
+                Instantiate(target, new Vector3(currentPosition.x, currentPosition.y, currentPosition.z), Quaternion.identity);
+                obstacleNumber = 0;
             }
+            
             
             TargetCount++;
         }

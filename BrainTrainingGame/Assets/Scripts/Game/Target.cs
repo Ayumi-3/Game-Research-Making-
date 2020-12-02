@@ -13,6 +13,7 @@ public class Target : MonoBehaviour
     private float rand;
     private float distanceZ;
     private AudioSource audioSource;
+    private bool isGetTarget = false;
 
     private void Start()
     {
@@ -28,7 +29,10 @@ public class Target : MonoBehaviour
         if (distanceZ > 3)
         {
             spawner.TargetCount--;
-            GameControl.Instance.CannotGetTarget(Player.transform, gameObject.transform);
+            if (!isGetTarget)
+            {
+                GameControl.Instance.CannotGetTarget(Player.transform, gameObject.transform);
+            }
             Destroy(gameObject, 0.0f);
         }
     }
@@ -44,8 +48,7 @@ public class Target : MonoBehaviour
             //colorFlag = (int)Mathf.Ceil(rand);
             //gameObject.GetComponent<Renderer>().material.color = ColorsPicker.Instance.Colors[colorFlag - 1];
             GameControl.Instance.GetTarget();
-            Destroy(gameObject, 0.5f);
-            spawner.TargetCount--;
+            isGetTarget = true;
         }
     }
     

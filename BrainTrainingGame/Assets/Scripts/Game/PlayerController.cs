@@ -11,6 +11,8 @@ public class PlayerController : MonoBehaviour
     private bool isRunning = false;
     private bool isReady = false;
 
+    private int gameMode = 0;
+
     // movement
     private CharacterController controller;
     public float speed = 7.0f;
@@ -61,63 +63,67 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        // Gather the inputs on which lane we should be
-        // Keyboard
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        if (gameMode == 1)
         {
-            MoveLane(false);
-            GameControl.Instance.GameDataRecord(false, "MoveLeftKeyDown", "1", "0", "1", "0", transform.position.x.ToString(),
-                "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
-        }
-        if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            MoveLane(true);
-            GameControl.Instance.GameDataRecord(false, "MoveRightKeyDown", "0", "1", "1", "0", transform.position.x.ToString(),
-                "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
-        }
-        if (Input.GetKeyUp(KeyCode.LeftArrow))
-        {
-            GameControl.Instance.GameDataRecord(false, "MoveLeftKeyUp", "1", "0", "0", "1", transform.position.x.ToString(),
-                "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
-        }
-        if (Input.GetKeyUp(KeyCode.RightArrow))
-        {
-            GameControl.Instance.GameDataRecord(false, "MoveRightKeyUp", "0", "1", "0", "1", transform.position.x.ToString(),
-                "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
-        }
-        // VR
-        /*if (SteamVR_Actions._default.Teleport.GetStateDown(SteamVR_Input_Sources.Any))
-        {
-            touchValue = TouchAction.GetAxis(SteamVR_Input_Sources.Any);
-
-            if (touchValue.x < -0.2f)
+            // Gather the inputs on which lane we should be
+            // Keyboard
+            if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
                 MoveLane(false);
                 GameControl.Instance.GameDataRecord(false, "MoveLeftKeyDown", "1", "0", "1", "0", transform.position.x.ToString(),
-                    "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
+                    "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
             }
-            if (touchValue.x > 0.2f)
+            if (Input.GetKeyDown(KeyCode.RightArrow))
             {
                 MoveLane(true);
                 GameControl.Instance.GameDataRecord(false, "MoveRightKeyDown", "0", "1", "1", "0", transform.position.x.ToString(),
-                    "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
+                    "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
             }
-        }
-        if (SteamVR_Actions._default.Teleport.GetStateUp(SteamVR_Input_Sources.Any))
-        {
-            touchValue = TouchAction.GetAxis(SteamVR_Input_Sources.Any);
-
-            if (touchValue.x < -0.2f)
+            if (Input.GetKeyUp(KeyCode.LeftArrow))
             {
                 GameControl.Instance.GameDataRecord(false, "MoveLeftKeyUp", "1", "0", "0", "1", transform.position.x.ToString(),
-                    "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
+                    "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
             }
-            if (touchValue.x > 0.2f)
+            if (Input.GetKeyUp(KeyCode.RightArrow))
             {
                 GameControl.Instance.GameDataRecord(false, "MoveRightKeyUp", "0", "1", "0", "1", transform.position.x.ToString(),
-                    "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
+                    "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
             }
-        }*/
+            // VR
+            /*if (SteamVR_Actions._default.Teleport.GetStateDown(SteamVR_Input_Sources.Any))
+            {
+                touchValue = TouchAction.GetAxis(SteamVR_Input_Sources.Any);
+
+                if (touchValue.x < -0.2f)
+                {
+                    MoveLane(false);
+                    GameControl.Instance.GameDataRecord(false, "MoveLeftKeyDown", "1", "0", "1", "0", transform.position.x.ToString(),
+                        "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
+                }
+                if (touchValue.x > 0.2f)
+                {
+                    MoveLane(true);
+                    GameControl.Instance.GameDataRecord(false, "MoveRightKeyDown", "0", "1", "1", "0", transform.position.x.ToString(),
+                        "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
+                }
+            }
+            if (SteamVR_Actions._default.Teleport.GetStateUp(SteamVR_Input_Sources.Any))
+            {
+                touchValue = TouchAction.GetAxis(SteamVR_Input_Sources.Any);
+
+                if (touchValue.x < -0.2f)
+                {
+                    GameControl.Instance.GameDataRecord(false, "MoveLeftKeyUp", "1", "0", "0", "1", transform.position.x.ToString(),
+                        "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
+                }
+                if (touchValue.x > 0.2f)
+                {
+                    GameControl.Instance.GameDataRecord(false, "MoveRightKeyUp", "0", "1", "0", "1", transform.position.x.ToString(),
+                        "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
+                }
+            }*/
+        }
+
 
 
         // Calculate where we should be in the future
@@ -155,7 +161,7 @@ public class PlayerController : MonoBehaviour
         desiredLane = Mathf.Clamp(desiredLane, 1, 5);
     }
     
-    public void StartRunning()
+    public void StartRunning(int mode)
     {
         isRunning = true;
         anim.SetBool("Walk", true);
@@ -163,6 +169,7 @@ public class PlayerController : MonoBehaviour
 
         monsterTransform = GameObject.FindGameObjectWithTag("Monster").transform;
         objectSpawner.IsScrolling = true;
+        gameMode = mode;
     }
 
     public void PauseRunning()

@@ -9,6 +9,7 @@ public class Obstacle : MonoBehaviour
     private TargetSpawner spawner;
     private float distanceZ;
     private AudioSource audioSource;
+    private bool isGetObstacle = false;
 
     private void Start()
     {
@@ -24,7 +25,10 @@ public class Obstacle : MonoBehaviour
         if (distanceZ > 3)
         {
             spawner.TargetCount--;
-            GameControl.Instance.DidntGetObatacle(Player.transform, gameObject.transform);
+            if (!isGetObstacle)
+            {
+                GameControl.Instance.DidntGetObatacle(Player.transform, gameObject.transform);
+            }
             Destroy(gameObject, 0.0f);
         }
     }
@@ -35,8 +39,7 @@ public class Obstacle : MonoBehaviour
         {
             audioSource.Play();
             GameControl.Instance.GetObstacle();
-            Destroy(gameObject, 1f);
-            spawner.TargetCount--;
+            isGetObstacle = true;
         }
     }
 }

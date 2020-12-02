@@ -92,22 +92,26 @@ public class GameControl : MonoBehaviour
     private bool isTimePause;
 
     //adaptive, level adjustment
-    private float[] CDTLevel;
-    private float[][] TTTLevel;
+    private List<float> CDTLevel = new List<float>();
+    private List<float> TTTLevel = new List<float>();
     private float lvl1TimeWindow = 650.0f;
     private float stepTimeWindow = 10.0f;
     private int numberCDTLevel = 41;
     private float[] targetInterval = { 1.2f, 1.0f, 0.8f };
-    private float minSpeed = 1.0f;
+    private float minSpeed = 3.0f;
     private float maxSpeed = 20.0f;
-    private int currentCDTLevel = 16;
-    private int currentTTTLevel = 20;
+    private float stepSpeed = 0.3f;
+    private int currentCDTLevel = 15;
+    private int currentTTTLevel = 14;
     private float CDTThresholdAccuracy = 80.0f;
     private float stepCDTAccuracy = 2.5f;
     private int CDTLimitChangeLevel = 10;
     private float TTTThresholdAccuracy = 80.0f;
     private float stepTTTAccuracy = 2.0f;
     private int TTTLimitChangeLevel = 10;
+    //CDT only mode
+    private float CDTModeInterval = 2.0f;
+    private float CDTTimer;
 
     private void Awake()
     {
@@ -155,8 +159,11 @@ public class GameControl : MonoBehaviour
         if(isFinishSetting && !isGameStarted)
         {
             isGameStarted = true;
-            playerController.StartRunning();
-            targetSpawner.StartRunning();
+            playerController.StartRunning(gameMode);
+            if (gameMode == 1)
+            {
+                targetSpawner.StartRunning();
+            }
             monsterController.StartRunning();
             isFinishSetting = false;
         }
@@ -175,7 +182,8 @@ public class GameControl : MonoBehaviour
                     countColorDiscriminationTaskPoint(true);
                     GameDataRecord(false, "ResponseToRightColor", "0", "0", "0", "0", "0",
                         "0", "0", "1", "1", monsterColorFlag.ToString(), targetColorFlag.ToString(),
-                        "0", "0", "0", TARGET_SCORE_AMOUNT.ToString(), monsterId.ToString(), ((float)monsterHP/(float)maxMonsterHP*100.0f).ToString());
+                        "0", "0", "0", TARGET_SCORE_AMOUNT.ToString(), monsterId.ToString(), ((float)monsterHP/(float)maxMonsterHP*100.0f).ToString(),
+                        "0", "0", "0", "0", "0", "0");
                 }
                 else // Response to wrong color
                 {
@@ -185,7 +193,8 @@ public class GameControl : MonoBehaviour
                     countColorDiscriminationTaskPoint(false);
                     GameDataRecord(false, "ResponseToWrongColor", "0", "0", "0", "0", "0",
                         "0", "0", "-1", "1", monsterColorFlag.ToString(), targetColorFlag.ToString(),
-                        "0", "0", "0", (-TARGET_SCORE_AMOUNT).ToString(), monsterId.ToString(), ((float)monsterHP / (float)maxMonsterHP * 100.0f).ToString());
+                        "0", "0", "0", (-TARGET_SCORE_AMOUNT).ToString(), monsterId.ToString(), ((float)monsterHP / (float)maxMonsterHP * 100.0f).ToString(),
+                        "0", "0", "0", "0", "0", "0");
                 }
 
                 if (monsterHP <= 0) //monster is dead
@@ -194,7 +203,8 @@ public class GameControl : MonoBehaviour
                     isTimePause = true;
                     MonsterHPCanvas.gameObject.SetActive(false);
                     monsterController.Dead();
-                    GameDataRecord(false, "DefeatedMonster", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", monsterId.ToString(), "0");
+                    GameDataRecord(false, "DefeatedMonster", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0",
+                        monsterId.ToString(), "0", "0", "0", "0", "0", "0", "0");
 
                     playerController.PauseRunning();
                     playerController.Ready();
@@ -221,6 +231,16 @@ public class GameControl : MonoBehaviour
                 }
             }
 
+            if (gameMode == 0)
+            {
+                CDTTimer += Time.deltaTime;
+                if (CDTTimer > CDTModeInterval)
+                {
+                    CDTTimer = 0.0f;
+                    GetTarget();
+                }
+            }
+
             if (!isTimePause)
             {
                 timeRemain -= Time.deltaTime;
@@ -234,7 +254,8 @@ public class GameControl : MonoBehaviour
                 else //game stop
                 {
                     timeLeftText.text = "0:00.000";
-                    GameDataRecord(false, "TimesUp", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
+                    GameDataRecord(false, "TimesUp", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0",
+                        "0", "0", "0", "0", "0", "0", "0");
                     isGameStarted = false;
                 }
             }
@@ -243,7 +264,8 @@ public class GameControl : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 Debug.Log("Manually stop game");
-                GameDataRecord(false, "ManuallyStopGame", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
+                GameDataRecord(false, "ManuallyStopGame", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0",
+                    "0", "0", "0", "0", "0", "0", "0", "0", "0");
                 isGameStarted = false;
             }
 
@@ -257,7 +279,8 @@ public class GameControl : MonoBehaviour
                 {
                     monsterId--;
                 }
-                GameDataRecord(false, "TotalScore", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", monsterId.ToString(), "0");
+                GameDataRecord(false, "TotalScore", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0",
+                    monsterId.ToString(), "0", "0", "0", "0", "0", "0", "0");
                 GameEndScoreText.text = "Your Score: " + score.ToString("0") + "\nDefeated Monsters: " + monsterId.ToString("0");
                 GameEndCanvas.gameObject.SetActive(true);
                 GameEndMonitorScoreText.text = "Sessions: " + sessionNo.ToString("0") + "\nScore: " + score.ToString("0") + "\nDefeated Monsters: " + monsterId.ToString("0");
@@ -272,7 +295,7 @@ public class GameControl : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
         prepareMonster();
         MonsterHPCanvas.gameObject.SetActive(true);
-        playerController.StartRunning();
+        playerController.StartRunning(gameMode);
         monsterController.StartRunning();
         isTimePause = false;
     }
@@ -291,6 +314,8 @@ public class GameControl : MonoBehaviour
         scoredCDTPoint = 0.0f;
         allTTTPoint = 0.0f;
         scoredTTTPoint = 0.0f;
+
+        CDTTimer = 0.0f;
 
         monsterId = 0;
 
@@ -318,16 +343,17 @@ public class GameControl : MonoBehaviour
         {
             responseTimeWindow = CDTLevel[currentCDTLevel] / 1000.0f;
 
-            playerController.speed = TTTLevel[currentTTTLevel][0];
+            playerController.speed = TTTLevel[currentTTTLevel];
             objectSpawner.ScrollSpeed = -playerController.speed;
-            targetSpawner.targetDistance = TTTLevel[currentTTTLevel][1];
+            targetSpawner.targetDistance = TTTLevel[currentTTTLevel];
         }
 
         sessionNo++;
         // set start record data
         csvName = dataDir + "GameDataRecord_" + System.DateTime.Now.ToString("yyyyMMdd_HHmmss") + "_" + sessionNo.ToString("00") + ".csv";
         dataManager.WriteData(dataDir, csvName, settingData, true, true);
-        GameDataRecord(true, "StartGame", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
+        GameDataRecord(true, "StartGame", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0",
+            "0", "0", responseTimeWindow.ToString(), "0", "0", playerController.speed.ToString());
         //communicationController.SendTriggerToMatlab(true);
 
         // Prepare Monster
@@ -372,7 +398,8 @@ public class GameControl : MonoBehaviour
         monsterBillboard.text = "";
         monsterHP = maxMonsterHP;
         monsterHealthBar.SetMaxHealth(maxMonsterHP);
-        GameDataRecord(false, "SpawnedMonster", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", monsterId.ToString(), "0");
+        GameDataRecord(false, "SpawnedMonster", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"
+            , monsterId.ToString(), "0", "0", "0", "0", "0", "0", "0");
     }
 
     private void updateScore(int addScore)
@@ -436,23 +463,18 @@ public class GameControl : MonoBehaviour
     {
         //Color Discrimination Task
         int i = 0;
-        CDTLevel[0] = lvl1TimeWindow;
+        CDTLevel.Add(lvl1TimeWindow);
         for (i = 1; i < numberCDTLevel; i++)
         {
-            CDTLevel[i] = CDTLevel[i - 1] + stepTimeWindow;
+            CDTLevel.Add(CDTLevel[i - 1] + stepTimeWindow);
         }
 
         //Target Tracking Task
-        float j;
-        int k, l = 0;
-        for (j = minSpeed; j <= maxSpeed; j++)
+        int j = 0;
+        TTTLevel.Add(minSpeed);
+        for (j = 1; TTTLevel[j - 1] < maxSpeed; j++)
         {
-            for (k = 0; k < targetInterval.Length; k++)
-            {
-                TTTLevel[l][0] = j;
-                TTTLevel[l][1] = j * targetInterval[k];
-                l++;
-            }
+            TTTLevel.Add(TTTLevel[j - 1] + stepSpeed);
         }
     }
 
@@ -470,10 +492,14 @@ public class GameControl : MonoBehaviour
             adjustLevel = Mathf.Clamp(adjustLevel, -CDTLimitChangeLevel, CDTLimitChangeLevel);
 
             currentCDTLevel += adjustLevel;
-            currentCDTLevel = Mathf.Clamp(currentCDTLevel, 1, CDTLevel.Length);
+            currentCDTLevel = Mathf.Clamp(currentCDTLevel, 0, CDTLevel.Count - 1);
 
             responseTimeWindow = CDTLevel[currentCDTLevel] / 1000.0f;
         }
+        GameDataRecord(false, "CDTLevelAdjustment", "0", "0", "0", "0", "0",
+            "0", "0", "0", "0", "0", "0",
+            "0","0", "0", "0", "0", "0",
+            currentAccuracy.ToString(), currentCDTLevel.ToString(), responseTimeWindow.ToString(), "0", "0", "0");
         Debug.Log("CDT:" + currentAccuracy + "|" + adjustLevel + "|" + currentCDTLevel + "|" + responseTimeWindow);
     }
 
@@ -491,33 +517,39 @@ public class GameControl : MonoBehaviour
             adjustLevel = Mathf.Clamp(adjustLevel, -TTTLimitChangeLevel, TTTLimitChangeLevel);
 
             currentTTTLevel += adjustLevel;
-            currentTTTLevel = Mathf.Clamp(currentTTTLevel, 1, TTTLevel.Length);
+            currentTTTLevel = Mathf.Clamp(currentTTTLevel, 0, TTTLevel.Count - 1);
 
-            playerController.speed = TTTLevel[currentTTTLevel][0];
+            playerController.speed = TTTLevel[currentTTTLevel];
             objectSpawner.ScrollSpeed = -playerController.speed;
-            targetSpawner.targetDistance = TTTLevel[currentTTTLevel][1];
+            targetSpawner.targetDistance = TTTLevel[currentTTTLevel];
         }
-        Debug.Log("TTT:" + currentAccuracy + "|" + adjustLevel + "|" + currentTTTLevel + "|" + playerController.speed + "|" + targetSpawner.targetDistance);
+        GameDataRecord(false, "TTTLevelAdjustment", "0", "0", "0", "0", "0",
+            "0", "0", "0", "0", "0", "0",
+            "0", "0", "0", "0", "0", "0",
+            "0", "0", "0", currentAccuracy.ToString(), currentTTTLevel.ToString(), playerController.speed.ToString());
+        Debug.Log("TTT:" + currentAccuracy + "|" + adjustLevel + "|" + currentTTTLevel + "|" + playerController.speed);
     }
 
     public void GetTarget() // Reach the target
     {
         float rand;
-        int colorFlag;
         rand = Random.Range(0.0f, ColorsPicker.Instance.colorMaxNumber);
-        colorFlag = (int)Mathf.Ceil(rand);
-        gameObject.GetComponent<Renderer>().material.color = ColorsPicker.Instance.Colors[colorFlag - 1];
+        targetColorFlag = (int)Mathf.Ceil(rand);
 
         monsterColorFlag = monsterController.colorFlag;
-        targetColorFlag = colorFlag;
 
         PlayerClothColor.GetComponent<Renderer>().material.color = ColorsPicker.Instance.Colors[targetColorFlag - 1];
         PlayerHatColor.GetComponent<Renderer>().material.color = ColorsPicker.Instance.Colors[targetColorFlag - 1];
-        countTargetTrackingTaskPoint(true);
+
+        if (gameMode == 1)
+        {
+            countTargetTrackingTaskPoint(true);
+        }
 
         GameDataRecord(false, "GetTarget", "0", "0", "0", "0", "0",
-           "1", "0", "0", "0", monsterColorFlag.ToString(), targetColorFlag.ToString(),
-           "0", "0", "0", "0", "0", "0");
+            "1", "0", "0", "0", monsterColorFlag.ToString(), targetColorFlag.ToString(),
+            "0", "0", "0", "0", "0", "0",
+            "0", "0", "0", "0", "0", "0");
 
         targetIsAttackable = true;
         StartCoroutine(waitForAttack());
@@ -538,7 +570,8 @@ public class GameControl : MonoBehaviour
                 countColorDiscriminationTaskPoint(false);
                 GameDataRecord(false, "LateResponse", "0", "0", "0", "0", "0",
                   "0", "0", "1", "0", monsterColorFlag.ToString(), targetColorFlag.ToString(),
-                  "0", "0", "0", (-TARGET_SCORE_AMOUNT).ToString(), "0", "0");
+                  "0", "0", "0", (-TARGET_SCORE_AMOUNT).ToString(), "0", "0",
+                  "0", "0", "0", "0", "0", "0");
             }
             else // correctly avoid response to wrong color
             {
@@ -546,7 +579,8 @@ public class GameControl : MonoBehaviour
                 countColorDiscriminationTaskPoint(true);
                 GameDataRecord(false, "AvoidResponse", "0", "0", "0", "0", "0",
                     "0", "0", "-1", "0", monsterColorFlag.ToString(), targetColorFlag.ToString(),
-                    "0", "0", "0", AVOID_RESPONSE_TO_WRONG_SCORE_AMOUNT.ToString(), "0", "0");
+                    "0", "0", "0", AVOID_RESPONSE_TO_WRONG_SCORE_AMOUNT.ToString(), "0", "0",
+                    "0", "0", "0", "0", "0", "0");
             }
         }
         targetIsAttackable = false;
@@ -558,7 +592,8 @@ public class GameControl : MonoBehaviour
         countTargetTrackingTaskPoint(false);
         GameDataRecord(false, "MissTarget", "0", "0", "0", "0", player.position.x.ToString(),
             "-1", target.position.x.ToString(), "0", "0", "0", "0",
-            "0", "0", "0", MISS_TARGET_SCORE_AMOUNT.ToString(), "0", "0");
+            "0", "0", "0", MISS_TARGET_SCORE_AMOUNT.ToString(), "0", "0",
+            "0", "0", "0", "0", "0", "0");
     }
     
     public void GetObstacle() // Hit obstacle
@@ -567,7 +602,8 @@ public class GameControl : MonoBehaviour
         countTargetTrackingTaskPoint(false);
         GameDataRecord(false, "HitObstacle", "0", "0", "0", "0", "0",
             "0", "0", "0", "0", "0", "0",
-            "-1", "0", "0", OBSTACLE_HIT_SCORE_AMOUNT.ToString(), "0", "0");
+            "-1", "0", "0", OBSTACLE_HIT_SCORE_AMOUNT.ToString(), "0", "0",
+            "0", "0", "0", "0", "0", "0");
 
         playerController.Fall();
     }
@@ -577,14 +613,16 @@ public class GameControl : MonoBehaviour
         countTargetTrackingTaskPoint(true);
         GameDataRecord(false, "AvoidObstacle", "0", "0", "0", "0", player.position.x.ToString(),
             "0", "0", "0", "0", "0", "0",
-            "1", obstacle.position.x.ToString(), "0", "0", "0", "0");
+            "1", obstacle.position.x.ToString(), "0", "0", "0", "0",
+            "0", "0", "0", "0", "0", "0");
     }
 
     public void MonsterChangeColor()
     {
         GameDataRecord(false, "MonsterChangeColor", "0", "0", "0", "0", "0",
             "0", "0", "0", "0", monsterController.colorFlag.ToString(), "0",
-            "0", "0", "1", "0", "0", "0");
+            "0", "0", "1", "0", "0", "0",
+            "0", "0", "0", "0", "0", "0");
     }
 
     public void PlayAgain()
@@ -609,7 +647,8 @@ public class GameControl : MonoBehaviour
     public void GameDataRecord(bool isFirst, string gameEvent, string moveLeft, string moveRight, string buttonDown, string buttonUp,
         string playerPosition, string getTarget, string targetPosition, string attackable, string attack, string monsterColorId,
         string targetColorId, string avoidObstacle, string obstaclePosition, string monsterColorChange, string getScore,
-        string monsterId, string monsterHpPercent)
+        string monsterId, string monsterHpPercent, string cdtAccuracy, string cdtLevel, string timeWindow,
+        string tttAccuracy, string tttLevel, string speed)
     {
         GamePlayData["GtecTime"] = communicationController.ReceivedData.ToString();
         GamePlayData["UnityTime"] = System.DateTime.Now.ToString("HH-mm-ss.fff");
@@ -631,6 +670,12 @@ public class GameControl : MonoBehaviour
         GamePlayData["GetScore"] = getScore;
         GamePlayData["MonsterId"] = monsterId;
         GamePlayData["MonsterHpPercent"] = monsterHpPercent;
+        GamePlayData["CDTAccuracy"] = cdtAccuracy;
+        GamePlayData["CDTLevel"] = cdtLevel;
+        GamePlayData["TimeWindow"] = timeWindow;
+        GamePlayData["TTTAccuracy"] = tttAccuracy;
+        GamePlayData["TTTLevel"] = tttLevel;
+        GamePlayData["Speed"] = speed;
         GamePlayData["Score"] = score.ToString();
 
         dataManager.WriteData(dataDir, csvName, GamePlayData, false, isFirst);

@@ -353,7 +353,7 @@ public class GameControl : MonoBehaviour
         csvName = dataDir + "GameDataRecord_" + System.DateTime.Now.ToString("yyyyMMdd_HHmmss") + "_" + sessionNo.ToString("00") + ".csv";
         dataManager.WriteData(dataDir, csvName, settingData, true, true);
         GameDataRecord(true, "StartGame", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0",
-            "0", "0", responseTimeWindow.ToString(), "0", "0", playerController.speed.ToString());
+            "0", currentCDTLevel.ToString(), responseTimeWindow.ToString(), "0", currentTTTLevel.ToString(), playerController.speed.ToString());
         //communicationController.SendTriggerToMatlab(true);
 
         // Prepare Monster

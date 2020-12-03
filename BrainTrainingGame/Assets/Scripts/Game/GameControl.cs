@@ -4,6 +4,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 using Valve.VR;
+using ViveSR.anipal.Eye;
 
 public class GameControl : MonoBehaviour
 {
@@ -86,6 +87,9 @@ public class GameControl : MonoBehaviour
     private string dataDir;
     private string csvName;
     public Dictionary<string, string> GamePlayData = new Dictionary<string, string>();
+    private string eyeTrackingFile;
+    private Dictionary<string, string> eyeTrackingData = new Dictionary<string, string>();
+    private float[] eyeOpenness = { 0.0f, 0.0f };
 
     private float maxTime;
     private float timeRemain;
@@ -170,6 +174,8 @@ public class GameControl : MonoBehaviour
         
         if(isGameStarted)
         {
+            RecordEyeTrackingData();
+
             if /*(SteamVR_Actions._default.GrabPinch.GetStateDown(SteamVR_Input_Sources.Any) && targetIsAttackable)*/(Input.GetKeyDown(KeyCode.Space) && targetIsAttackable)
             {
                 targetIsAttackable = false;
@@ -356,6 +362,16 @@ public class GameControl : MonoBehaviour
             "0", currentCDTLevel.ToString(), responseTimeWindow.ToString(), "0", currentTTTLevel.ToString(), playerController.speed.ToString());
         //communicationController.SendTriggerToMatlab(true);
 
+        eyeTrackingFile = dataDir + "EyeTrackingRecord_" + System.DateTime.Now.ToString("yyyyMMdd_HHmmss") + "_" + sessionNo.ToString("00") + ".csv";
+        eyeTrackingData["GtecTime"] = communicationController.ReceivedData.ToString();
+        eyeTrackingData["UnityTime"] = System.DateTime.Now.ToString("HH-mm-ss.fff");
+        SRanipal_Eye.GetEyeOpenness(EyeIndex.LEFT, out eyeOpenness[0]);
+        SRanipal_Eye.GetEyeOpenness(EyeIndex.RIGHT, out eyeOpenness[1]);
+        eyeTrackingData["LeftEyeOpenness"] = eyeOpenness[0].ToString();
+        eyeTrackingData["RightEyeOpenness"] = eyeOpenness[1].ToString();
+        dataManager.WriteData(dataDir, eyeTrackingFile, eyeTrackingData, true, true);
+
+
         // Prepare Monster
         prepareMonster();
 
@@ -387,6 +403,17 @@ public class GameControl : MonoBehaviour
         MonsterHPCanvas.gameObject.SetActive(true);
         isFinishSetting = true;
         isTimePause = false;
+    }
+
+    private void RecordEyeTrackingData()
+    {
+        eyeTrackingData["GtecTime"] = communicationController.ReceivedData.ToString();
+        eyeTrackingData["UnityTime"] = System.DateTime.Now.ToString("HH-mm-ss.fff");
+        SRanipal_Eye.GetEyeOpenness(EyeIndex.LEFT, out eyeOpenness[0]);
+        SRanipal_Eye.GetEyeOpenness(EyeIndex.RIGHT, out eyeOpenness[1]);
+        eyeTrackingData["LeftEyeOpenness"] = eyeOpenness[0].ToString();
+        eyeTrackingData["RightEyeOpenness"] = eyeOpenness[1].ToString();
+        dataManager.WriteData(dataDir, eyeTrackingFile, eyeTrackingData, false, false);
     }
 
     private void prepareMonster()

@@ -67,30 +67,30 @@ public class PlayerController : MonoBehaviour
         {
             // Gather the inputs on which lane we should be
             // Keyboard
-            if (Input.GetKeyDown(KeyCode.LeftArrow))
+            /*if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
                 MoveLane(false);
                 GameControl.Instance.GameDataRecord(false, "MoveLeftKeyDown", "1", "0", "1", "0", transform.position.x.ToString(),
-                    "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
+                    "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
             }
             if (Input.GetKeyDown(KeyCode.RightArrow))
             {
                 MoveLane(true);
                 GameControl.Instance.GameDataRecord(false, "MoveRightKeyDown", "0", "1", "1", "0", transform.position.x.ToString(),
-                    "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
+                    "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
             }
             if (Input.GetKeyUp(KeyCode.LeftArrow))
             {
                 GameControl.Instance.GameDataRecord(false, "MoveLeftKeyUp", "1", "0", "0", "1", transform.position.x.ToString(),
-                    "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
+                    "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
             }
             if (Input.GetKeyUp(KeyCode.RightArrow))
             {
                 GameControl.Instance.GameDataRecord(false, "MoveRightKeyUp", "0", "1", "0", "1", transform.position.x.ToString(),
-                    "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
-            }
+                    "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
+            }*/
             // VR
-            /*if (SteamVR_Actions._default.Teleport.GetStateDown(SteamVR_Input_Sources.Any))
+            if (SteamVR_Actions._default.Teleport.GetStateDown(SteamVR_Input_Sources.Any))
             {
                 touchValue = TouchAction.GetAxis(SteamVR_Input_Sources.Any);
 
@@ -98,13 +98,13 @@ public class PlayerController : MonoBehaviour
                 {
                     MoveLane(false);
                     GameControl.Instance.GameDataRecord(false, "MoveLeftKeyDown", "1", "0", "1", "0", transform.position.x.ToString(),
-                        "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
+                        "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
                 }
                 if (touchValue.x > 0.2f)
                 {
                     MoveLane(true);
                     GameControl.Instance.GameDataRecord(false, "MoveRightKeyDown", "0", "1", "1", "0", transform.position.x.ToString(),
-                        "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
+                        "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
                 }
             }
             if (SteamVR_Actions._default.Teleport.GetStateUp(SteamVR_Input_Sources.Any))
@@ -114,14 +114,14 @@ public class PlayerController : MonoBehaviour
                 if (touchValue.x < -0.2f)
                 {
                     GameControl.Instance.GameDataRecord(false, "MoveLeftKeyUp", "1", "0", "0", "1", transform.position.x.ToString(),
-                        "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
+                        "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
                 }
                 if (touchValue.x > 0.2f)
                 {
                     GameControl.Instance.GameDataRecord(false, "MoveRightKeyUp", "0", "1", "0", "1", transform.position.x.ToString(),
-                        "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
+                        "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
                 }
-            }*/
+            }
         }
 
 
@@ -211,7 +211,8 @@ public class PlayerController : MonoBehaviour
 
     public void SetDefault()
     {
-        transform.position = new Vector3(0.0f, 0.0f, 0.0f);
-        transform.rotation = Quaternion.Euler(new Vector3(0.0f, 0.0f, 0.0f));
+        transform.position = Vector3.zero;
+        transform.rotation = Quaternion.Euler(Vector3.zero);
+        desiredLane = 3;
     }
 }

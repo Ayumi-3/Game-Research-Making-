@@ -28,6 +28,8 @@ public class GameControl : MonoBehaviour
     private DataManager dataManager;
     private GetPlayerName getPlayerName;
     private CommunicationController communicationController;
+    private UDPReceiver udpReceiver;
+    private LoadSceneOnClick loadSceneOnClick;
 
     public Canvas ScoreCanvas;
     public Canvas MonsterHPCanvas;
@@ -134,6 +136,8 @@ public class GameControl : MonoBehaviour
         dataManager = GetComponent<DataManager>();
         getPlayerName = GetComponent<GetPlayerName>();
         communicationController = GetComponent<CommunicationController>();
+        udpReceiver = GetComponent<UDPReceiver>();
+        loadSceneOnClick = GetComponent<LoadSceneOnClick>();
 
         clearVariables();
 
@@ -721,4 +725,10 @@ public class GameControl : MonoBehaviour
         dataManager.WriteData(dataDir, csvName, GamePlayData, false, isFirst);
     }
     
+    public void BackToMainMenuScene()
+    {
+        udpReceiver.ChangeScene();
+        loadSceneOnClick.LoadByIndex(1);
+    }
+
 }

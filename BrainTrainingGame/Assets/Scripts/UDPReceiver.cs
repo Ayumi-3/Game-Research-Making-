@@ -28,6 +28,7 @@ public class UDPReceiver : MonoBehaviour
             new ThreadStart(ReceiveData));
         _ReceiveThread.IsBackground = true;
         _ReceiveThread.Start();
+        Debug.Log("Finish initialize UDP");
     }
 
     public void SetObserver(IReceiverObserver observer)
@@ -74,6 +75,21 @@ public class UDPReceiver : MonoBehaviour
             _ReceiveThread.Abort();
             _ReceiveThread = null;
             _ReceiveClient.Close();
+        }
+        catch (Exception err)
+        {
+            Debug.Log("<color=red>" + err.Message + "</color>");
+        }
+    }
+
+    public void ChangeScene()
+    {
+        try
+        {
+            _ReceiveThread.Abort();
+            _ReceiveThread = null;
+            _ReceiveClient.Close();
+            Debug.Log("Closed UDP");
         }
         catch (Exception err)
         {

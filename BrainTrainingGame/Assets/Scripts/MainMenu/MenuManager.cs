@@ -17,6 +17,8 @@ public class MenuManager : MonoBehaviour
     private DataManager dataManager;
     private AudioSource audioSource;
     private CommunicationController communicationController;
+    private UDPReceiver udpReceiver;
+    private LoadSceneOnClick loadSceneOnClick;
 
     // Baseline
     public Canvas BaselineCanvas;
@@ -37,6 +39,8 @@ public class MenuManager : MonoBehaviour
         dataManager = GetComponent<DataManager>();
         audioSource = GetComponent<AudioSource>();
         communicationController = GetComponent<CommunicationController>();
+        udpReceiver = GetComponent<UDPReceiver>();
+        loadSceneOnClick = GetComponent<LoadSceneOnClick>();
 
         BaselineCanvas.gameObject.SetActive(false);
 
@@ -120,7 +124,11 @@ public class MenuManager : MonoBehaviour
         isRecording = true;
     }
 
-
+    public void StartGameScene()
+    {
+        udpReceiver.ChangeScene();
+        loadSceneOnClick.LoadByIndex(2);
+    }
 
 
 

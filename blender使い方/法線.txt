@@ -1,0 +1,10 @@
+法線:Normal
+
+https://bluebirdofoz.hatenablog.com/entry/2019/12/10/090822
+オーバーレイ、ジオメトリーのFace Orientation
+で、赤青表示
+
+編集モード
+ メッシュ -> ノーマル -> 反転(Flip)
+
+

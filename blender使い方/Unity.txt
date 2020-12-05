@@ -1,0 +1,5 @@
+ウワンの
+has exit time: exit timeに指定した秒数再生し終わると次のステートに行く
+
+
+set as default state:最初に再生されるステート

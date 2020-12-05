@@ -1,0 +1,17 @@
+blender -> Unity
+http://corevale.com/blender/8316
+
+
+【Blender】人型キャラクターをUnityに移しアニメーションさせる【Humanoid】
+https://unity-shoshinsha.biz/archives/1226
+ちなみにアニメーションだけを移したいのならアーマチュアのでフォームボーンのみにチェックを入れます。
+
+
+Unityのアニメーションについて
+・Animation　旧式
+・Mecanim　　AnimatorControllerなど　人型Humaidは複数のモデルで使いまわすことができる
+・TimeLine　カットシーンなど
+
+
+ものを持たせる
+https://www.ame-name.com/archives/61

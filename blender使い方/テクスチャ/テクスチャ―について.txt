@@ -1,0 +1,58 @@
+メッシュオブジェクトにテクスチャを適用する際、UV展開をします。 そのUV展開する際の『切れ込みの目印』となるのが、このシームです
+https://horohorori.com/blender-note/about-compare-crease-and-seam-and-sharp/#:~:text=%E3%83%A1%E3%83%83%E3%82%B7%E3%83%A5%E3%82%AA%E3%83%96%E3%82%B8%E3%82%A7%E3%82%AF%E3%83%88%E3%81%AB%E3%83%86%E3%82%AF%E3%82%B9%E3%83%81%E3%83%A3%E3%82%92,%E3%81%AE%E3%81%8C%E3%80%81%E3%81%93%E3%81%AE%E3%82%B7%E3%83%BC%E3%83%A0%E3%81%A7%E3%81%99%E3%80%82
+
+『UV展開』とは、ざっくり説明しますと、「3次元のオブジェクトを、2次元にするために切り開いて展開する」というものになります。
+
+シームをつけたい辺を選択して、「Control + E」を押します。そして、出てくるメニューから「シームを付ける」を選択することによって、シームを付けることができます。
+http://krlab.info.kochi-tech.ac.jp/kurihara/lecture/cg/BlenderWeb_Hayashi/html/materialAndTexture.html
+
+
+1030
+UVグリッド展開
+基本
+https://www.youtube.com/watch?v=Mb1wV06GP9E&t=637s
+
+カラーグリッドを３Dビューにも表示させる
+https://reflectorange.blog.jp/archives/091.html
+手順４の「シェーダーエディター(Shader Editor)画面に切り替えます」
+の方法は、https://bookyakuno.com/how-to-set-textures-in-blender280/
+を参照
+
+同期はUVマップ左上のUV Sync Selection
+
+・ミラーモディファイアを使うと、適用前にUV展開しておけば簡単に重なった状態にできる
+
+
+
+blenderのマテリアルをテクスチャにする
+https://www.youtube.com/watch?v=VcDSEiQkx54&t=780s
+
+
+わかりやすめ
+https://horohorori.com/blender-note/making-milk-package-on-blender/
+
+
+https://mrsoramame.jpn.org/archives/687#4
+重複している頂点を削除する
+不用意にできてしまった重複する頂点は後で様々な問題を起こしますので、重複する頂点を削除します。重複頂点の削除は編集モードで行います。
+
+手順１編集モードでAを押して頂点をすべて選択状態にする
+
+手順２Ctrl ＋ Vを押して表示された頂点メニューから重複頂点を削除（remove doubles)を選択
+
+
+UVマップの出力
+UV/画像エディタ画面でヘッダーの「UV」->UV配置をエクスポートを選択
+
+
+〇エクスポートしたUVマップが黒いとき
+頂点を全選択してから展開すると行ける？
+
+
+〇ピン止め（Pinning）のテクニック
+https://mrsoramame.jpn.org/archives/687#UV-3
+一部のUVの編集状態を保持しながら、全体のUV展開をやり直したい場合にピン止めを利用します。ピンと目されたUV部分は再度展開しても形が変わりません。
+
+保持したいUV頂点を選択してPを押すとピン止めできます。
+
+逆にピン止めを解除したい場合はAlt ＋ Pを押します。

@@ -1,0 +1,10 @@
+
+ものを持たせる
+https://secondlifememo.blogspot.com/2014/03/blender.html
+帽子→体の順にクリック
+ポーズモードで接着したいボーンを選択
+Ctrl+Pで「Bone」を選ぶと、ポーズモードでもついてくる
+
+透明表示
+Alt+Z
+

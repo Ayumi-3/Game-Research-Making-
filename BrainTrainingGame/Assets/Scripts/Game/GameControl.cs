@@ -183,7 +183,7 @@ public class GameControl : MonoBehaviour
         {
             RecordEyeTrackingData();
 
-            if (SteamVR_Actions._default.GrabPinch.GetStateDown(SteamVR_Input_Sources.Any) && targetIsAttackable)//(Input.GetKeyDown(KeyCode.Space) && targetIsAttackable)
+            if ((SteamVR_Actions._default.GrabPinch.GetStateDown(SteamVR_Input_Sources.Any) || Input.GetKeyDown(KeyCode.Space)) && targetIsAttackable)
             {
                 targetIsAttackable = false;
                 if (monsterColorFlag != targetColorFlag) // Corectly response to right color

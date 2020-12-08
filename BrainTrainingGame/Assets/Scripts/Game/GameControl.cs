@@ -62,17 +62,11 @@ public class GameControl : MonoBehaviour
     private Text monsterBillboard;
 
     private Dictionary<string, string> settingData = new Dictionary<string, string>();
-    private bool isAdaptive;
-    private float thresholdPoint;
-    private bool isConectedToGtec;
     private bool isFinishSetting = false;
     private int gameMode;
     
     private float adaptiveTimer;
     private float timeInterval = 60.0f;
-    private float pointRatio;
-    private float playerSpeed;
-    public float SpeedUp = 3.0f;
     private float responseTimeWindow = 0.5f;
 
     private float allTarget;
@@ -183,6 +177,19 @@ public class GameControl : MonoBehaviour
         {
             RecordEyeTrackingData();
 
+            adaptiveTimer += Time.deltaTime;
+            if (adaptiveTimer > timeInterval)
+            {
+                adaptiveTimer = 0.0f;
+
+                CDTLevelAdjustment();
+
+                if (gameMode == 1) // Multitask
+                {
+                    TTTLevelAdjustment();
+                }
+            }
+
             if ((SteamVR_Actions._default.GrabPinch.GetStateDown(SteamVR_Input_Sources.Any) || Input.GetKeyDown(KeyCode.Space)) && targetIsAttackable)
             {
                 targetIsAttackable = false;
@@ -225,22 +232,6 @@ public class GameControl : MonoBehaviour
                     StartCoroutine(waitDeadMonsterAnimation());
 
                     //audioSource.Pause();
-                }
-            }
-
-            if (isAdaptive)
-            {
-                adaptiveTimer += Time.deltaTime;
-                if (adaptiveTimer > timeInterval)
-                {
-                    adaptiveTimer = 0.0f;
-
-                    CDTLevelAdjustment();
-
-                    if (gameMode == 1) // Multitask
-                    {
-                        TTTLevelAdjustment();
-                    }
                 }
             }
 
@@ -296,7 +287,9 @@ public class GameControl : MonoBehaviour
                     monsterId.ToString(), "0", "0", "0", "0", "0", "0", "0", "0");
                 GameEndScoreText.text = "Your Score: " + score.ToString("0") + "\nDefeated Monsters: " + monsterId.ToString("0");
                 GameEndCanvas.gameObject.SetActive(true);
-                GameEndMonitorScoreText.text = "Sessions: " + sessionNo.ToString("0") + "\nScore: " + score.ToString("0") + "\nDefeated Monsters: " + monsterId.ToString("0");
+                GameEndMonitorScoreText.text = "Sessions: " + sessionNo.ToString("0") +
+                    "\nScore: " + score.ToString("0") + "\nDefeated Monsters: " + monsterId.ToString("0") +
+                    "\nCDT Level: " + currentCDTLevel.ToString("0") + " | TTT Level: " + currentTTTLevel.ToString("0");
                 GameEndMonitorCanvas.gameObject.SetActive(true);
             }
         }
@@ -346,30 +339,27 @@ public class GameControl : MonoBehaviour
 
         maxMonsterHP = int.Parse(settingData["MonsterMaxHp"]);
 
-        playerController.speed = float.Parse(settingData["PlayerSpeed"]);
-        objectSpawner.ScrollSpeed = -playerController.speed;
-        ColorsPicker.Instance.colorMaxNumber = int.Parse(settingData["NumberOfColor"]);
+        currentCDTLevel = int.Parse(settingData["CDTLevel"]);
+        currentTTTLevel = int.Parse(settingData["TTTLevel"]);
+        
         targetSpawner.obstacleChance = float.Parse(settingData["ObstacleAppearance"]) / 100.0f;
-        targetSpawner.targetDistance = float.Parse(settingData["TargetDistance"]);
-        isAdaptive = (settingData["AdaptiveToggle"] == "true");
-        if (isAdaptive)
-        {
-            responseTimeWindow = CDTLevel[currentCDTLevel] / 1000.0f;
 
-            playerController.speed = TTTSpeedLevel[currentTTTLevel];
-            objectSpawner.ScrollSpeed = -playerController.speed;
-            targetSpawner.targetDistance = TTTDistanceLevel[currentTTTLevel];
-        }
+        responseTimeWindow = CDTLevel[currentCDTLevel] / 1000.0f;
+
+        playerController.speed = TTTSpeedLevel[currentTTTLevel];
+        objectSpawner.ScrollSpeed = -playerController.speed;
+        targetSpawner.targetDistance = TTTDistanceLevel[currentTTTLevel];
 
         sessionNo++;
         // set start record data
-        csvName = dataDir + "GameDataRecord_" + System.DateTime.Now.ToString("yyyyMMdd_HHmmss") + "_" + sessionNo.ToString("00") + ".csv";
+        string startTime = System.DateTime.Now.ToString("yyyyMMdd_HHmmss");
+        csvName = dataDir + "GameDataRecord_" + startTime + "_" + sessionNo.ToString("00") + ".csv";
         dataManager.WriteData(dataDir, csvName, settingData, true, true);
         GameDataRecord(true, "StartGame", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0",
             "0", currentCDTLevel.ToString(), responseTimeWindow.ToString(), "0", currentTTTLevel.ToString(), playerController.speed.ToString(), targetSpawner.targetDistance.ToString());
         //communicationController.SendTriggerToMatlab(true);
 
-        eyeTrackingFile = dataDir + "EyeTrackingRecord_" + System.DateTime.Now.ToString("yyyyMMdd_HHmmss") + "_" + sessionNo.ToString("00") + ".csv";
+        eyeTrackingFile = dataDir + "EyeTrackingRecord_" + startTime + "_" + sessionNo.ToString("00") + ".csv";
         eyeTrackingData["GtecTime"] = communicationController.ReceivedData.ToString();
         eyeTrackingData["UnityTime"] = System.DateTime.Now.ToString("HH-mm-ss.fff");
         SRanipal_Eye.GetEyeOpenness(EyeIndex.LEFT, out eyeOpenness[0]);
@@ -500,7 +490,7 @@ public class GameControl : MonoBehaviour
         CDTLevel.Add(lvl1TimeWindow);
         for (i = 1; i < numberCDTLevel; i++)
         {
-            CDTLevel.Add(CDTLevel[i - 1] + stepTimeWindow);
+            CDTLevel.Add(CDTLevel[i - 1] - stepTimeWindow);
         }
 
         //Target Tracking Task
@@ -511,13 +501,17 @@ public class GameControl : MonoBehaviour
             TTTSpeedLevel.Add(TTTSpeedLevel[j - 1] + stepSpeed);
         }
         
-        float stepTimeInterval;
+        float stepTimeInterval, tempDistance;
         stepTimeInterval = (maxTimeInterval - minTimeInterval) / TTTSpeedLevel.Count;
         j = 0;
         TTTDistanceLevel.Add(TTTSpeedLevel[j] * maxTimeInterval);
         for (j = 1; j < TTTSpeedLevel.Count - 1; j++)
         {
-            TTTDistanceLevel.Add(TTTSpeedLevel[j] * (maxTimeInterval - (stepTimeInterval * j)));
+            tempDistance = TTTSpeedLevel[j] * (maxTimeInterval - (stepTimeInterval * j));
+            tempDistance *= 10.0f;
+            tempDistance = Mathf.Floor(tempDistance);
+            tempDistance /= 10.0f;
+            TTTDistanceLevel.Add(tempDistance);
         }
     }
 
@@ -675,6 +669,8 @@ public class GameControl : MonoBehaviour
         targetSpawner.ClearTarget();
         monsterController.DestroyMonster();
         objectSpawner.SetDefault();
+
+        gameSetting.SetLevelNextSession(currentCDTLevel, currentTTTLevel);
 
         clearVariables();
         ScoreCanvas.gameObject.SetActive(false);

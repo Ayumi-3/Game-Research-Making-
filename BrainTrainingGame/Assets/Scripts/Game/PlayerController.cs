@@ -136,7 +136,7 @@ public class PlayerController : MonoBehaviour
             targetPosition += Vector3.right * LANE_DISTANCE;
         else if (desiredLane == 5)
             targetPosition += Vector3.right * LANE_DISTANCE * 2;
-
+        
         // Let's calculate our move delta
         Vector3 moveVector = Vector3.zero;
         moveVector.x = (targetPosition - transform.position).normalized.x * speed;

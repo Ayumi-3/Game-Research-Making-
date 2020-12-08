@@ -6,7 +6,7 @@ public class ColorsPicker : MonoBehaviour
 {
     public static ColorsPicker Instance { set; get; }
 
-    public float colorMaxNumber = 3.0f;
+    public float colorMaxNumber = 4.0f;
     public Color32[] Colors = new Color32[5];
 
     private void Awake()

@@ -8,12 +8,9 @@ public class GameSetting : MonoBehaviour
     public Dropdown ModeDropdown;
     public InputField TimeInput;
     public InputField MonsterMaxHpInput;
-    public InputField PlayerSpeedInput;
-    public InputField NumberOfColorInput;
+    public InputField CDTLevelInput;
+    public InputField TTTLevelInput;
     public InputField ObstacleAppearanceInput;
-    public InputField TargetDistanceInput;
-    public Toggle AdaptiveToggle;
-    public InputField ThresholdPointInput;
 
     private Dictionary<string, string> DefaultData = new Dictionary<string, string>();
     private Dictionary<string, string> SettingData = new Dictionary<string, string>();
@@ -23,23 +20,17 @@ public class GameSetting : MonoBehaviour
         DefaultData["Mode"] = "1";
         DefaultData["Time"] = "300";
         DefaultData["MonsterMaxHp"] = "300";
-        DefaultData["PlayerSpeed"] = "7";
-        DefaultData["NumberOfColor"] = "3";
+        DefaultData["CDTLevel"] = "15";
+        DefaultData["TTTLevel"] = "14";
         DefaultData["ObstacleAppearance"] = "20";
-        DefaultData["TargetDistance"] = "6";
-        DefaultData["AdaptiveToggle"] = "true";
-        DefaultData["ThresholdPoint"] = "80";
 
         int modeIndex = int.Parse(DefaultData["Mode"]);
         ModeDropdown.options[modeIndex].text = ModeDropdown.options[modeIndex].text;
         TimeInput.text = DefaultData["Time"];
         MonsterMaxHpInput.text = DefaultData["MonsterMaxHp"];
-        PlayerSpeedInput.text = DefaultData["PlayerSpeed"];
-        NumberOfColorInput.text = DefaultData["NumberOfColor"];
+        CDTLevelInput.text = DefaultData["CDTLevel"];
+        TTTLevelInput.text = DefaultData["TTTLevel"];
         ObstacleAppearanceInput.text = DefaultData["ObstacleAppearance"];
-        TargetDistanceInput.text = DefaultData["TargetDistance"];
-        AdaptiveToggle.isOn = (DefaultData["AdaptiveToggle"] == "true");
-        ThresholdPointInput.text = "80";
     }
 
     public void SetDefault()
@@ -47,12 +38,9 @@ public class GameSetting : MonoBehaviour
         ModeDropdown.options[1].text = ModeDropdown.options[1].text;
         TimeInput.text = DefaultData["Time"];
         MonsterMaxHpInput.text = DefaultData["MonsterMaxHp"];
-        PlayerSpeedInput.text = DefaultData["PlayerSpeed"];
-        NumberOfColorInput.text = DefaultData["NumberOfColor"];
+        CDTLevelInput.text = DefaultData["CDTLevel"];
+        TTTLevelInput.text = DefaultData["TTTLevel"];
         ObstacleAppearanceInput.text = DefaultData["ObstacleAppearance"];
-        TargetDistanceInput.text = DefaultData["TargetDistance"];
-        AdaptiveToggle.isOn = (DefaultData["AdaptiveToggle"] == "true");
-        ThresholdPointInput.text = "80";
     }
 
     public Dictionary<string, string> GetSetting()
@@ -60,13 +48,16 @@ public class GameSetting : MonoBehaviour
         SettingData["Mode"] = ModeDropdown.value.ToString("0");
         SettingData["Time"] = TimeInput.text;
         SettingData["MonsterMaxHp"] = MonsterMaxHpInput.text;
-        SettingData["PlayerSpeed"] = PlayerSpeedInput.text;
-        SettingData["NumberOfColor"] = NumberOfColorInput.text;
+        SettingData["CDTLevel"] = CDTLevelInput.text;
+        SettingData["TTTLevel"] = TTTLevelInput.text;
         SettingData["ObstacleAppearance"] = ObstacleAppearanceInput.text;
-        SettingData["TargetDistance"] = TargetDistanceInput.text;
-        SettingData["AdaptiveToggle"] = AdaptiveToggle.isOn.ToString().ToLower();
-        SettingData["ThresholdPoint"] = ThresholdPointInput.text;
         return SettingData;
+    }
+
+    public void SetLevelNextSession(int cdtlevel, int tttlevel)
+    {
+        CDTLevelInput.text = cdtlevel.ToString();
+        TTTLevelInput.text = tttlevel.ToString();
     }
 
 }

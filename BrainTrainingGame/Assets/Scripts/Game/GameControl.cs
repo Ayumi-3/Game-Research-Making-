@@ -505,7 +505,7 @@ public class GameControl : MonoBehaviour
         stepTimeInterval = (maxTimeInterval - minTimeInterval) / TTTSpeedLevel.Count;
         j = 0;
         TTTDistanceLevel.Add(TTTSpeedLevel[j] * maxTimeInterval);
-        for (j = 1; j < TTTSpeedLevel.Count - 1; j++)
+        for (j = 1; j < TTTSpeedLevel.Count; j++)
         {
             tempDistance = TTTSpeedLevel[j] * (maxTimeInterval - (stepTimeInterval * j));
             tempDistance *= 10.0f;
@@ -513,6 +513,7 @@ public class GameControl : MonoBehaviour
             tempDistance /= 10.0f;
             TTTDistanceLevel.Add(tempDistance);
         }
+        Debug.Log(TTTSpeedLevel.Count + "|" + TTTDistanceLevel.Count);
     }
 
     private void CDTLevelAdjustment() //Color Discrimination Task level adjustment

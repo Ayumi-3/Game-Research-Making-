@@ -112,7 +112,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 057bb6323a055be48873bf6bf2be991b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 0}
 --- !u!1 &2097863322
 GameObject:
   m_ObjectHideFlags: 0
@@ -218,7 +217,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 630652130968712788}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: 0, y: 0, z: 8}
+  m_LocalPosition: {x: 0, y: 0, z: 10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 9168065760149388400}
@@ -272,8 +271,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee9953bbfc54bc64ba4aac92356b937a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lookAt: {fileID: 0}
-  offset: {x: 0, y: 0, z: 8}
+  offset: {x: 0, y: 0, z: 10}
   JewelRenderer: {fileID: 5295841456940988006}
   MonsterRenderer: {fileID: 476802451494251183}
   MonsterMaterialNormal: {fileID: 2100000, guid: 5613bcc34ea3bc1478e6dc371ac2351f,

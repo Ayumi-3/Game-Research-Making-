@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
     private CharacterController controller;
     public float speed = 7.0f;
     private int desiredLane = 3; // 5Lanes
+    private Rigidbody rigidbody;
 
     //Animator
     private Animator anim;
@@ -37,11 +38,12 @@ public class PlayerController : MonoBehaviour
         controller = GetComponent<CharacterController>();
         anim = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
-
+        rigidbody = GetComponent<Rigidbody>();
         
         objectSpawner = GameObject.FindGameObjectWithTag("SideObject").GetComponent<SideObjectSpawner>();
         PauseRunning();
         isReady = false;
+        transform.position = Vector3.zero;
 
     }
     private void Update()
@@ -67,7 +69,7 @@ public class PlayerController : MonoBehaviour
         {
             // Gather the inputs on which lane we should be
             // Keyboard
-            /*if (Input.GetKeyDown(KeyCode.LeftArrow))
+            if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
                 MoveLane(false);
                 GameControl.Instance.GameDataRecord(false, "MoveLeftKeyDown", "1", "0", "1", "0", transform.position.x.ToString(),
@@ -88,7 +90,7 @@ public class PlayerController : MonoBehaviour
             {
                 GameControl.Instance.GameDataRecord(false, "MoveRightKeyUp", "0", "1", "0", "1", transform.position.x.ToString(),
                     "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0");
-            }*/
+            }
             // VR
             if (SteamVR_Actions._default.Teleport.GetStateDown(SteamVR_Input_Sources.Any))
             {
@@ -124,8 +126,6 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-
-
         // Calculate where we should be in the future
         Vector3 targetPosition = transform.position.z * Vector3.forward;
         if (desiredLane == 1)
@@ -136,16 +136,18 @@ public class PlayerController : MonoBehaviour
             targetPosition += Vector3.right * LANE_DISTANCE;
         else if (desiredLane == 5)
             targetPosition += Vector3.right * LANE_DISTANCE * 2;
-        
+
+        Debug.Log(desiredLane);
+
         // Let's calculate our move delta
         Vector3 moveVector = Vector3.zero;
         moveVector.x = (targetPosition - transform.position).normalized.x * speed;
         moveVector.y = 0.0f;
         moveVector.z = speed;
-
-        // Move the Player
+        
+        //// Move the Player
         controller.Move(moveVector * Time.deltaTime);
-
+        
         // Rotate the player
         Vector3 dir = controller.velocity;
         if (dir != Vector3.zero)
@@ -153,11 +155,29 @@ public class PlayerController : MonoBehaviour
             dir.y = 0;
             transform.forward = Vector3.Lerp(transform.forward, dir, TURN_SPEED);
         }
+
+        //rigidbody.velocity = targetPosition * speed;
+        //rigidbody.MovePosition(targetPosition);
+        //rigidbody.velocity = moveVector;
+
+        //Vector3 desireForward = Vector3.RotateTowards(transform.forward, moveVector, TURN_SPEED * Time.deltaTime, 0f);
+        //Quaternion rotation = Quaternion.LookRotation(desireForward);
+        //
+        //rigidbody.MovePosition(rigidbody.position + moveVector * Time.deltaTime);
+        //rigidbody.MoveRotation(rotation);
     }
 
     private void MoveLane(bool goingRight)
     {
-        desiredLane += (goingRight) ? 1 : -1;
+        //desiredLane += (goingRight) ? 1 : -1;
+        if (goingRight)
+        {
+            desiredLane++;
+        }
+        else
+        {
+            desiredLane--;
+        }
         desiredLane = Mathf.Clamp(desiredLane, 1, 5);
     }
     

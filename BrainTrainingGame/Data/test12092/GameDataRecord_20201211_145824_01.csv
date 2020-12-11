@@ -1,0 +1,13 @@
+Mode,Time,MonsterMaxHp,CDTLevel,TTTLevel,ObstacleAppearance
+1,300,300,15,14,20
+GtecTime,UnityTime,GameEvent,MoveLeft,MoveRight,ButtonDown,ButtonUp,PlayerPosition,GetTarget,TargetPosition,Attackable,Attack,MonsterColorId,TargetColorId,AvoidObstacle,ObstaclePosition,MonsterColorChange,GetScore,MonsterId,MonsterHpPercent,CDTAccuracy,CDTLevel,TimeWindow,TTTAccuracy,TTTLevel,Speed,Distance,Score
+0,14-58-24.835,StartGame,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,15,0.5,0,14,7.200002,12.3,0
+0,14-58-24.848,SpawnedMonster,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0
+0,14-58-29.881,MonsterChangeColor,0,0,0,0,0,0,0,0,0,3,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0
+0,14-58-30.757,MoveRightKeyDown,0,1,1,0,3.32806E-11,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+0,14-58-30.938,MoveRightKeyUp,0,1,0,1,0.05637139,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+0,14-58-31.692,MoveLeftKeyDown,1,0,1,0,0.09976456,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+0,14-58-31.918,MoveLeftKeyUp,1,0,0,1,0.02120376,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+0,14-58-32.428,MoveLeftKeyDown,1,0,1,0,-0.05622558,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+0,14-58-32.918,MonsterChangeColor,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0
+0,14-58-34.327,MoveLeftKeyUp,1,0,0,1,-1.799553,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0

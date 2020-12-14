@@ -1121,6 +1121,7 @@ GameObject:
   - component: {fileID: 1890358434902896417}
   - component: {fileID: 4080788075457827386}
   - component: {fileID: 8978321499771988608}
+  - component: {fileID: 1247611403}
   - component: {fileID: 521258413}
   m_Layer: 0
   m_Name: Player
@@ -1200,7 +1201,7 @@ MonoBehaviour:
     actionPath: /actions/default/in/TouchpadTouch
     needsReinit: 0
   GetPointSound: {fileID: 8300000, guid: fc878b9d1af059245959f800eedadccc, type: 3}
-  NotGetPointSound: {fileID: 8300000, guid: 55a73564d46d075489967ec99947a1bf, type: 3}
+  NotGetPointSound: {fileID: 8300000, guid: 16ce8e3e0374a1d4988dc89af9326da6, type: 3}
 --- !u!114 &8978321499771988608
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1216,10 +1217,25 @@ MonoBehaviour:
   target: {fileID: 2899912408489355913, guid: 906d5354575f6544980b15e542c99e18, type: 3}
   obstacle: {fileID: 65582150819680466, guid: e6fb57a52ca9822408f7e7183c09e931, type: 3}
   player: {fileID: 4938375276308740664}
-  maxTarget: 10
+  maxTarget: 5
   targetDistance: 6
   obstacleChance: 0.2
   TargetCount: 0
+--- !u!114 &1247611403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5747563489527095426}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 302868da3ecf05e458c7c8b169cbe2f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Monster: {fileID: 630652130968712788, guid: ec839c8195616df4582535a81627c5d6, type: 3}
+  Player: {fileID: 4938375276308740664}
+  offset: {x: 0, y: 0, z: 10}
 --- !u!82 &521258413
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1232,7 +1248,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 0.3
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -1873,7 +1889,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 057bb6323a055be48873bf6bf2be991b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 0}
 --- !u!1 &8195197557304087507
 GameObject:
   m_ObjectHideFlags: 0

@@ -513,7 +513,6 @@ public class GameControl : MonoBehaviour
             tempDistance /= 10.0f;
             TTTDistanceLevel.Add(tempDistance);
         }
-        Debug.Log(TTTSpeedLevel.Count + "|" + TTTDistanceLevel.Count);
     }
 
     private void CDTLevelAdjustment() //Color Discrimination Task level adjustment

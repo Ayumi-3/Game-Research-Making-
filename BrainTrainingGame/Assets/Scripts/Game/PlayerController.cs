@@ -17,7 +17,6 @@ public class PlayerController : MonoBehaviour
     private CharacterController controller;
     public float speed = 7.0f;
     private int desiredLane = 3; // 5Lanes
-    private Rigidbody rigidbody;
 
     //Animator
     private Animator anim;
@@ -38,7 +37,6 @@ public class PlayerController : MonoBehaviour
         controller = GetComponent<CharacterController>();
         anim = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
-        rigidbody = GetComponent<Rigidbody>();
         
         objectSpawner = GameObject.FindGameObjectWithTag("SideObject").GetComponent<SideObjectSpawner>();
         PauseRunning();
@@ -137,11 +135,32 @@ public class PlayerController : MonoBehaviour
         else if (desiredLane == 5)
             targetPosition += Vector3.right * LANE_DISTANCE * 2;
 
-        Debug.Log(desiredLane);
+        //Debug.Log(desiredLane);
 
+        /*
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
+
+        Vector3 moveVector = Vector3.zero;
+        moveVector.Set(horizontal, 0f, vertical);
+        moveVector.Normalize();
+
+        Vector3 desiredForward = Vector3.RotateTowards(transform.forward, moveVector, TURN_SPEED * Time.deltaTime, 0f);
+        Quaternion rotation = Quaternion.LookRotation(desiredForward);
+
+        controller.Move(moveVector * speed * Time.deltaTime);
+        transform.rotation = rotation;
+        Vector3 dir = controller.velocity;
+        if (dir != Vector3.zero)
+        {
+            dir.y = 0;
+            transform.forward = Vector3.Lerp(transform.forward, dir, TURN_SPEED);
+        }*/
+
+        
         // Let's calculate our move delta
         Vector3 moveVector = Vector3.zero;
-        moveVector.x = (targetPosition - transform.position).normalized.x * speed;
+        moveVector.x = (targetPosition - transform.position).x * speed;
         moveVector.y = 0.0f;
         moveVector.z = speed;
         
@@ -155,16 +174,6 @@ public class PlayerController : MonoBehaviour
             dir.y = 0;
             transform.forward = Vector3.Lerp(transform.forward, dir, TURN_SPEED);
         }
-
-        //rigidbody.velocity = targetPosition * speed;
-        //rigidbody.MovePosition(targetPosition);
-        //rigidbody.velocity = moveVector;
-
-        //Vector3 desireForward = Vector3.RotateTowards(transform.forward, moveVector, TURN_SPEED * Time.deltaTime, 0f);
-        //Quaternion rotation = Quaternion.LookRotation(desireForward);
-        //
-        //rigidbody.MovePosition(rigidbody.position + moveVector * Time.deltaTime);
-        //rigidbody.MoveRotation(rotation);
     }
 
     private void MoveLane(bool goingRight)

@@ -289,7 +289,11 @@ public class GameControl : MonoBehaviour
                 GameEndCanvas.gameObject.SetActive(true);
                 GameEndMonitorScoreText.text = "Sessions: " + sessionNo.ToString("0") +
                     "\nScore: " + score.ToString("0") + "\nDefeated Monsters: " + monsterId.ToString("0") +
-                    "\nCDT Level: " + currentCDTLevel.ToString("0") + " | TTT Level: " + currentTTTLevel.ToString("0");
+                    "\nCDT Level: " + currentCDTLevel.ToString("0");
+                if (gameMode == 1)
+                {
+                    GameEndMonitorScoreText.text += " | TTT Level: " + currentTTTLevel.ToString("0");
+                }
                 GameEndMonitorCanvas.gameObject.SetActive(true);
             }
         }
@@ -680,7 +684,7 @@ public class GameControl : MonoBehaviour
         GameEndCanvas.gameObject.SetActive(false);
         GameEndMonitorCanvas.gameObject.SetActive(false);
 
-        audioSource.Play();
+        //audioSource.Play();
     }
 
     public void GameDataRecord(bool isFirst, string gameEvent, string moveLeft, string moveRight, string buttonDown, string buttonUp,

@@ -5,15 +5,16 @@ using UnityEngine;
 public class MonsterController : MonoBehaviour
 {
     private Transform lookAt; // player
-    public Vector3 offset = new Vector3(0, 0, 8.0f);
+    public Vector3 offset = new Vector3(0, 0, 10.0f);
     public Renderer JewelRenderer;
-    public Renderer MonsterRenderer;
-    public Material MonsterMaterialNormal;
+    public Renderer BodyRenderer;
+    public Renderer HatRenderer;
+    public Material[] MonsterMaterialNormal;
     public Material MonsterMaterialDamage;
 
     private Material[] jewelMaterials;
 
-    private Vector3 DefaultPosition = new Vector3(0.0f, 0.0f, 8.0f);
+    private Vector3 DefaultPosition = new Vector3(0.0f, 0.0f, 10.0f);
 
     private Animator anim;
 
@@ -22,14 +23,20 @@ public class MonsterController : MonoBehaviour
     public int colorFlag = 0;
     private int tempFlag;
     private bool isChangeColor = false;
+    private int matIndex;
 
-    private void Awake()
+    private void Start()
     {
         anim = GetComponent<Animator>();
         anim.SetBool("Walk", false);
 
         lookAt = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
         //transform.position = lookAt.position + offset;
+
+        rand = Random.Range(0.0f, MonsterMaterialNormal.Length);
+        matIndex = (int)Mathf.Ceil(rand);
+        BodyRenderer.material = MonsterMaterialNormal[matIndex - 1];
+        HatRenderer.material = MonsterMaterialNormal[matIndex - 1];
 
         rand = Random.Range(0.0f, ColorsPicker.Instance.colorMaxNumber);
         colorFlag = (int)Mathf.Ceil(rand);
@@ -88,7 +95,8 @@ public class MonsterController : MonoBehaviour
     }
     public void Damage()
     {
-        MonsterRenderer.material = MonsterMaterialDamage;
+        BodyRenderer.material = MonsterMaterialDamage;
+        HatRenderer.material = MonsterMaterialDamage;
         anim.SetTrigger("Damage");
         StartCoroutine(WaitDamageAnimation());
     }
@@ -98,7 +106,8 @@ public class MonsterController : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         if (!anim.GetCurrentAnimatorStateInfo(0).IsName("Die"))
         {
-            MonsterRenderer.material = MonsterMaterialNormal;
+            BodyRenderer.material = MonsterMaterialNormal[matIndex - 1];
+            HatRenderer.material = MonsterMaterialNormal[matIndex - 1];
         }
     }
 

@@ -85,7 +85,8 @@ public class GameControl : MonoBehaviour
     public Dictionary<string, string> GamePlayData = new Dictionary<string, string>();
     private string eyeTrackingFile;
     private Dictionary<string, string> eyeTrackingData = new Dictionary<string, string>();
-    private float[] eyeOpenness = { 0.0f, 0.0f };
+    private float[] eyeOpenness = new float[3];
+    private VerboseData verboseData;
 
     private float maxTime;
     private float timeRemain;
@@ -175,7 +176,7 @@ public class GameControl : MonoBehaviour
         
         if(isGameStarted)
         {
-            RecordEyeTrackingData();
+            RecordEyeTrackingData(false);
 
             adaptiveTimer += Time.deltaTime;
             if (adaptiveTimer > timeInterval)
@@ -364,14 +365,7 @@ public class GameControl : MonoBehaviour
         //communicationController.SendTriggerToMatlab(true);
 
         eyeTrackingFile = dataDir + "EyeTrackingRecord_" + startTime + "_" + sessionNo.ToString("00") + ".csv";
-        eyeTrackingData["GtecTime"] = communicationController.ReceivedData.ToString();
-        eyeTrackingData["UnityTime"] = System.DateTime.Now.ToString("HH-mm-ss.fff");
-        SRanipal_Eye.GetEyeOpenness(EyeIndex.LEFT, out eyeOpenness[0]);
-        SRanipal_Eye.GetEyeOpenness(EyeIndex.RIGHT, out eyeOpenness[1]);
-        eyeTrackingData["LeftEyeOpenness"] = eyeOpenness[0].ToString();
-        eyeTrackingData["RightEyeOpenness"] = eyeOpenness[1].ToString();
-        dataManager.WriteData(dataDir, eyeTrackingFile, eyeTrackingData, true, true);
-
+        RecordEyeTrackingData(true);
 
         // Prepare Monster
         prepareMonster();
@@ -406,15 +400,31 @@ public class GameControl : MonoBehaviour
         isTimePause = false;
     }
 
-    private void RecordEyeTrackingData()
+    private void RecordEyeTrackingData(bool isFirst)
     {
         eyeTrackingData["GtecTime"] = communicationController.ReceivedData.ToString();
         eyeTrackingData["UnityTime"] = System.DateTime.Now.ToString("HH-mm-ss.fff");
-        SRanipal_Eye.GetEyeOpenness(EyeIndex.LEFT, out eyeOpenness[0]);
-        SRanipal_Eye.GetEyeOpenness(EyeIndex.RIGHT, out eyeOpenness[1]);
-        eyeTrackingData["LeftEyeOpenness"] = eyeOpenness[0].ToString();
-        eyeTrackingData["RightEyeOpenness"] = eyeOpenness[1].ToString();
-        dataManager.WriteData(dataDir, eyeTrackingFile, eyeTrackingData, false, false);
+        SRanipal_Eye.GetVerboseData(out verboseData);
+        eyeTrackingData["CombinedEyeValidDataBitMask"] = verboseData.combined.eye_data.eye_data_validata_bit_mask.ToString();
+        eyeTrackingData["LeftEyeValidDataBitMask"] = verboseData.left.eye_data_validata_bit_mask.ToString();
+        eyeTrackingData["RightEyeValidDataBitMask"] = verboseData.right.eye_data_validata_bit_mask.ToString();
+        eyeTrackingData["CombinedEyeOpenness"] = verboseData.combined.eye_data.eye_openness.ToString();
+        eyeTrackingData["LeftEyeOpenness"] = verboseData.left.eye_openness.ToString();
+        eyeTrackingData["RightEyeOpenness"] = verboseData.right.eye_openness.ToString();
+        eyeTrackingData["CombinedPupilDiameter"] = verboseData.combined.eye_data.pupil_diameter_mm.ToString();
+        eyeTrackingData["LeftPupilDiameter"] = verboseData.left.pupil_diameter_mm.ToString();
+        eyeTrackingData["RightPupilDiameter"] = verboseData.right.pupil_diameter_mm.ToString();
+        eyeTrackingData["CombinedPupilPosition"] = verboseData.combined.eye_data.pupil_position_in_sensor_area.ToString();
+        eyeTrackingData["LeftPupilPosition"] = verboseData.left.pupil_position_in_sensor_area.ToString();
+        eyeTrackingData["RightPupilPosition"] = verboseData.right.pupil_position_in_sensor_area.ToString();
+        eyeTrackingData["CombinedGazeOrigin"] = verboseData.combined.eye_data.gaze_origin_mm.ToString();
+        eyeTrackingData["LeftGazeOrigin"] = verboseData.left.gaze_origin_mm.ToString();
+        eyeTrackingData["RightGazeOrigin"] = verboseData.right.gaze_origin_mm.ToString();
+        eyeTrackingData["CombinedGazeDirection"] = verboseData.combined.eye_data.gaze_direction_normalized.ToString();
+        eyeTrackingData["LeftGazeDirection"] = verboseData.left.gaze_direction_normalized.ToString();
+        eyeTrackingData["RightGazeDirection"] = verboseData.right.gaze_direction_normalized.ToString();
+        
+        dataManager.WriteData(dataDir, eyeTrackingFile, eyeTrackingData, isFirst, isFirst);
     }
 
     private void prepareMonster()

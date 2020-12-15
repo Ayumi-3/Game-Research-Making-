@@ -25,13 +25,16 @@ public class MonsterController : MonoBehaviour
     private bool isChangeColor = false;
     private int matIndex;
 
-    private void Start()
+    private void Awake()
     {
         anim = GetComponent<Animator>();
+    }
+
+    private void Start()
+    {
         anim.SetBool("Walk", false);
 
         lookAt = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
-        //transform.position = lookAt.position + offset;
 
         rand = Random.Range(0.0f, MonsterMaterialNormal.Length);
         matIndex = (int)Mathf.Ceil(rand);

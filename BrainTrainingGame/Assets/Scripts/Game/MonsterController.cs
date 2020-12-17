@@ -28,10 +28,6 @@ public class MonsterController : MonoBehaviour
     private void Awake()
     {
         anim = GetComponent<Animator>();
-    }
-
-    private void Start()
-    {
         anim.SetBool("Walk", false);
 
         lookAt = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
@@ -46,18 +42,15 @@ public class MonsterController : MonoBehaviour
         jewelMaterials = JewelRenderer.materials;
         jewelMaterials[1].color = ColorsPicker.Instance.Colors[colorFlag - 1];
     }
-
-    private void LateUpdate()
-    {
-        Vector3 desiredPosition = lookAt.position + offset;
-        desiredPosition.x = 0;
-        transform.position = Vector3.Lerp(transform.position, desiredPosition, 0.1f);
-    }
-
+    
     private void Update()
     {
         if (!isRunning)
             return;
+        
+        Vector3 desiredPosition = lookAt.position + offset;
+        desiredPosition.x = 0;
+        transform.position = Vector3.Lerp(transform.position, desiredPosition, 0.1f);
 
         if (!isChangeColor)
         {

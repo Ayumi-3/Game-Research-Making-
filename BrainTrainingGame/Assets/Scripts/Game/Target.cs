@@ -41,12 +41,7 @@ public class Target : MonoBehaviour
     {
         if(other.tag == "Player")
         {
-            audioSource.Play();
-            //anim.SetTrigger("Collected");
-            //motor.PauseRunning();
-            //rand = Random.Range(0.0f, ColorsPicker.Instance.colorMaxNumber);
-            //colorFlag = (int)Mathf.Ceil(rand);
-            //gameObject.GetComponent<Renderer>().material.color = ColorsPicker.Instance.Colors[colorFlag - 1];
+            audioSource.Play();gameObject.GetComponent<Renderer>().material.color = Color.gray;
             GameControl.Instance.GetTarget();
             isGetTarget = true;
         }

@@ -13,7 +13,7 @@ public class CameraMotor : MonoBehaviour
 
     public bool IsRunning { set; get; }
     
-    private void LateUpdate()
+    private void Update()
     {
         if (!IsRunning)
             return;

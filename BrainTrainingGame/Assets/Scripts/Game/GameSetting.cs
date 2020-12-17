@@ -20,7 +20,7 @@ public class GameSetting : MonoBehaviour
         DefaultData["Mode"] = "1";
         DefaultData["Time"] = "300";
         DefaultData["MonsterMaxHp"] = "300";
-        DefaultData["CDTLevel"] = "15";
+        DefaultData["CDTLevel"] = "25";
         DefaultData["TTTLevel"] = "14";
         DefaultData["ObstacleAppearance"] = "20";
 

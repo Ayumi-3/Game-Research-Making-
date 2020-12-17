@@ -134,29 +134,6 @@ public class PlayerController : MonoBehaviour
             targetPosition += Vector3.right * LANE_DISTANCE;
         else if (desiredLane == 5)
             targetPosition += Vector3.right * LANE_DISTANCE * 2;
-
-        //Debug.Log(desiredLane);
-
-        /*
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
-
-        Vector3 moveVector = Vector3.zero;
-        moveVector.Set(horizontal, 0f, vertical);
-        moveVector.Normalize();
-
-        Vector3 desiredForward = Vector3.RotateTowards(transform.forward, moveVector, TURN_SPEED * Time.deltaTime, 0f);
-        Quaternion rotation = Quaternion.LookRotation(desiredForward);
-
-        controller.Move(moveVector * speed * Time.deltaTime);
-        transform.rotation = rotation;
-        Vector3 dir = controller.velocity;
-        if (dir != Vector3.zero)
-        {
-            dir.y = 0;
-            transform.forward = Vector3.Lerp(transform.forward, dir, TURN_SPEED);
-        }*/
-
         
         // Let's calculate our move delta
         Vector3 moveVector = Vector3.zero;
@@ -178,15 +155,7 @@ public class PlayerController : MonoBehaviour
 
     private void MoveLane(bool goingRight)
     {
-        //desiredLane += (goingRight) ? 1 : -1;
-        if (goingRight)
-        {
-            desiredLane++;
-        }
-        else
-        {
-            desiredLane--;
-        }
+        desiredLane += (goingRight) ? 1 : -1;
         desiredLane = Mathf.Clamp(desiredLane, 1, 5);
     }
     

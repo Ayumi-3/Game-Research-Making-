@@ -94,36 +94,38 @@ public class GameControl : MonoBehaviour
 
     //adaptive, level adjustment
     private List<float> CDTLevel = new List<float>();
+    private float lvl1TimeWindow = 1000.0f;
+    private float stepTimeWindow = 20.0f;
+    private int numberCDTLevel = 38;
+    private float CDTThresholdAccuracy = 80.0f;
+    private float stepCDTAccuracy = 4.0f;
+    private int CDTLimitChangeLevel = 4;
+    private float CDTIntervalTime;
+    private float minCDTIntervalTime = 2.0f;
+    private float maxCDTIntervalTime = 3.5f;
+    private float CDTTimer;
+
     private List<float> TTTSpeedLevel = new List<float>();
     private List<float> TTTDistanceLevel = new List<float>();
-    private float lvl1TimeWindow = 650.0f;
-    private float stepTimeWindow = 10.0f;
-    private int numberCDTLevel = 41;
-    private float[] targetInterval = { 1.2f, 1.0f, 0.8f };
     private float minSpeed = 3.0f;
-    private float maxSpeed = 20.0f;
-    private float stepSpeed = 0.3f;
+    private float maxSpeed = 30.0f;
+    private float stepSpeed = 0.5f;
     private float minTimeInterval = 0.8f;
     private float maxTimeInterval = 2.0f;
-    private int currentCDTLevel = 15;
-    private int currentTTTLevel = 14;
-    private float CDTThresholdAccuracy = 80.0f;
-    private float stepCDTAccuracy = 2.5f;
-    private int CDTLimitChangeLevel = 10;
     private float TTTThresholdAccuracy = 80.0f;
     private float stepTTTAccuracy = 2.0f;
     private int TTTLimitChangeLevel = 10;
-    //CDT only mode
-    private float CDTModeInterval = 1.5f;
-    private float CDTTimer;
+    private float TTTFixedDistance = 10.0f;
 
+    private int currentCDTLevel = 25;
+    private int currentTTTLevel = 14;
+    
     private void Awake()
     {
         Instance = this;
         playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         targetSpawner = GameObject.FindGameObjectWithTag("Player").GetComponent<TargetSpawner>();
         monsterSpawner = GameObject.FindGameObjectWithTag("Player").GetComponent<MonsterSpawner>();
-        //monsterController = GameObject.FindGameObjectWithTag("Monster").GetComponent<MonsterController>();
         gameSetting = GameObject.FindGameObjectWithTag("GameControl").GetComponent<GameSetting>();
         objectSpawner = GameObject.FindGameObjectWithTag("SideObject").GetComponent<SideObjectSpawner>();
         cameraMotor = FindObjectOfType<CameraMotor>();
@@ -191,7 +193,7 @@ public class GameControl : MonoBehaviour
                 }
             }
 
-            if ((SteamVR_Actions._default.GrabPinch.GetStateDown(SteamVR_Input_Sources.Any) || Input.GetKeyDown(KeyCode.Space)) && targetIsAttackable)
+            if ((SteamVR_Actions._default.GrabPinch.GetStateDown(SteamVR_Input_Sources.Any) || Input.GetKeyDown(KeyCode.Space)) && targetIsAttackable && !isTimePause)
             {
                 targetIsAttackable = false;
                 if (monsterColorFlag != targetColorFlag) // Corectly response to right color
@@ -231,19 +233,16 @@ public class GameControl : MonoBehaviour
                     playerController.Ready();
 
                     StartCoroutine(waitDeadMonsterAnimation());
-
-                    //audioSource.Pause();
                 }
             }
 
-            if (gameMode == 0)
+            //CDT control
+            CDTTimer += Time.deltaTime;
+            if (CDTTimer > CDTIntervalTime)
             {
-                CDTTimer += Time.deltaTime;
-                if (CDTTimer > CDTModeInterval)
-                {
-                    CDTTimer = 0.0f;
-                    GetTarget();
-                }
+                CDTTimer = 0.0f;
+                CDTIntervalTime = Random.Range(minCDTIntervalTime, maxCDTIntervalTime);
+                PlayerChangeColor();
             }
 
             if (!isTimePause)
@@ -353,7 +352,11 @@ public class GameControl : MonoBehaviour
 
         playerController.speed = TTTSpeedLevel[currentTTTLevel];
         objectSpawner.ScrollSpeed = -playerController.speed;
-        targetSpawner.targetDistance = TTTDistanceLevel[currentTTTLevel];
+        targetSpawner.targetDistance = TTTFixedDistance;
+
+        //playerController.speed = 30;
+        //objectSpawner.ScrollSpeed = -playerController.speed;
+        //targetSpawner.targetDistance = 10;
 
         sessionNo++;
         // set start record data
@@ -369,6 +372,8 @@ public class GameControl : MonoBehaviour
 
         // Prepare Monster
         prepareMonster();
+
+        CDTIntervalTime = Random.Range(minCDTIntervalTime, maxCDTIntervalTime);
 
         timeLeftText.text = "0:00.000";
 
@@ -515,18 +520,18 @@ public class GameControl : MonoBehaviour
             TTTSpeedLevel.Add(TTTSpeedLevel[j - 1] + stepSpeed);
         }
         
-        float stepTimeInterval, tempDistance;
-        stepTimeInterval = (maxTimeInterval - minTimeInterval) / TTTSpeedLevel.Count;
-        j = 0;
-        TTTDistanceLevel.Add(TTTSpeedLevel[j] * maxTimeInterval);
-        for (j = 1; j < TTTSpeedLevel.Count; j++)
-        {
-            tempDistance = TTTSpeedLevel[j] * (maxTimeInterval - (stepTimeInterval * j));
-            tempDistance *= 10.0f;
-            tempDistance = Mathf.Floor(tempDistance);
-            tempDistance /= 10.0f;
-            TTTDistanceLevel.Add(tempDistance);
-        }
+        //float stepTimeInterval, tempDistance;
+        //stepTimeInterval = (maxTimeInterval - minTimeInterval) / TTTSpeedLevel.Count;
+        //j = 0;
+        //TTTDistanceLevel.Add(TTTSpeedLevel[j] * maxTimeInterval);
+        //for (j = 1; j < TTTSpeedLevel.Count; j++)
+        //{
+        //    tempDistance = TTTSpeedLevel[j] * (maxTimeInterval - (stepTimeInterval * j));
+        //    tempDistance *= 10.0f;
+        //    tempDistance = Mathf.Floor(tempDistance);
+        //    tempDistance /= 10.0f;
+        //    TTTDistanceLevel.Add(tempDistance);
+        //}
     }
 
     private void CDTLevelAdjustment() //Color Discrimination Task level adjustment
@@ -572,7 +577,7 @@ public class GameControl : MonoBehaviour
 
             playerController.speed = TTTSpeedLevel[currentTTTLevel];
             objectSpawner.ScrollSpeed = -playerController.speed;
-            targetSpawner.targetDistance = TTTDistanceLevel[currentTTTLevel];
+            //targetSpawner.targetDistance = TTTDistanceLevel[currentTTTLevel];
         }
         GameDataRecord(false, "TTTLevelAdjustment", "0", "0", "0", "0", "0",
             "0", "0", "0", "0", "0", "0",
@@ -581,7 +586,7 @@ public class GameControl : MonoBehaviour
         Debug.Log("TTT:" + currentAccuracy + "|" + adjustLevel + "|" + currentTTTLevel + "|" + playerController.speed + "|" + targetSpawner.targetDistance);
     }
 
-    public void GetTarget() // Reach the target
+    public void PlayerChangeColor()
     {
         float rand;
         rand = Random.Range(0.0f, ColorsPicker.Instance.colorMaxNumber);
@@ -592,18 +597,23 @@ public class GameControl : MonoBehaviour
         PlayerClothColor.GetComponent<Renderer>().material.color = ColorsPicker.Instance.Colors[targetColorFlag - 1];
         PlayerHatColor.GetComponent<Renderer>().material.color = ColorsPicker.Instance.Colors[targetColorFlag - 1];
 
-        if (gameMode == 1)
-        {
-            countTargetTrackingTaskPoint(true);
-        }
-
-        GameDataRecord(false, "GetTarget", "0", "0", "0", "0", "0",
-            "1", "0", "0", "0", monsterColorFlag.ToString(), targetColorFlag.ToString(),
+        GameDataRecord(false, "ChangePlayerColor", "0", "0", "0", "0", "0",
+            "0", "0", "1", "0", monsterColorFlag.ToString(), targetColorFlag.ToString(),
             "0", "0", "0", "0", "0", "0",
             "0", "0", "0", "0", "0", "0", "0");
 
         targetIsAttackable = true;
         StartCoroutine(waitForAttack());
+    }
+
+    public void GetTarget() // Reach the target
+    {
+        countTargetTrackingTaskPoint(true);
+
+        GameDataRecord(false, "GetTarget", "0", "0", "0", "0", "0",
+            "1", "0", "0", "0", monsterColorFlag.ToString(), targetColorFlag.ToString(),
+            "0", "0", "0", "0", "0", "0",
+            "0", "0", "0", "0", "0", "0", "0");
     }
 
     private IEnumerator waitForAttack()
@@ -671,7 +681,7 @@ public class GameControl : MonoBehaviour
     public void MonsterChangeColor()
     {
         GameDataRecord(false, "MonsterChangeColor", "0", "0", "0", "0", "0",
-            "0", "0", "0", "0", monsterController.colorFlag.ToString(), "0",
+            "0", "0", "0", "0", monsterController.colorFlag.ToString(), targetColorFlag.ToString(),
             "0", "0", "1", "0", "0", "0",
             "0", "0", "0", "0", "0", "0", "0");
     }

@@ -1,0 +1,11 @@
+Mode,Time,MonsterMaxHp,CDTLevel,TTTLevel,ObstacleAppearance
+0,300,300,15,14,20
+GtecTime,UnityTime,GameEvent,MoveLeft,MoveRight,ButtonDown,ButtonUp,PlayerPosition,GetTarget,TargetPosition,Attackable,Attack,MonsterColorId,TargetColorId,AvoidObstacle,ObstaclePosition,MonsterColorChange,GetScore,MonsterId,MonsterHpPercent,CDTAccuracy,CDTLevel,TimeWindow,TTTAccuracy,TTTLevel,Speed,Distance,Score
+0,16-57-04.603,StartGame,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,15,0.5,0,14,30,7,0
+0,16-57-04.618,SpawnedMonster,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0
+0,16-57-09.618,MonsterChangeColor,0,0,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0
+0,16-57-11.109,ChangePlayerColor,0,0,0,0,0,0,0,1,0,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+0,16-57-11.642,LateResponse,0,0,0,0,0,0,0,1,0,1,2,0,0,0,-10,0,0,0,0,0,0,0,0,0,-10
+0,16-57-12.630,ChangePlayerColor,0,0,0,0,0,0,0,1,0,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,-10
+0,16-57-12.648,MonsterChangeColor,0,0,0,0,0,0,0,0,0,2,2,0,0,1,0,0,0,0,0,0,0,0,0,0,-10
+0,16-57-13.136,LateResponse,0,0,0,0,0,0,0,1,0,1,2,0,0,0,-10,0,0,0,0,0,0,0,0,0,-20

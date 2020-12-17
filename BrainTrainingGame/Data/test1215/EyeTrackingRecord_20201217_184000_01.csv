@@ -1,0 +1,2 @@
+GtecTime,UnityTime,CombinedEyeValidDataBitMask,LeftEyeValidDataBitMask,RightEyeValidDataBitMask,CombinedEyeOpenness,LeftEyeOpenness,RightEyeOpenness,CombinedPupilDiameter,LeftPupilDiameter,RightPupilDiameter,CombinedPupilPosition,LeftPupilPosition,RightPupilPosition,CombinedGazeOrigin,LeftGazeOrigin,RightGazeOrigin,CombinedGazeDirection,LeftGazeDirection,RightGazeDirection
+0,18-40-00.845,0,0,0,0,0,0,0,0,0,"(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0)","(0.0, 0.0, 0.0)","(0.0, 0.0, 0.0)","(0.0, 0.0, 0.0)","(0.0, 0.0, 0.0)","(0.0, 0.0, 0.0)","(0.0, 0.0, 0.0)"

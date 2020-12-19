@@ -161,7 +161,7 @@ public class GameControl : MonoBehaviour
         //setting task level
         settingTaskLevel();
     }
-
+    
     private void Update()
     {
         if(isFinishSetting && !isGameStarted)
@@ -428,6 +428,39 @@ public class GameControl : MonoBehaviour
         eyeTrackingData["CombinedGazeDirection"] = verboseData.combined.eye_data.gaze_direction_normalized.ToString();
         eyeTrackingData["LeftGazeDirection"] = verboseData.left.gaze_direction_normalized.ToString();
         eyeTrackingData["RightGazeDirection"] = verboseData.right.gaze_direction_normalized.ToString();
+
+        Ray ray;
+        FocusInfo focusInfo;
+        bool focusStatus = SRanipal_Eye.Focus(GazeIndex.COMBINE, out ray, out focusInfo, 30.0f);
+        Debug.Log("FocusStatus: " + focusStatus);
+        eyeTrackingData["FocusStatus"] = focusStatus.ToString();
+        if (focusStatus)
+        {
+            //DartBoard dartBoard = focusInfo.transform.GetComponent<DartBoard>();
+            //if (dartBoard != null) dartBoard.Focus(focusInfo.point);
+            eyeTrackingData["RayOriginal"] = ray.origin.ToString();
+            eyeTrackingData["RayDirection"] = ray.direction.ToString();
+            eyeTrackingData["Collider"] = focusInfo.collider.ToString();
+            eyeTrackingData["Distance"] = focusInfo.distance.ToString();
+            eyeTrackingData["Normal"] = focusInfo.normal.ToString();
+            eyeTrackingData["Point"] = focusInfo.point.ToString();
+            eyeTrackingData["Transform.position"] = focusInfo.transform.position.ToString();
+            eyeTrackingData["Transform.rotation"] = focusInfo.transform.rotation.ToString();
+        }
+        else
+        {
+            eyeTrackingData["RayOriginal"] = "0";
+            eyeTrackingData["RayDirection"] = "0";
+            eyeTrackingData["Collider"] = "0";
+            eyeTrackingData["Distance"] = "0";
+            eyeTrackingData["Normal"] = "0";
+            eyeTrackingData["Point"] = "0";
+            eyeTrackingData["Transform.position"] = "0";
+            eyeTrackingData["Transform.rotation"] = "0";
+        }
+        
+        
+        
         
         dataManager.WriteData(dataDir, eyeTrackingFile, eyeTrackingData, isFirst, isFirst);
     }

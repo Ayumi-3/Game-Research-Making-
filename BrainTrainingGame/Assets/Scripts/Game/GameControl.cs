@@ -193,6 +193,14 @@ public class GameControl : MonoBehaviour
                 }
             }
 
+            if (SteamVR_Actions._default.GrabPinch.GetStateDown(SteamVR_Input_Sources.Any) || Input.GetKeyDown(KeyCode.Space))
+            {
+                GameDataRecord(false, "Attack", "0", "0", "0", "0", "0",
+                        "0", "0", "0", targetIsAttackable.ToString(), "0", "0",
+                        "0", "0", "0", "0", "0", "0",
+                        "0", "0", "0", "0", "0", "0", "0");
+            }
+
             if ((SteamVR_Actions._default.GrabPinch.GetStateDown(SteamVR_Input_Sources.Any) || Input.GetKeyDown(KeyCode.Space)) && targetIsAttackable && !isTimePause)
             {
                 targetIsAttackable = false;
@@ -432,7 +440,7 @@ public class GameControl : MonoBehaviour
         Ray ray;
         FocusInfo focusInfo;
         bool focusStatus = SRanipal_Eye.Focus(GazeIndex.COMBINE, out ray, out focusInfo, 30.0f);
-        Debug.Log("FocusStatus: " + focusStatus);
+        //Debug.Log("FocusStatus: " + focusStatus);
         eyeTrackingData["FocusStatus"] = focusStatus.ToString();
         if (focusStatus)
         {

@@ -8,6 +8,10 @@ public class PlayerController : MonoBehaviour
     private const float LANE_DISTANCE = 3.0f;
     private const float TURN_SPEED = 0.05f;
 
+    private const int MODE_CDT = 0;
+    private const int MODE_TTT = 1;
+    private const int MODE_MULTITASKING = 2;
+
     private bool isRunning = false;
     private bool isReady = false;
 
@@ -63,7 +67,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        if (gameMode == 1)
+        if (gameMode == MODE_TTT || gameMode == MODE_MULTITASKING)
         {
             // Gather the inputs on which lane we should be
             // Keyboard
@@ -164,8 +168,10 @@ public class PlayerController : MonoBehaviour
         isRunning = true;
         anim.SetBool("Walk", true);
         anim.SetBool("Rest", false);
-
-        monsterTransform = GameObject.FindGameObjectWithTag("Monster").transform;
+        if (gameMode == MODE_CDT || gameMode == MODE_MULTITASKING)
+        {
+            monsterTransform = GameObject.FindGameObjectWithTag("Monster").transform;
+        }
         objectSpawner.IsScrolling = true;
         gameMode = mode;
     }

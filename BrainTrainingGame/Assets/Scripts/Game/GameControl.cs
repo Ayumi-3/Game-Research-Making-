@@ -8,12 +8,20 @@ using ViveSR.anipal.Eye;
 
 public class GameControl : MonoBehaviour
 {
-    private const int TARGET_SCORE_AMOUNT = 10;
+    private const int RESPONSE_TO_RIGHT_SCORE_AMOUNT = 10;
     private const int AVOID_RESPONSE_TO_WRONG_SCORE_AMOUNT = 5;
-    private const int MISS_TARGET_SCORE_AMOUNT = -5;
-    private const int OBSTACLE_HIT_SCORE_AMOUNT = -10;
+    private const int LATE_RESPONSE_SCORE_AMOUNT = -5;
+    private const int GET_TARGET_SCORE_AMOUNT = 5;
+    private const int AVOID_OBSTACLE_SCORE_AMOUNT = 5;
+    private const int MISS_TARGET_SCORE_AMOUNT = -1;
+    private const int HIT_OBSTACLE_SCORE_AMOUNT = -5;
     private const int MONSTER_HP_DECREASE = -20;
     private const int MONSTER_HP_INCREASE = 10;
+    private const int DEFEATED_MONSTER_SCORE_AMOUNT = 100;
+
+    private const int MODE_CDT = 0;
+    private const int MODE_TTT = 1;
+    private const int MODE_MULTITASKING = 2;
 
     public static GameControl Instance { set; get; }
 
@@ -68,9 +76,7 @@ public class GameControl : MonoBehaviour
     private float adaptiveTimer;
     private float timeInterval = 60.0f;
     private float responseTimeWindow = 0.5f;
-
-    private float allTarget;
-    private float scoredTarget;
+    
     private float allCDTPoint;
     private float scoredCDTPoint;
     private float allTTTPoint;
@@ -168,11 +174,14 @@ public class GameControl : MonoBehaviour
         {
             isGameStarted = true;
             playerController.StartRunning(gameMode);
-            if (gameMode == 1)
+            if (gameMode == MODE_TTT || gameMode == MODE_MULTITASKING)
             {
                 targetSpawner.StartRunning();
             }
-            monsterController.StartRunning();
+            if (gameMode == MODE_CDT || gameMode == MODE_MULTITASKING)
+            {
+                monsterController.StartRunning();
+            }
             isFinishSetting = false;
         }
         
@@ -185,74 +194,80 @@ public class GameControl : MonoBehaviour
             {
                 adaptiveTimer = 0.0f;
 
-                CDTLevelAdjustment();
-
-                if (gameMode == 1) // Multitask
+                if (gameMode == MODE_CDT || gameMode == MODE_MULTITASKING)
+                {
+                    CDTLevelAdjustment();
+                }
+                if (gameMode == MODE_TTT || gameMode == MODE_MULTITASKING)
                 {
                     TTTLevelAdjustment();
                 }
             }
 
-            if (SteamVR_Actions._default.GrabPinch.GetStateDown(SteamVR_Input_Sources.Any) || Input.GetKeyDown(KeyCode.Space))
+            if ((SteamVR_Actions._default.GrabPinch.GetStateDown(SteamVR_Input_Sources.Any) || Input.GetKeyDown(KeyCode.Space)))
             {
                 GameDataRecord(false, "Attack", "0", "0", "0", "0", "0",
-                        "0", "0", "0", targetIsAttackable.ToString(), "0", "0",
-                        "0", "0", "0", "0", "0", "0",
-                        "0", "0", "0", "0", "0", "0", "0");
+                    "0", "0", "0", targetIsAttackable.ToString(), "0", "0",
+                    "0", "0", "0", "0", "0", "0",
+                    "0", "0", "0", "0", "0", "0", "0");
+
+                if (targetIsAttackable && !isTimePause)
+                {
+                    targetIsAttackable = false;
+                    if (monsterColorFlag != targetColorFlag) // Corectly response to right color
+                    {
+                        playerController.Attack(true);
+                        monsterController.Damage();
+                        updateScore(RESPONSE_TO_RIGHT_SCORE_AMOUNT);
+                        updateMonsterHP(MONSTER_HP_DECREASE);
+                        countColorDiscriminationTaskPoint(true);
+                        GameDataRecord(false, "ResponseToRightColor", "0", "0", "0", "0", "0",
+                            "0", "0", "1", "1", monsterColorFlag.ToString(), targetColorFlag.ToString(),
+                            "0", "0", "0", RESPONSE_TO_RIGHT_SCORE_AMOUNT.ToString(), monsterId.ToString(), ((float)monsterHP/(float)maxMonsterHP*100.0f).ToString(),
+                            "0", "0", "0", "0", "0", "0", "0");
+                    }
+                    else // Response to wrong color
+                    {
+                        playerController.Attack(false);
+                        updateScore(-RESPONSE_TO_RIGHT_SCORE_AMOUNT);
+                        updateMonsterHP(MONSTER_HP_INCREASE);
+                        countColorDiscriminationTaskPoint(false);
+                        GameDataRecord(false, "ResponseToWrongColor", "0", "0", "0", "0", "0",
+                            "0", "0", "-1", "1", monsterColorFlag.ToString(), targetColorFlag.ToString(),
+                            "0", "0", "0", (-RESPONSE_TO_RIGHT_SCORE_AMOUNT).ToString(), monsterId.ToString(), ((float)monsterHP / (float)maxMonsterHP * 100.0f).ToString(),
+                            "0", "0", "0", "0", "0", "0", "0");
+                    }
+
+                    if (monsterHP <= 0) //monster is dead
+                    {
+                        defeatedText.text = monsterId.ToString("0");
+                        isTimePause = true;
+                        updateScore(DEFEATED_MONSTER_SCORE_AMOUNT);
+                        MonsterHPCanvas.gameObject.SetActive(false);
+                        monsterController.Dead();
+                        GameDataRecord(false, "DefeatedMonster", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", DEFEATED_MONSTER_SCORE_AMOUNT.ToString(),
+                            monsterId.ToString(), "0", "0", "0", "0", "0", "0", "0", "0");
+
+                        playerController.PauseRunning();
+                        playerController.Ready();
+
+                        StartCoroutine(waitDeadMonsterAnimation());
+                    }
+                }
             }
 
-            if ((SteamVR_Actions._default.GrabPinch.GetStateDown(SteamVR_Input_Sources.Any) || Input.GetKeyDown(KeyCode.Space)) && targetIsAttackable && !isTimePause)
+            if (gameMode == MODE_CDT || gameMode ==MODE_MULTITASKING)
             {
-                targetIsAttackable = false;
-                if (monsterColorFlag != targetColorFlag) // Corectly response to right color
+                //CDT control
+                CDTTimer += Time.deltaTime;
+                if (CDTTimer > CDTIntervalTime)
                 {
-                    playerController.Attack(true);
-                    monsterController.Damage();
-                    updateScore(TARGET_SCORE_AMOUNT);
-                    updateMonsterHP(MONSTER_HP_DECREASE);
-                    countColorDiscriminationTaskPoint(true);
-                    GameDataRecord(false, "ResponseToRightColor", "0", "0", "0", "0", "0",
-                        "0", "0", "1", "1", monsterColorFlag.ToString(), targetColorFlag.ToString(),
-                        "0", "0", "0", TARGET_SCORE_AMOUNT.ToString(), monsterId.ToString(), ((float)monsterHP/(float)maxMonsterHP*100.0f).ToString(),
-                        "0", "0", "0", "0", "0", "0", "0");
-                }
-                else // Response to wrong color
-                {
-                    playerController.Attack(false);
-                    updateScore(-TARGET_SCORE_AMOUNT);
-                    updateMonsterHP(MONSTER_HP_INCREASE);
-                    countColorDiscriminationTaskPoint(false);
-                    GameDataRecord(false, "ResponseToWrongColor", "0", "0", "0", "0", "0",
-                        "0", "0", "-1", "1", monsterColorFlag.ToString(), targetColorFlag.ToString(),
-                        "0", "0", "0", (-TARGET_SCORE_AMOUNT).ToString(), monsterId.ToString(), ((float)monsterHP / (float)maxMonsterHP * 100.0f).ToString(),
-                        "0", "0", "0", "0", "0", "0", "0");
-                }
-
-                if (monsterHP <= 0) //monster is dead
-                {
-                    defeatedText.text = monsterId.ToString("0");
-                    isTimePause = true;
-                    MonsterHPCanvas.gameObject.SetActive(false);
-                    monsterController.Dead();
-                    GameDataRecord(false, "DefeatedMonster", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0",
-                        monsterId.ToString(), "0", "0", "0", "0", "0", "0", "0", "0");
-
-                    playerController.PauseRunning();
-                    playerController.Ready();
-
-                    StartCoroutine(waitDeadMonsterAnimation());
+                    CDTTimer = 0.0f;
+                    CDTIntervalTime = Random.Range(minCDTIntervalTime, maxCDTIntervalTime);
+                    PlayerChangeColor();
                 }
             }
-
-            //CDT control
-            CDTTimer += Time.deltaTime;
-            if (CDTTimer > CDTIntervalTime)
-            {
-                CDTTimer = 0.0f;
-                CDTIntervalTime = Random.Range(minCDTIntervalTime, maxCDTIntervalTime);
-                PlayerChangeColor();
-            }
-
+            
             if (!isTimePause)
             {
                 timeRemain -= Time.deltaTime;
@@ -271,8 +286,7 @@ public class GameControl : MonoBehaviour
                     isGameStarted = false;
                 }
             }
-
-
+            
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 Debug.Log("Manually stop game");
@@ -284,8 +298,14 @@ public class GameControl : MonoBehaviour
             if (!isGameStarted)
             {
                 playerController.PauseRunning();
-                targetSpawner.PauseRunning();
-                monsterController.PauseRunning();
+                if (gameMode == MODE_TTT || gameMode == MODE_MULTITASKING)
+                {
+                    targetSpawner.PauseRunning();
+                }
+                if (gameMode == MODE_CDT || gameMode == MODE_MULTITASKING)
+                {
+                    monsterController.PauseRunning();
+                }
                 cameraMotor.IsRunning = false;
                 if (monsterHP > 0)
                 {
@@ -293,14 +313,21 @@ public class GameControl : MonoBehaviour
                 }
                 GameDataRecord(false, "TotalScore", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0",
                     monsterId.ToString(), "0", "0", "0", "0", "0", "0", "0", "0");
-                GameEndScoreText.text = "Your Score: " + score.ToString("0") + "\nDefeated Monsters: " + monsterId.ToString("0");
+                GameEndScoreText.text = "Your Score: " + score.ToString("0");
+                if (gameMode == MODE_CDT || gameMode == MODE_MULTITASKING)
+                {
+                    GameEndScoreText.text += "\nDefeated Monsters: " + monsterId.ToString("0");
+                }
                 GameEndCanvas.gameObject.SetActive(true);
                 GameEndMonitorScoreText.text = "Sessions: " + sessionNo.ToString("0") +
-                    "\nScore: " + score.ToString("0") + "\nDefeated Monsters: " + monsterId.ToString("0") +
-                    "\nCDT Level: " + currentCDTLevel.ToString("0");
-                if (gameMode == 1)
+                    "\nScore: " + score.ToString("0");
+                if (gameMode == MODE_CDT || gameMode == MODE_MULTITASKING)
                 {
-                    GameEndMonitorScoreText.text += " | TTT Level: " + currentTTTLevel.ToString("0");
+                    GameEndMonitorScoreText.text += "\nDefeated Monsters: " + monsterId.ToString("0") + "\nCDT Level: " + currentCDTLevel.ToString("0");
+                }
+                if (gameMode == MODE_TTT || gameMode == MODE_MULTITASKING)
+                {
+                    GameEndMonitorScoreText.text += "\nTTT Level: " + currentTTTLevel.ToString("0");
                 }
                 GameEndMonitorCanvas.gameObject.SetActive(true);
             }
@@ -325,8 +352,6 @@ public class GameControl : MonoBehaviour
         CountDownText.text = "";
 
         score = 0.0f;
-        allTarget = 0.0f;
-        scoredTarget = 0.0f;
         adaptiveTimer = 0.0f;
         allCDTPoint = 0.0f;
         scoredCDTPoint = 0.0f;
@@ -378,10 +403,13 @@ public class GameControl : MonoBehaviour
         eyeTrackingFile = dataDir + "EyeTrackingRecord_" + startTime + "_" + sessionNo.ToString("00") + ".csv";
         RecordEyeTrackingData(true);
 
-        // Prepare Monster
-        prepareMonster();
+        if (gameMode == MODE_CDT || gameMode == MODE_MULTITASKING)
+        {
+            // Prepare Monster
+            prepareMonster();
 
-        CDTIntervalTime = Random.Range(minCDTIntervalTime, maxCDTIntervalTime);
+            CDTIntervalTime = Random.Range(minCDTIntervalTime, maxCDTIntervalTime);
+        }
 
         timeLeftText.text = "0:00.000";
 
@@ -408,7 +436,10 @@ public class GameControl : MonoBehaviour
         
         CountDownCanvas.gameObject.SetActive(false);
         ScoreCanvas.gameObject.SetActive(true);
-        MonsterHPCanvas.gameObject.SetActive(true);
+        if (gameMode == MODE_CDT || gameMode == MODE_MULTITASKING)
+        {
+            MonsterHPCanvas.gameObject.SetActive(true);
+        }
         isFinishSetting = true;
         isTimePause = false;
     }
@@ -466,9 +497,6 @@ public class GameControl : MonoBehaviour
             eyeTrackingData["Transform.position"] = "0";
             eyeTrackingData["Transform.rotation"] = "0";
         }
-        
-        
-        
         
         dataManager.WriteData(dataDir, eyeTrackingFile, eyeTrackingData, isFirst, isFirst);
     }
@@ -531,15 +559,6 @@ public class GameControl : MonoBehaviour
         if (isScored)
         {
             scoredTTTPoint += 1.0f;
-        }
-    }
-
-    private void countTarget(bool isScored)
-    {
-        allTarget += 1.0f;
-        if (isScored)
-        {
-            scoredTarget += 1.0f;
         }
     }
 
@@ -649,11 +668,12 @@ public class GameControl : MonoBehaviour
 
     public void GetTarget() // Reach the target
     {
+        updateScore(GET_TARGET_SCORE_AMOUNT);
         countTargetTrackingTaskPoint(true);
 
         GameDataRecord(false, "GetTarget", "0", "0", "0", "0", "0",
             "1", "0", "0", "0", monsterColorFlag.ToString(), targetColorFlag.ToString(),
-            "0", "0", "0", "0", "0", "0",
+            "0", "0", "0", GET_TARGET_SCORE_AMOUNT.ToString(), "0", "0",
             "0", "0", "0", "0", "0", "0", "0");
     }
 
@@ -668,11 +688,11 @@ public class GameControl : MonoBehaviour
         {
             if (monsterColorFlag != targetColorFlag) // Late response to right color
             {
-                updateScore(-TARGET_SCORE_AMOUNT);
+                updateScore(LATE_RESPONSE_SCORE_AMOUNT);
                 countColorDiscriminationTaskPoint(false);
                 GameDataRecord(false, "LateResponse", "0", "0", "0", "0", "0",
                   "0", "0", "1", "0", monsterColorFlag.ToString(), targetColorFlag.ToString(),
-                  "0", "0", "0", (-TARGET_SCORE_AMOUNT).ToString(), "0", "0",
+                  "0", "0", "0", LATE_RESPONSE_SCORE_AMOUNT.ToString(), "0", "0",
                   "0", "0", "0", "0", "0", "0", "0");
             }
             else // correctly avoid response to wrong color
@@ -700,11 +720,11 @@ public class GameControl : MonoBehaviour
     
     public void GetObstacle() // Hit obstacle
     {
-        updateScore(OBSTACLE_HIT_SCORE_AMOUNT);
+        updateScore(HIT_OBSTACLE_SCORE_AMOUNT);
         countTargetTrackingTaskPoint(false);
         GameDataRecord(false, "HitObstacle", "0", "0", "0", "0", "0",
             "0", "0", "0", "0", "0", "0",
-            "-1", "0", "0", OBSTACLE_HIT_SCORE_AMOUNT.ToString(), "0", "0",
+            "-1", "0", "0", HIT_OBSTACLE_SCORE_AMOUNT.ToString(), "0", "0",
             "0", "0", "0", "0", "0", "0", "0");
 
         playerController.Fall();
@@ -712,10 +732,11 @@ public class GameControl : MonoBehaviour
 
     public void DidntGetObatacle(Transform player, Transform obstacle) // Avoid obstacle
     {
+        updateScore(AVOID_OBSTACLE_SCORE_AMOUNT);
         countTargetTrackingTaskPoint(true);
         GameDataRecord(false, "AvoidObstacle", "0", "0", "0", "0", player.position.x.ToString(),
             "0", "0", "0", "0", "0", "0",
-            "1", obstacle.position.x.ToString(), "0", "0", "0", "0",
+            "1", obstacle.position.x.ToString(), "0", AVOID_OBSTACLE_SCORE_AMOUNT.ToString(), "0", "0",
             "0", "0", "0", "0", "0", "0", "0");
     }
 
@@ -731,8 +752,14 @@ public class GameControl : MonoBehaviour
     {
         playerController.SetDefault();
         cameraMotor.SetDefault();
-        targetSpawner.ClearTarget();
-        monsterController.DestroyMonster();
+        if (gameMode == MODE_TTT || gameMode == MODE_MULTITASKING)
+        {
+            targetSpawner.ClearTarget();
+        }
+        if (gameMode == MODE_CDT || gameMode == MODE_MULTITASKING)
+        {
+            monsterController.DestroyMonster();
+        }
         objectSpawner.SetDefault();
 
         gameSetting.SetLevelNextSession(currentCDTLevel, currentTTTLevel);

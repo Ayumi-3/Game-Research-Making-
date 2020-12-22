@@ -17,15 +17,12 @@ public class GameSetting : MonoBehaviour
 
     private void Start()
     {
-        DefaultData["Mode"] = "1";
         DefaultData["Time"] = "300";
         DefaultData["MonsterMaxHp"] = "300";
         DefaultData["CDTLevel"] = "25";
         DefaultData["TTTLevel"] = "14";
         DefaultData["ObstacleAppearance"] = "20";
-
-        int modeIndex = int.Parse(DefaultData["Mode"]);
-        ModeDropdown.options[modeIndex].text = ModeDropdown.options[modeIndex].text;
+        
         TimeInput.text = DefaultData["Time"];
         MonsterMaxHpInput.text = DefaultData["MonsterMaxHp"];
         CDTLevelInput.text = DefaultData["CDTLevel"];
@@ -35,7 +32,6 @@ public class GameSetting : MonoBehaviour
 
     public void SetDefault()
     {
-        ModeDropdown.options[1].text = ModeDropdown.options[1].text;
         TimeInput.text = DefaultData["Time"];
         MonsterMaxHpInput.text = DefaultData["MonsterMaxHp"];
         CDTLevelInput.text = DefaultData["CDTLevel"];

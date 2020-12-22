@@ -7,6 +7,6 @@ public class EyeTrackingCalibration : MonoBehaviour
 {
     public void EyeTrackingCaribrateOnClick()
     {
-        SRanipal_Eye.LaunchEyeCalibration();
+        SRanipal_Eye_v2.LaunchEyeCalibration();
     }
 }

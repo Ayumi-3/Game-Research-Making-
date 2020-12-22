@@ -41,7 +41,8 @@ public class Target : MonoBehaviour
     {
         if(other.tag == "Player")
         {
-            audioSource.Play();gameObject.GetComponent<Renderer>().material.color = Color.gray;
+            audioSource.Play();
+            gameObject.GetComponent<Renderer>().material.color = Color.gray;
             GameControl.Instance.GetTarget();
             isGetTarget = true;
         }

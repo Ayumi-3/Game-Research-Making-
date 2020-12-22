@@ -166,11 +166,12 @@ public class PlayerController : MonoBehaviour
         isRunning = true;
         anim.SetBool("Walk", true);
         anim.SetBool("Rest", false);
+        gameMode = mode;
         if (gameMode == MODE_CDT || gameMode == MODE_MULTITASKING)
         {
             monsterTransform = GameObject.FindGameObjectWithTag("Monster").transform;
         }
-        gameMode = mode;
+        
     }
 
     public void PauseRunning()

@@ -452,7 +452,9 @@ public class GameControl : MonoBehaviour
     {
         eyeTrackingData["GtecTime"] = communicationController.ReceivedData.ToString();
         eyeTrackingData["UnityTime"] = System.DateTime.Now.ToString("HH-mm-ss.fff");
-        SRanipal_Eye.GetVerboseData(out verboseData);
+        EyeData_v2 eyeData = new EyeData_v2();
+        SRanipal_Eye_API.GetEyeData_v2(ref eyeData);
+        SRanipal_Eye_v2.GetVerboseData(out verboseData);
         eyeTrackingData["CombinedEyeValidDataBitMask"] = verboseData.combined.eye_data.eye_data_validata_bit_mask.ToString();
         eyeTrackingData["LeftEyeValidDataBitMask"] = verboseData.left.eye_data_validata_bit_mask.ToString();
         eyeTrackingData["RightEyeValidDataBitMask"] = verboseData.right.eye_data_validata_bit_mask.ToString();
@@ -472,9 +474,16 @@ public class GameControl : MonoBehaviour
         eyeTrackingData["LeftGazeDirection"] = verboseData.left.gaze_direction_normalized.ToString();
         eyeTrackingData["RightGazeDirection"] = verboseData.right.gaze_direction_normalized.ToString();
 
+        eyeTrackingData["LeftEyeWide"] = eyeData.expression_data.left.eye_wide.ToString();
+        eyeTrackingData["RightEyeWide"] = eyeData.expression_data.right.eye_wide.ToString();
+        eyeTrackingData["LeftEyeSqeeze"] = eyeData.expression_data.left.eye_squeeze.ToString();
+        eyeTrackingData["RightEyeSqeeze"] = eyeData.expression_data.right.eye_squeeze.ToString();
+        eyeTrackingData["LeftEyeFrown"] = eyeData.expression_data.left.eye_frown.ToString();
+        eyeTrackingData["RightEyeFrown"] = eyeData.expression_data.right.eye_frown.ToString();
+
         Ray ray;
         FocusInfo focusInfo;
-        bool focusStatus = SRanipal_Eye.Focus(GazeIndex.COMBINE, out ray, out focusInfo, 30.0f);
+        bool focusStatus = SRanipal_Eye_v2.Focus(GazeIndex.COMBINE, out ray, out focusInfo, 30.0f);
         //Debug.Log("FocusStatus: " + focusStatus);
         eyeTrackingData["FocusStatus"] = focusStatus.ToString();
         if (focusStatus)

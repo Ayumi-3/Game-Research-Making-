@@ -19,6 +19,7 @@ public class MenuManager : MonoBehaviour
     private CommunicationController communicationController;
     private UDPReceiver udpReceiver;
     private LoadSceneOnClick loadSceneOnClick;
+    private PlayerController playerController;
 
     // Baseline
     public Canvas BaselineCanvas;
@@ -53,7 +54,7 @@ public class MenuManager : MonoBehaviour
             Directory.CreateDirectory(DataDir);
         }
         Debug.Log("Finish start MenuManager");
-
+        
         TimeInput.text = "300";
         isRecording = false;
     }

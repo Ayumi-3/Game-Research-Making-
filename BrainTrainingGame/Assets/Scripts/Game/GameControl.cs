@@ -174,6 +174,7 @@ public class GameControl : MonoBehaviour
         {
             isGameStarted = true;
             playerController.StartRunning(gameMode);
+            objectSpawner.IsScrolling = true;
             if (gameMode == MODE_TTT || gameMode == MODE_MULTITASKING)
             {
                 targetSpawner.StartRunning();
@@ -249,6 +250,7 @@ public class GameControl : MonoBehaviour
                             monsterId.ToString(), "0", "0", "0", "0", "0", "0", "0", "0");
 
                         playerController.PauseRunning();
+                        objectSpawner.IsScrolling = false;
                         playerController.Ready();
 
                         StartCoroutine(waitDeadMonsterAnimation());
@@ -298,6 +300,7 @@ public class GameControl : MonoBehaviour
             if (!isGameStarted)
             {
                 playerController.PauseRunning();
+                objectSpawner.IsScrolling = false;
                 if (gameMode == MODE_TTT || gameMode == MODE_MULTITASKING)
                 {
                     targetSpawner.PauseRunning();
@@ -341,6 +344,7 @@ public class GameControl : MonoBehaviour
         prepareMonster();
         MonsterHPCanvas.gameObject.SetActive(true);
         playerController.StartRunning(gameMode);
+        objectSpawner.IsScrolling = true;
         monsterController.StartRunning();
         isTimePause = false;
     }
@@ -475,8 +479,6 @@ public class GameControl : MonoBehaviour
         eyeTrackingData["FocusStatus"] = focusStatus.ToString();
         if (focusStatus)
         {
-            //DartBoard dartBoard = focusInfo.transform.GetComponent<DartBoard>();
-            //if (dartBoard != null) dartBoard.Focus(focusInfo.point);
             eyeTrackingData["RayOriginal"] = ray.origin.ToString();
             eyeTrackingData["RayDirection"] = ray.direction.ToString();
             eyeTrackingData["Collider"] = focusInfo.collider.ToString();
@@ -497,7 +499,10 @@ public class GameControl : MonoBehaviour
             eyeTrackingData["Transform.position"] = "0";
             eyeTrackingData["Transform.rotation"] = "0";
         }
-        
+
+        eyeTrackingData["Camera.position"] = cameraMotor.transform.position.ToString();
+        eyeTrackingData["Camera.rotation"] = cameraMotor.transform.rotation.ToString();
+
         dataManager.WriteData(dataDir, eyeTrackingFile, eyeTrackingData, isFirst, isFirst);
     }
 

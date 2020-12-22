@@ -27,7 +27,6 @@ public class PlayerController : MonoBehaviour
     private float randAction;
 
     private Transform monsterTransform;
-    private SideObjectSpawner objectSpawner;
 
     public SteamVR_Action_Vector2 TouchAction;
     private Vector2 touchValue;
@@ -42,7 +41,6 @@ public class PlayerController : MonoBehaviour
         anim = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
         
-        objectSpawner = GameObject.FindGameObjectWithTag("SideObject").GetComponent<SideObjectSpawner>();
         PauseRunning();
         isReady = false;
         transform.position = Vector3.zero;
@@ -172,7 +170,6 @@ public class PlayerController : MonoBehaviour
         {
             monsterTransform = GameObject.FindGameObjectWithTag("Monster").transform;
         }
-        objectSpawner.IsScrolling = true;
         gameMode = mode;
     }
 
@@ -182,8 +179,6 @@ public class PlayerController : MonoBehaviour
         anim.SetBool("Walk", false);
         anim.SetBool("Rest", true);
         isReady = false;
-
-        objectSpawner.IsScrolling = false;
     }
 
     public void Ready()

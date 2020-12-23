@@ -338,7 +338,10 @@ namespace ViveSR
                     }
                     else if (SRanipal_Eye_Framework.Status == SRanipal_Eye_Framework.FrameworkStatus.NOT_SUPPORT)
                     {
-                        origin = Camera.main.transform.position;
+                        //origin = Camera.main.transform.position;
+                        GameObject vrcamerarig;
+                        vrcamerarig = GameObject.FindGameObjectWithTag("MainCamera");
+                        origin = vrcamerarig.transform.position;
                         valid = true;
                     }
                     ray = new Ray(origin, direction);

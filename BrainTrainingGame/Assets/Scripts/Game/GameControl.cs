@@ -365,6 +365,7 @@ public class GameControl : MonoBehaviour
         CDTTimer = 0.0f;
 
         monsterId = 0;
+        defeatedText.text = monsterId.ToString("0");
 
         settingData.Clear();
     }
@@ -796,7 +797,7 @@ public class GameControl : MonoBehaviour
         string tttAccuracy, string tttLevel, string speed, string distance)
     {
         GamePlayData["GtecTime"] = communicationController.ReceivedData.ToString();
-        GamePlayData["UnityTime"] = System.DateTime.Now.ToString("HH-mm-ss.fff");
+        GamePlayData["UnityTime"] = (Time.time * 1000).ToString(); //System.DateTime.Now.ToString("HH-mm-ss.fff");
         GamePlayData["GameEvent"] = gameEvent;
         GamePlayData["MoveLeft"] = moveLeft;
         GamePlayData["MoveRight"] = moveRight;

@@ -452,7 +452,7 @@ public class GameControl : MonoBehaviour
     private void RecordEyeTrackingData(bool isFirst)
     {
         eyeTrackingData["GtecTime"] = communicationController.ReceivedData.ToString();
-        eyeTrackingData["UnityTime"] = System.DateTime.Now.ToString("HH-mm-ss.fff");
+        eyeTrackingData["UnityTime"] = (Time.time * 1000).ToString();  //System.DateTime.Now.ToString("HH-mm-ss.fff");
         EyeData_v2 eyeData = new EyeData_v2();
         SRanipal_Eye_API.GetEyeData_v2(ref eyeData);
         SRanipal_Eye_v2.GetVerboseData(out verboseData);

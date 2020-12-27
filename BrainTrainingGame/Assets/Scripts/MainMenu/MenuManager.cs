@@ -33,6 +33,8 @@ public class MenuManager : MonoBehaviour
     private bool isRecording;
     private int recordMode;
 
+    public Canvas QuestionnaireCanvas;
+
     private void Awake()
     {
         Instance = this;
@@ -44,6 +46,7 @@ public class MenuManager : MonoBehaviour
         loadSceneOnClick = GetComponent<LoadSceneOnClick>();
 
         BaselineCanvas.gameObject.SetActive(false);
+        QuestionnaireCanvas.gameObject.SetActive(false);
 
         playerName = getPlayerName.GetPlayer();
 

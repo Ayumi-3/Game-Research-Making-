@@ -90,7 +90,11 @@
     <Compile Include="Assets\Scripts\LoadSceneOnClick.cs" />
     <Compile Include="Assets\Scripts\MainMenu\Baseline.cs" />
     <Compile Include="Assets\Scripts\MainMenu\EyeTrackingCalibration.cs" />
+    <Compile Include="Assets\Scripts\MainMenu\Finish.cs" />
     <Compile Include="Assets\Scripts\MainMenu\MenuManager.cs" />
+    <Compile Include="Assets\Scripts\MainMenu\Next.cs" />
+    <Compile Include="Assets\Scripts\MainMenu\Previous.cs" />
+    <Compile Include="Assets\Scripts\MainMenu\Questionnaire.cs" />
     <Compile Include="Assets\Scripts\MainMenu\StartGame.cs" />
     <Compile Include="Assets\Scripts\Read2UDP.cs" />
     <Compile Include="Assets\Scripts\RecordEyeData.cs" />

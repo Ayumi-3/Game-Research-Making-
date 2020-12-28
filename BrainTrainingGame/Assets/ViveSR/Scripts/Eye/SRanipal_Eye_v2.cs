@@ -275,8 +275,10 @@ namespace ViveSR
                     {
                         //origin = Camera.main.transform.position;
                         GameObject vrcamerarig;
+                        Camera maincamera;
                         vrcamerarig = GameObject.FindGameObjectWithTag("MainCamera");
-                        origin = vrcamerarig.transform.position;
+                        maincamera = vrcamerarig.gameObject.GetComponentInChildren<Camera>();
+                        origin = maincamera.transform.position;
                         valid = true;
                     }
                     else
@@ -343,8 +345,10 @@ namespace ViveSR
                     {
                         //origin = Camera.main.transform.position;
                         GameObject vrcamerarig;
+                        Camera maincamera;
                         vrcamerarig = GameObject.FindGameObjectWithTag("MainCamera");
-                        origin = vrcamerarig.transform.position;
+                        maincamera = vrcamerarig.gameObject.GetComponentInChildren<Camera>();
+                        origin = maincamera.transform.position;
                         valid = true;
                     }
                     ray = new Ray(origin, direction);
@@ -381,8 +385,10 @@ namespace ViveSR
                     {
                         //Ray rayGlobal = new Ray(Camera.main.transform.position, Camera.main.transform.TransformDirection(ray.direction));
                         GameObject vrcamerarig;
+                        Camera maincamera;
                         vrcamerarig = GameObject.FindGameObjectWithTag("MainCamera");
-                        Ray rayGlobal = new Ray(vrcamerarig.transform.position, vrcamerarig.transform.TransformDirection(ray.direction));
+                        maincamera = vrcamerarig.gameObject.GetComponentInChildren<Camera>();
+                        Ray rayGlobal = new Ray(maincamera.transform.position, maincamera.transform.TransformDirection(ray.direction));
                         RaycastHit hit;
                         if (radius == 0) valid = Physics.Raycast(rayGlobal, out hit, maxDistance, focusableLayer);
                         else valid = Physics.SphereCast(rayGlobal, radius, out hit, maxDistance, focusableLayer);

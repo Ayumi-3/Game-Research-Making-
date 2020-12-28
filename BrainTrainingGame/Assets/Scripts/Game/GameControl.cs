@@ -38,6 +38,7 @@ public class GameControl : MonoBehaviour
     private CommunicationController communicationController;
     private UDPReceiver udpReceiver;
     private LoadSceneOnClick loadSceneOnClick;
+    private Camera mainCamera;
 
     public Canvas ScoreCanvas;
     public Canvas MonsterHPCanvas;
@@ -141,6 +142,7 @@ public class GameControl : MonoBehaviour
         communicationController = GetComponent<CommunicationController>();
         udpReceiver = GetComponent<UDPReceiver>();
         loadSceneOnClick = GetComponent<LoadSceneOnClick>();
+        mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponentInChildren<Camera>();
 
         clearVariables();
 
@@ -484,11 +486,12 @@ public class GameControl : MonoBehaviour
 
         Ray ray;
         FocusInfo focusInfo;
-        bool focusStatus = SRanipal_Eye_v2.Focus(GazeIndex.COMBINE, out ray, out focusInfo, 30.0f);
+        bool focusStatus = SRanipal_Eye_v2.Focus(GazeIndex.COMBINE, out ray, out focusInfo);
         //Debug.Log("FocusStatus: " + focusStatus);
         eyeTrackingData["FocusStatus"] = focusStatus.ToString();
         if (focusStatus)
         {
+            Debug.Log(focusInfo.collider);
             eyeTrackingData["RayOriginal"] = ray.origin.ToString();
             eyeTrackingData["RayDirection"] = ray.direction.ToString();
             eyeTrackingData["Collider"] = focusInfo.collider.ToString();
@@ -510,8 +513,8 @@ public class GameControl : MonoBehaviour
             eyeTrackingData["Transform.rotation"] = "0";
         }
 
-        eyeTrackingData["Camera.position"] = cameraMotor.transform.position.ToString();
-        eyeTrackingData["Camera.rotation"] = cameraMotor.transform.rotation.ToString();
+        eyeTrackingData["Camera.position"] = mainCamera.transform.position.ToString();
+        eyeTrackingData["Camera.rotation"] = mainCamera.transform.rotation.ToString();
 
         dataManager.WriteData(dataDir, eyeTrackingFile, eyeTrackingData, isFirst, isFirst);
     }

@@ -5,8 +5,8 @@ using Valve.VR;
 
 public class PlayerController : MonoBehaviour
 {
-    private const float LANE_DISTANCE = 3.0f;
-    private const float TURN_SPEED = 0.05f;
+    private const float LANE_DISTANCE = 0.3f;
+    private const float TURN_SPEED = 0.5f;
 
     private const int MODE_CDT = 0;
     private const int MODE_TTT = 1;
@@ -139,7 +139,7 @@ public class PlayerController : MonoBehaviour
         
         // Let's calculate our move delta
         Vector3 moveVector = Vector3.zero;
-        moveVector.x = (targetPosition - transform.position).x * speed;
+        moveVector.x = (targetPosition - transform.position).x * speed * 10;
         moveVector.y = 0.0f;
         moveVector.z = speed;
         

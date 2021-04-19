@@ -114,15 +114,15 @@ public class GameControl : MonoBehaviour
 
     private List<float> TTTSpeedLevel = new List<float>();
     private List<float> TTTDistanceLevel = new List<float>();
-    private float minSpeed = 3.0f;
-    private float maxSpeed = 30.0f;
-    private float stepSpeed = 0.5f;
-    private float minTimeInterval = 0.8f;
-    private float maxTimeInterval = 2.0f;
+    private float minSpeed = 0.3f;
+    private float maxSpeed = 3.0f;
+    private float stepSpeed = 0.05f;
+    private float minTimeInterval = 0.08f;
+    private float maxTimeInterval = 0.2f;
     private float TTTThresholdAccuracy = 80.0f;
     private float stepTTTAccuracy = 2.0f;
     private int TTTLimitChangeLevel = 10;
-    private float TTTFixedDistance = 10.0f;
+    private float TTTFixedDistance = 1.0f;
 
     private int currentCDTLevel = 25;
     private int currentTTTLevel = 14;

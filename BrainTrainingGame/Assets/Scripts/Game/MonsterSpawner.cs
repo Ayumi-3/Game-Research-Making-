@@ -6,7 +6,7 @@ public class MonsterSpawner : MonoBehaviour
 {
     public GameObject Monster;
     public Transform Player;
-    public Vector3 offset = new Vector3(0, 0, 8.0f);
+    public Vector3 offset = new Vector3(0, 0, 0.8f);
 
     private Vector3 targetPosition;
 

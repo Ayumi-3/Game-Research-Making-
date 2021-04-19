@@ -5,7 +5,7 @@ using UnityEngine;
 public class MonsterController : MonoBehaviour
 {
     private Transform lookAt; // player
-    public Vector3 offset = new Vector3(0, 0, 10.0f);
+    public Vector3 offset = new Vector3(0, 0, 1.0f);
     public Renderer JewelRenderer;
     public Renderer BodyRenderer;
     public Renderer HatRenderer;
@@ -14,7 +14,7 @@ public class MonsterController : MonoBehaviour
 
     private Material[] jewelMaterials;
 
-    private Vector3 DefaultPosition = new Vector3(0.0f, 0.0f, 10.0f);
+    private Vector3 DefaultPosition = new Vector3(0.0f, 0.0f, 1.0f);
 
     private Animator anim;
 

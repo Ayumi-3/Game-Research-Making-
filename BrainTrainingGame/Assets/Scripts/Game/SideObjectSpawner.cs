@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class SideObjectSpawner : MonoBehaviour
 {
-    private const float DISTANCE_TO_RESPAWN = 6.0f;
+    private const float DISTANCE_TO_RESPAWN = 0.6f;
 
-    public float ScrollSpeed = -7.0f;
+    public float ScrollSpeed = -0.7f;
     public float totalLenght;
     public bool IsScrolling { set; get; }
 

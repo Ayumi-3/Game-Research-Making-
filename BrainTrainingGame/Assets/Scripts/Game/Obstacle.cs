@@ -22,7 +22,7 @@ public class Obstacle : MonoBehaviour
     private void Update()
     {
         distanceZ = Player.transform.position.z - gameObject.transform.position.z;
-        if (distanceZ > 3)
+        if (distanceZ > 0.3)
         {
             spawner.TargetCount--;
             if (!isGetObstacle)

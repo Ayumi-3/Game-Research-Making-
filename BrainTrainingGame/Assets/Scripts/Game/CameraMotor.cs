@@ -8,8 +8,8 @@ public class CameraMotor : MonoBehaviour
     public Vector3 offset = new Vector3(0, 11.5f, -4.5f);
     public Vector3 rotation = new Vector3(41, 0, 0);
 
-    private Vector3 DefaultPosition = new Vector3(-0.15f, 2.6f, 4.0f);
-    private Vector3 DefaultRotation = new Vector3(15.0f, -160.0f, 0.0f);
+    //private Vector3 DefaultPosition = new Vector3(-0.15f, 2.6f, 4.0f);
+    //private Vector3 DefaultRotation = new Vector3(15.0f, -160.0f, 0.0f);
 
     public bool IsRunning { set; get; }
     
@@ -26,7 +26,10 @@ public class CameraMotor : MonoBehaviour
 
     public void SetDefault()
     {
-        transform.position = DefaultPosition;
-        transform.rotation = Quaternion.Euler(DefaultRotation);
+        //transform.position = DefaultPosition;
+        //transform.rotation = Quaternion.Euler(DefaultRotation);
+        
+        transform.position = offset;
+        transform.rotation = Quaternion.Euler(rotation);
     }
 }

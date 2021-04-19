@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlaneMotor : MonoBehaviour
 {
     private Transform PlayerTransform;
-    public Vector3 offset = new Vector3(0.0f, 0.0f, 60.0f);
+    public Vector3 offset = new Vector3(0.0f, 0.0f, 6.0f);
 
     private void Start()
     {

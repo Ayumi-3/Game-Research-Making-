@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class TargetSpawner : MonoBehaviour
 {
-    private const float LANE_DISTANCE = 3.0f;
-    private const float DISTANCE_TO_RESPAWN = 30.0f;
+    private const float LANE_DISTANCE = 0.3f;
+    private const float DISTANCE_TO_RESPAWN = 3.0f;
 
     public GameObject target;
     public GameObject obstacle;
     public Transform player;
     public int maxTarget = 5;
-    public float targetDistance = 6.0f;
+    public float targetDistance = 0.6f;
     public float obstacleChance = 0.2f;
 
     private bool isRunning = false;
@@ -38,7 +38,7 @@ public class TargetSpawner : MonoBehaviour
             currentPosition = new Vector3(target.transform.position.x, target.transform.position.y, player.position.z);
             tempLane = (int)Mathf.Ceil(Random.Range(0.0f, 5.0f));
             laneRandom();
-            currentPosition.z += 5;
+            currentPosition.z += 0.5f;
             Instantiate(target, new Vector3(currentPosition.x, currentPosition.y, currentPosition.z), Quaternion.identity);
             TargetCount++;
         }

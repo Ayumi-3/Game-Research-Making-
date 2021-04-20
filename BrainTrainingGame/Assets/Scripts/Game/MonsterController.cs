@@ -37,10 +37,13 @@ public class MonsterController : MonoBehaviour
         BodyRenderer.material = MonsterMaterialNormal[matIndex - 1];
         HatRenderer.material = MonsterMaterialNormal[matIndex - 1];
 
-        rand = Random.Range(0.0f, ColorsPicker.Instance.colorMaxNumber);
+        jewelMaterials = JewelRenderer.materials;
+        jewelMaterials[1].color = Color.white;
+
+        /*rand = Random.Range(0.0f, ColorsPicker.Instance.colorMaxNumber);
         colorFlag = (int)Mathf.Ceil(rand);
         jewelMaterials = JewelRenderer.materials;
-        jewelMaterials[1].color = ColorsPicker.Instance.Colors[colorFlag - 1];
+        jewelMaterials[1].color = ColorsPicker.Instance.Colors[colorFlag - 1];*/
     }
     
     private void Update()
@@ -52,10 +55,10 @@ public class MonsterController : MonoBehaviour
         desiredPosition.x = 0;
         transform.position = Vector3.Lerp(transform.position, desiredPosition, 0.1f);
 
-        if (!isChangeColor)
+        /*if (!isChangeColor)
         {
             StartCoroutine(waitForColorChange());
-        }
+        }*/
         
     }
 

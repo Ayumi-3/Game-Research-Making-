@@ -30,6 +30,7 @@ public class GameControl : MonoBehaviour
     private TargetSpawner targetSpawner;
     private MonsterSpawner monsterSpawner;
     private MonsterController monsterController;
+    private Renderer monsterJewelRenderer;
     private GameSetting gameSetting;
     private SideObjectSpawner objectSpawner;
     private CameraMotor cameraMotor;
@@ -314,6 +315,7 @@ public class GameControl : MonoBehaviour
                 cameraMotor.IsRunning = false;
                 if (monsterHP > 0)
                 {
+                    //targetIsAttackable = false;
                     monsterId--;
                 }
                 GameDataRecord(false, "TotalScore", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0",
@@ -525,6 +527,7 @@ public class GameControl : MonoBehaviour
         monsterSpawner.SpawnMonster();
         monsterController = GameObject.FindGameObjectWithTag("Monster").GetComponent<MonsterController>();
         monsterBillboard = GameObject.FindGameObjectWithTag("Monster").GetComponentInChildren<Text>();
+        monsterJewelRenderer = monsterController.JewelRenderer;
         monsterBillboard.text = "";
         monsterHP = maxMonsterHP;
         monsterHealthBar.SetMaxHealth(maxMonsterHP);
@@ -670,10 +673,15 @@ public class GameControl : MonoBehaviour
         rand = Random.Range(0.0f, ColorsPicker.Instance.colorMaxNumber);
         targetColorFlag = (int)Mathf.Ceil(rand);
 
-        monsterColorFlag = monsterController.colorFlag;
+        //monsterColorFlag = monsterController.colorFlag;
 
         PlayerClothColor.GetComponent<Renderer>().material.color = ColorsPicker.Instance.Colors[targetColorFlag - 1];
         PlayerHatColor.GetComponent<Renderer>().material.color = ColorsPicker.Instance.Colors[targetColorFlag - 1];
+        
+        rand = Random.Range(0.0f, ColorsPicker.Instance.colorMaxNumber);
+        monsterColorFlag = (int)Mathf.Ceil(rand);
+
+        monsterJewelRenderer.materials[1].color = ColorsPicker.Instance.Colors[monsterColorFlag - 1];
 
         GameDataRecord(false, "ChangePlayerColor", "0", "0", "0", "0", "0",
             "0", "0", "1", "0", monsterColorFlag.ToString(), targetColorFlag.ToString(),
@@ -701,6 +709,7 @@ public class GameControl : MonoBehaviour
 
         PlayerClothColor.GetComponent<Renderer>().material.color = Color.white;
         PlayerHatColor.GetComponent<Renderer>().material.color = Color.white;
+        monsterJewelRenderer.materials[1].color = Color.white;
 
         if (targetIsAttackable)
         {

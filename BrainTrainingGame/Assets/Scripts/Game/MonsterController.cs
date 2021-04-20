@@ -50,16 +50,18 @@ public class MonsterController : MonoBehaviour
     {
         if (!isRunning)
             return;
-        
-        Vector3 desiredPosition = lookAt.position + offset;
+
+        /*Vector3 desiredPosition = lookAt.position + offset;
         desiredPosition.x = 0;
-        transform.position = Vector3.Lerp(transform.position, desiredPosition, 0.1f);
+        transform.position = Vector3.Lerp(transform.position, desiredPosition, 0.1f);*/
+
+        transform.position = Vector3.forward * lookAt.position.z + offset;
 
         /*if (!isChangeColor)
         {
             StartCoroutine(waitForColorChange());
         }*/
-        
+
     }
 
     private IEnumerator waitForColorChange()

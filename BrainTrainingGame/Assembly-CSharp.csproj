@@ -71,6 +71,7 @@
     <Compile Include="Assets\Scripts\Game\CameraMotor.cs" />
     <Compile Include="Assets\Scripts\Game\CanvasController.cs" />
     <Compile Include="Assets\Scripts\Game\ColorsPicker.cs" />
+    <Compile Include="Assets\Scripts\Game\EyeDataRecord.cs" />
     <Compile Include="Assets\Scripts\Game\GameControl.cs" />
     <Compile Include="Assets\Scripts\Game\GameDataRecord.cs" />
     <Compile Include="Assets\Scripts\Game\GameSetting.cs" />
@@ -106,6 +107,7 @@
     <Compile Include="Assets\Scripts\Welcome\CanvasControl.cs" />
     <Compile Include="Assets\Scripts\Welcome\Enter.cs" />
     <Compile Include="Assets\Scripts\Welcome\Register.cs" />
+    <Compile Include="Assets\Scripts\test120hz.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\ViveSR\Scripts\Eye\SRanipal_Eye.cs" />
     <Compile Include="Assets\ViveSR\Scripts\Eye\SRanipal_EyeData.cs" />

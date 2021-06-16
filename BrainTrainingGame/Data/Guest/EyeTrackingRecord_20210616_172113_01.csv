@@ -1,0 +1,1 @@
+FocusStatus,RayOriginal,RayDirection,Collider,Distance,Normal,Point,Transform.position,Transform.rotation,Camera.position,Camera.rotation,GtecTime,TimeTicks,CombinedEyeValidDataBitMask,LeftEyeValidDataBitMask,RightEyeValidDataBitMask,CombinedEyeOpenness,LeftEyeOpenness,RightEyeOpenness,CombinedPupilDiameter,LeftPupilDiameter,RightPupilDiameter

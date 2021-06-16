@@ -273,12 +273,7 @@ namespace ViveSR
                     direction = Vector3.forward;
                     if (SRanipal_Eye_Framework.Status != SRanipal_Eye_Framework.FrameworkStatus.WORKING)
                     {
-                        //origin = Camera.main.transform.position;
-                        GameObject vrcamerarig;
-                        Camera maincamera;
-                        vrcamerarig = GameObject.FindGameObjectWithTag("MainCamera");
-                        maincamera = vrcamerarig.gameObject.GetComponentInChildren<Camera>();
-                        origin = maincamera.transform.position;
+                        origin = Camera.main.transform.position;
                         valid = true;
                     }
                     else
@@ -305,6 +300,7 @@ namespace ViveSR
                             {
                                 origin = eyesData[(int)gazeIndex].gaze_origin_mm * 0.001f;
                                 direction = eyesData[(int)gazeIndex].gaze_direction_normalized;
+                                origin.x *= -1;
                                 direction.x *= -1;
                             }
                         }
@@ -343,12 +339,7 @@ namespace ViveSR
                     }
                     else if (SRanipal_Eye_Framework.Status == SRanipal_Eye_Framework.FrameworkStatus.NOT_SUPPORT)
                     {
-                        //origin = Camera.main.transform.position;
-                        GameObject vrcamerarig;
-                        Camera maincamera;
-                        vrcamerarig = GameObject.FindGameObjectWithTag("MainCamera");
-                        maincamera = vrcamerarig.gameObject.GetComponentInChildren<Camera>();
-                        origin = maincamera.transform.position;
+                        origin = Camera.main.transform.position;
                         valid = true;
                     }
                     ray = new Ray(origin, direction);
@@ -383,12 +374,7 @@ namespace ViveSR
                     bool valid = GetGazeRay(index, out ray, eye_data);
                     if (valid)
                     {
-                        //Ray rayGlobal = new Ray(Camera.main.transform.position, Camera.main.transform.TransformDirection(ray.direction));
-                        GameObject vrcamerarig;
-                        Camera maincamera;
-                        vrcamerarig = GameObject.FindGameObjectWithTag("MainCamera");
-                        maincamera = vrcamerarig.gameObject.GetComponentInChildren<Camera>();
-                        Ray rayGlobal = new Ray(maincamera.transform.position, maincamera.transform.TransformDirection(ray.direction));
+                        Ray rayGlobal = new Ray(Camera.main.transform.position, Camera.main.transform.TransformDirection(ray.direction));
                         RaycastHit hit;
                         if (radius == 0) valid = Physics.Raycast(rayGlobal, out hit, maxDistance, focusableLayer);
                         else valid = Physics.SphereCast(rayGlobal, radius, out hit, maxDistance, focusableLayer);

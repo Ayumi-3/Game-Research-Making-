@@ -40,6 +40,7 @@ public class GameControl : MonoBehaviour
     private UDPReceiver udpReceiver;
     private LoadSceneOnClick loadSceneOnClick;
     private Camera mainCamera;
+    private EyeDataRecord eyeDataRecord;
 
     public Canvas ScoreCanvas;
     public Canvas MonsterHPCanvas;
@@ -144,6 +145,7 @@ public class GameControl : MonoBehaviour
         udpReceiver = GetComponent<UDPReceiver>();
         loadSceneOnClick = GetComponent<LoadSceneOnClick>();
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponentInChildren<Camera>();
+        eyeDataRecord = GetComponent<EyeDataRecord>();
 
         clearVariables();
 
@@ -191,7 +193,7 @@ public class GameControl : MonoBehaviour
         
         if(isGameStarted)
         {
-            RecordEyeTrackingData(false);
+            //RecordEyeTrackingData(false);
 
             adaptiveTimer += Time.deltaTime;
             if (adaptiveTimer > timeInterval)
@@ -337,6 +339,7 @@ public class GameControl : MonoBehaviour
                     GameEndMonitorScoreText.text += "\nTTT Level: " + currentTTTLevel.ToString("0");
                 }
                 GameEndMonitorCanvas.gameObject.SetActive(true);
+                eyeDataRecord.StopRecord();
             }
         }
         
@@ -410,7 +413,9 @@ public class GameControl : MonoBehaviour
         //communicationController.SendTriggerToMatlab(true);
 
         eyeTrackingFile = dataDir + "EyeTrackingRecord_" + startTime + "_" + sessionNo.ToString("00") + ".csv";
-        RecordEyeTrackingData(true);
+        //EyeData_v2 eyeData = new EyeData_v2();
+        //RecordEyeTrackingData(true, eyeData);
+        eyeDataRecord.StartRecord(dataDir, eyeTrackingFile);
 
         if (gameMode == MODE_CDT || gameMode == MODE_MULTITASKING)
         {
@@ -453,13 +458,15 @@ public class GameControl : MonoBehaviour
         isTimePause = false;
     }
 
-    private void RecordEyeTrackingData(bool isFirst)
+    public void RecordEyeTrackingData(bool isFirst, EyeData_v2 eyeData)
     {
         eyeTrackingData["GtecTime"] = communicationController.ReceivedData.ToString();
-        eyeTrackingData["UnityTime"] = (Time.time * 1000).ToString();  //System.DateTime.Now.ToString("HH-mm-ss.fff");
-        EyeData_v2 eyeData = new EyeData_v2();
-        SRanipal_Eye_API.GetEyeData_v2(ref eyeData);
-        SRanipal_Eye_v2.GetVerboseData(out verboseData);
+        eyeTrackingData["EyeTrackingTimeStamp"] = eyeData.timestamp.ToString();
+        //eyeTrackingData["UnityTime"] = (Time.time * 1000).ToString();  //System.DateTime.Now.ToString("HH-mm-ss.fff");
+        //EyeData_v2 eyeData = new EyeData_v2();
+        //SRanipal_Eye_API.GetEyeData_v2(ref eyeData);
+        //SRanipal_Eye_v2.GetVerboseData(out verboseData);
+        verboseData = eyeData.verbose_data;
         eyeTrackingData["CombinedEyeValidDataBitMask"] = verboseData.combined.eye_data.eye_data_validata_bit_mask.ToString();
         eyeTrackingData["LeftEyeValidDataBitMask"] = verboseData.left.eye_data_validata_bit_mask.ToString();
         eyeTrackingData["RightEyeValidDataBitMask"] = verboseData.right.eye_data_validata_bit_mask.ToString();
@@ -488,7 +495,7 @@ public class GameControl : MonoBehaviour
 
         Ray ray;
         FocusInfo focusInfo;
-        bool focusStatus = SRanipal_Eye_v2.Focus(GazeIndex.COMBINE, out ray, out focusInfo);
+        bool focusStatus = SRanipal_Eye_v2.Focus(GazeIndex.COMBINE, out ray, out focusInfo, eyeData);
         //Debug.Log("FocusStatus: " + focusStatus);
         eyeTrackingData["FocusStatus"] = focusStatus.ToString();
         if (focusStatus)
@@ -515,8 +522,8 @@ public class GameControl : MonoBehaviour
             eyeTrackingData["Transform.rotation"] = "0";
         }
 
-        eyeTrackingData["Camera.position"] = mainCamera.transform.position.ToString();
-        eyeTrackingData["Camera.rotation"] = mainCamera.transform.rotation.ToString();
+        /*eyeTrackingData["Camera.position"] = mainCamera.transform.position.ToString();
+        eyeTrackingData["Camera.rotation"] = mainCamera.transform.rotation.ToString();*/
 
         dataManager.WriteData(dataDir, eyeTrackingFile, eyeTrackingData, isFirst, isFirst);
     }
@@ -810,6 +817,7 @@ public class GameControl : MonoBehaviour
     {
         GamePlayData["GtecTime"] = communicationController.ReceivedData.ToString();
         GamePlayData["UnityTime"] = (Time.time * 1000).ToString(); //System.DateTime.Now.ToString("HH-mm-ss.fff");
+        GamePlayData["TimeTicks"] = System.DateTime.Now.Ticks.ToString();
         GamePlayData["GameEvent"] = gameEvent;
         GamePlayData["MoveLeft"] = moveLeft;
         GamePlayData["MoveRight"] = moveRight;

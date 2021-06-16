@@ -296,6 +296,7 @@ namespace ViveSR
                             {
                                 origin = eyesData[(int)gazeIndex].gaze_origin_mm * 0.001f;
                                 direction = eyesData[(int)gazeIndex].gaze_direction_normalized;
+                                origin.x *= -1;
                                 direction.x *= -1;
                             }
                         }
@@ -369,11 +370,7 @@ namespace ViveSR
                     bool valid = GetGazeRay(index, out ray, eye_data);
                     if (valid)
                     {
-                        //Debug.Log(Camera.main.transform.position);
-                        //Ray rayGlobal = new Ray(Camera.main.transform.position, Camera.main.transform.TransformDirection(ray.direction));
-                        GameObject vrcamerarig;
-                        vrcamerarig = GameObject.FindGameObjectWithTag("MainCamera");
-                        Ray rayGlobal = new Ray(vrcamerarig.transform.position, vrcamerarig.transform.TransformDirection(ray.direction));
+                        Ray rayGlobal = new Ray(Camera.main.transform.position, Camera.main.transform.TransformDirection(ray.direction));
                         RaycastHit hit;
                         if (radius == 0) valid = Physics.Raycast(rayGlobal, out hit, maxDistance, focusableLayer);
                         else valid = Physics.SphereCast(rayGlobal, radius, out hit, maxDistance, focusableLayer);

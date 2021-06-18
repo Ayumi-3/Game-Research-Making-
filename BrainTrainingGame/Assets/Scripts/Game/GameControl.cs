@@ -89,10 +89,10 @@ public class GameControl : MonoBehaviour
 
     private string dataPath = @"Data/";
     private string playerName;
-    private string dataDir;
+    public string dataDir;
     private string csvName;
     public Dictionary<string, string> GamePlayData = new Dictionary<string, string>();
-    private string eyeTrackingFile;
+    public string eyeTrackingFile;
     private Dictionary<string, string> eyeTrackingData = new Dictionary<string, string>();
     private float[] eyeOpenness = new float[3];
     private VerboseData verboseData;
@@ -415,7 +415,7 @@ public class GameControl : MonoBehaviour
         eyeTrackingFile = dataDir + "EyeTrackingRecord_" + startTime + "_" + sessionNo.ToString("00") + ".csv";
         //EyeData_v2 eyeData = new EyeData_v2();
         //RecordEyeTrackingData(true, eyeData);
-        eyeDataRecord.StartRecord(dataDir, eyeTrackingFile);
+        eyeDataRecord.StartRecord();
 
         if (gameMode == MODE_CDT || gameMode == MODE_MULTITASKING)
         {
@@ -816,8 +816,7 @@ public class GameControl : MonoBehaviour
         string tttAccuracy, string tttLevel, string speed, string distance)
     {
         GamePlayData["GtecTime"] = communicationController.ReceivedData.ToString();
-        GamePlayData["UnityTime"] = (Time.time * 1000).ToString(); //System.DateTime.Now.ToString("HH-mm-ss.fff");
-        GamePlayData["TimeTicks"] = System.DateTime.Now.Ticks.ToString();
+        GamePlayData["UnityTimeTicks"] = System.DateTime.Now.Ticks.ToString(); //(Time.time * 1000).ToString(); //System.DateTime.Now.ToString("HH-mm-ss.fff");
         GamePlayData["GameEvent"] = gameEvent;
         GamePlayData["MoveLeft"] = moveLeft;
         GamePlayData["MoveRight"] = moveRight;

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using ViveSR.anipal.Eye;
 using System.Runtime.InteropServices;
 
@@ -13,6 +14,7 @@ public class EyeDataRecord : MonoBehaviour
 
     private static EyeData_v2 eyeData = new EyeData_v2();
     private static bool eye_callback_registered = false;
+    private readonly GazeIndex[] GazePriority = new GazeIndex[] { GazeIndex.COMBINE, GazeIndex.LEFT, GazeIndex.RIGHT };
 
     public static string FileName;
     public static string DataDir;
@@ -27,6 +29,8 @@ public class EyeDataRecord : MonoBehaviour
         dataManager = GetComponent<DataManager>();
         communicationController = GetComponent<CommunicationController>();
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponentInChildren<Camera>();
+
+        resetEyeTrackingData();
 
         // Get player name, get folder path, create folder if not exist
         /*playerName = getPlayerName.GetPlayer();
@@ -52,37 +56,48 @@ public class EyeDataRecord : MonoBehaviour
             eye_callback_registered = false;
         }
 
-        Ray ray;
-        FocusInfo focusInfo;
-        bool focusStatus = SRanipal_Eye_v2.Focus(GazeIndex.COMBINE, out ray, out focusInfo);
-        //Debug.Log("FocusStatus: " + focusStatus);
-        eyeTrackingData["FocusStatus"] = focusStatus.ToString();
-        if (focusStatus)
+        if (isRecord)
         {
-            Debug.Log(focusInfo.collider);
-            eyeTrackingData["RayOriginal"] = ray.origin.ToString();
-            eyeTrackingData["RayDirection"] = ray.direction.ToString();
-            eyeTrackingData["Collider"] = focusInfo.collider.ToString();
-            eyeTrackingData["Distance"] = focusInfo.distance.ToString();
-            eyeTrackingData["Normal"] = focusInfo.normal.ToString();
-            eyeTrackingData["Point"] = focusInfo.point.ToString();
-            eyeTrackingData["Transform.position"] = focusInfo.transform.position.ToString();
-            eyeTrackingData["Transform.rotation"] = focusInfo.transform.rotation.ToString();
-        }
-        else
-        {
-            eyeTrackingData["RayOriginal"] = "0";
-            eyeTrackingData["RayDirection"] = "0";
-            eyeTrackingData["Collider"] = "0";
-            eyeTrackingData["Distance"] = "0";
-            eyeTrackingData["Normal"] = "0";
-            eyeTrackingData["Point"] = "0";
-            eyeTrackingData["Transform.position"] = "0";
-            eyeTrackingData["Transform.rotation"] = "0";
-        }
+            foreach (GazeIndex index in GazePriority)
+            {
+                Ray ray;
+                FocusInfo focusInfo;
+                bool focusStatus = SRanipal_Eye_v2.Focus(index, out ray, out focusInfo, eyeData);
+                //Debug.Log("FocusStatus: " + focusStatus);
+                eyeTrackingData["FocusStatus"] = focusStatus.ToString();
+                if (focusStatus)
+                {
+                    Debug.Log(focusInfo.collider);
+                    eyeTrackingData["GazeIndex"] = (index + 1).ToString();
+                    eyeTrackingData["RayOriginal"] = ray.origin.ToString();
+                    eyeTrackingData["RayDirection"] = ray.direction.ToString();
+                    eyeTrackingData["Collider"] = focusInfo.collider.ToString();
+                    eyeTrackingData["Distance"] = focusInfo.distance.ToString();
+                    eyeTrackingData["Normal"] = focusInfo.normal.ToString();
+                    eyeTrackingData["Point"] = focusInfo.point.ToString();
+                    eyeTrackingData["Transform.position"] = focusInfo.transform.position.ToString();
+                    eyeTrackingData["Transform.rotation"] = focusInfo.transform.rotation.ToString();
+                    //ui.GetComponent<RectTransform>().InverseTransformPoint(focusInfo.point).ToString();
+                }
 
-        eyeTrackingData["Camera.position"] = mainCamera.transform.position.ToString();
-        eyeTrackingData["Camera.rotation"] = mainCamera.transform.rotation.ToString();
+                else
+                {
+                    eyeTrackingData["GazeIndex"] = "0";
+                    eyeTrackingData["RayOriginal"] = "0";
+                    eyeTrackingData["RayDirection"] = "0";
+                    eyeTrackingData["Collider"] = "0";
+                    eyeTrackingData["Distance"] = "0";
+                    eyeTrackingData["Normal"] = "0";
+                    eyeTrackingData["Point"] = "0";
+                    eyeTrackingData["Transform.position"] = "0";
+                    eyeTrackingData["Transform.rotation"] = "0";
+                }
+
+                eyeTrackingData["Camera.position"] = mainCamera.transform.position.ToString();
+                eyeTrackingData["Camera.rotation"] = mainCamera.transform.rotation.ToString();
+            }
+        }
+        
     }
 
     private void OnDisable()
@@ -125,13 +140,18 @@ public class EyeDataRecord : MonoBehaviour
     private static void EyeCallback(ref EyeData_v2 eye_data)
     {
         VerboseData verboseData;
+        string dataDir;
+        string fileName;
+        dataDir = GameControl.Instance.dataDir;
+        fileName = GameControl.Instance.eyeTrackingFile;
         if(isRecord)
         {
             eyeData = eye_data;
             //GameControl.Instance.RecordEyeTrackingData(false, eyeData);
             verboseData = eyeData.verbose_data;
             eyeTrackingData["GtecTime"] = communicationController.ReceivedData.ToString();
-            eyeTrackingData["TimeTicks"] = System.DateTime.Now.Ticks.ToString(); //(Time.time * 1000).ToString();  //System.DateTime.Now.ToString("HH-mm-ss.fff");
+            eyeTrackingData["UnityTimeTicks"] = System.DateTime.Now.Ticks.ToString(); //(Time.time * 1000).ToString();  //System.DateTime.Now.ToString("HH-mm-ss.fff");
+            eyeTrackingData["EyeTimeStamp"] = eyeData.timestamp.ToString();
             eyeTrackingData["CombinedEyeValidDataBitMask"] = verboseData.combined.eye_data.eye_data_validata_bit_mask.ToString();
             eyeTrackingData["LeftEyeValidDataBitMask"] = verboseData.left.eye_data_validata_bit_mask.ToString();
             eyeTrackingData["RightEyeValidDataBitMask"] = verboseData.right.eye_data_validata_bit_mask.ToString();
@@ -160,32 +180,22 @@ public class EyeDataRecord : MonoBehaviour
 
             if (isFirst)
             {
-                /*eyeTrackingData["RayOriginal"] = "0";
-                eyeTrackingData["RayDirection"] = "0";
-                eyeTrackingData["Collider"] = "0";
-                eyeTrackingData["Distance"] = "0";
-                eyeTrackingData["Normal"] = "0";
-                eyeTrackingData["Point"] = "0";
-                eyeTrackingData["Transform.position"] = "0";
-                eyeTrackingData["Transform.rotation"] = "0";
-                eyeTrackingData["Camera.position"] = "0";
-                eyeTrackingData["Camera.rotation"] = "0";*/
-                dataManager.WriteData(DataDir, FileName, eyeTrackingData, true, true);
+                dataManager.WriteData(dataDir, fileName, eyeTrackingData, true, true);
+                isFirst = false;
             }
             else
             {
-                dataManager.WriteData(DataDir, FileName, eyeTrackingData, false, false);
+                dataManager.WriteData(dataDir, fileName, eyeTrackingData, false, false);
             }
         }
 
     }
 
-    public void StartRecord(string datadir, string filename)
+    public void StartRecord()
     {
         isRecord = true;
         isFirst = true;
-        DataDir = datadir;
-        FileName = filename;
+        resetEyeTrackingData();
     }
 
     public void StopRecord()
@@ -193,4 +203,48 @@ public class EyeDataRecord : MonoBehaviour
         isRecord = false;
     }
 
+    private void resetEyeTrackingData()
+    {
+        eyeTrackingData["GtecTime"] = communicationController.ReceivedData.ToString();
+        eyeTrackingData["UnityTimeTicks"] = System.DateTime.Now.Ticks.ToString(); //(Time.time * 1000).ToString();  //System.DateTime.Now.ToString("HH-mm-ss.fff");
+        eyeTrackingData["EyeTimeStamp"] = "0";
+        eyeTrackingData["CombinedEyeValidDataBitMask"] = "0";
+        eyeTrackingData["LeftEyeValidDataBitMask"] = "0";
+        eyeTrackingData["RightEyeValidDataBitMask"] = "0";
+        eyeTrackingData["CombinedEyeOpenness"] = "0";
+        eyeTrackingData["LeftEyeOpenness"] = "0";
+        eyeTrackingData["RightEyeOpenness"] = "0";
+        eyeTrackingData["CombinedPupilDiameter"] = "0";
+        eyeTrackingData["LeftPupilDiameter"] = "0";
+        eyeTrackingData["RightPupilDiameter"] = "0";
+        eyeTrackingData["CombinedPupilPosition"] = "0";
+        eyeTrackingData["LeftPupilPosition"] = "0";
+        eyeTrackingData["RightPupilPosition"] = "0";
+        eyeTrackingData["CombinedGazeOrigin"] = "0";
+        eyeTrackingData["LeftGazeOrigin"] = "0";
+        eyeTrackingData["RightGazeOrigin"] = "0";
+        eyeTrackingData["CombinedGazeDirection"] = "0";
+        eyeTrackingData["LeftGazeDirection"] = "0";
+        eyeTrackingData["RightGazeDirection"] = "0";
+
+        eyeTrackingData["LeftEyeWide"] = "0";
+        eyeTrackingData["RightEyeWide"] = "0";
+        eyeTrackingData["LeftEyeSqeeze"] = "0";
+        eyeTrackingData["RightEyeSqeeze"] = "0";
+        eyeTrackingData["LeftEyeFrown"] = "0";
+        eyeTrackingData["RightEyeFrown"] = "0";
+
+        eyeTrackingData["FocusStatus"] = "False";
+        eyeTrackingData["GazeIndex"] = "0";
+        eyeTrackingData["RayOriginal"] = "0";
+        eyeTrackingData["RayDirection"] = "0";
+        eyeTrackingData["Collider"] = "0";
+        eyeTrackingData["Distance"] = "0";
+        eyeTrackingData["Normal"] = "0";
+        eyeTrackingData["Point"] = "0";
+        eyeTrackingData["Transform.position"] = "0";
+        eyeTrackingData["Transform.rotation"] = "0";
+        eyeTrackingData["Camera.position"] = "0";
+        eyeTrackingData["Camera.rotation"] = "0";
+    }
 }

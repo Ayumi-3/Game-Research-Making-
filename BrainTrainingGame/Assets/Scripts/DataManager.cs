@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using System.IO;
 using CsvHelper;
+using System.Linq;
 
 public class DataManager : MonoBehaviour
 {
@@ -34,7 +35,16 @@ public class DataManager : MonoBehaviour
         {
             if (writeHeader)
             {
-                foreach (string key in data.Keys)
+                /*int i;
+                string key;
+                Dictionary<string, string>.KeyCollection keycol = data.Keys;
+                for (i = 0; i < data.Keys.Count; i++)
+                {
+                    key = keycol[i];
+                    wt.WriteField(key);
+                }*/
+                //string[] keycol = data.Keys.ToArray();
+                foreach (string key in data.Keys.ToList())
                 {
                     wt.WriteField(key);
                 }
@@ -42,7 +52,7 @@ public class DataManager : MonoBehaviour
                 wt.NextRecord();
             }
 
-            foreach (string val in data.Values)
+            foreach (string val in data.Values.ToList())
             {
                 wt.WriteField(val);
             }

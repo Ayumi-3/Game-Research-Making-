@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 
 public class EyeDataRecord : MonoBehaviour
 {
+    public Text FocusText;
     private static DataManager dataManager;
     private static CommunicationController communicationController;
     private static Camera mainCamera;
@@ -61,14 +62,14 @@ public class EyeDataRecord : MonoBehaviour
             foreach (GazeIndex index in GazePriority)
             {
                 Ray ray;
-                FocusInfo focusInfo;
+                FocusInfo focusInfo = new FocusInfo();
                 bool focusStatus = SRanipal_Eye_v2.Focus(index, out ray, out focusInfo, eyeData);
                 //Debug.Log("FocusStatus: " + focusStatus);
                 eyeTrackingData["FocusStatus"] = focusStatus.ToString();
                 if (focusStatus)
                 {
                     Debug.Log(focusInfo.collider);
-                    eyeTrackingData["GazeIndex"] = (index + 1).ToString();
+                    eyeTrackingData["GazeIndex"] = index.ToString();
                     eyeTrackingData["RayOriginal"] = ray.origin.ToString();
                     eyeTrackingData["RayDirection"] = ray.direction.ToString();
                     eyeTrackingData["Collider"] = focusInfo.collider.ToString();
@@ -78,6 +79,22 @@ public class EyeDataRecord : MonoBehaviour
                     eyeTrackingData["Transform.position"] = focusInfo.transform.position.ToString();
                     eyeTrackingData["Transform.rotation"] = focusInfo.transform.rotation.ToString();
                     //ui.GetComponent<RectTransform>().InverseTransformPoint(focusInfo.point).ToString();
+                    if (focusInfo.collider.ToString().Contains("Monster"))
+                    {
+                        FocusText.text = "Monster";
+                    }
+                    else if (focusInfo.collider.ToString().Contains("Player"))
+                    {
+                        FocusText.text = "Player";
+                    }
+                    else if (focusInfo.collider.ToString().Contains("Target"))
+                    {
+                        FocusText.text = "Target";
+                    }
+                    else if (focusInfo.collider.ToString().Contains("Obstacle"))
+                    {
+                        FocusText.text = "Rock";
+                    }
                 }
 
                 else
@@ -91,10 +108,12 @@ public class EyeDataRecord : MonoBehaviour
                     eyeTrackingData["Point"] = "0";
                     eyeTrackingData["Transform.position"] = "0";
                     eyeTrackingData["Transform.rotation"] = "0";
+                    FocusText.text = "Others";
                 }
 
                 eyeTrackingData["Camera.position"] = mainCamera.transform.position.ToString();
                 eyeTrackingData["Camera.rotation"] = mainCamera.transform.rotation.ToString();
+
             }
         }
         

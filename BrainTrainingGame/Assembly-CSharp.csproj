@@ -714,8 +714,14 @@
     <Reference Include="Unity.RenderPipelines.Core.Runtime">
       <HintPath>C:/Git/Game-Research-Making-/BrainTrainingGame/Library/ScriptAssemblies/Unity.RenderPipelines.Core.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.Recorder.Editor">
+      <HintPath>C:/Git/Game-Research-Making-/BrainTrainingGame/Library/ScriptAssemblies/Unity.Recorder.Editor.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>C:/Git/Game-Research-Making-/BrainTrainingGame/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Recorder">
+      <HintPath>C:/Git/Game-Research-Making-/BrainTrainingGame/Library/ScriptAssemblies/Unity.Recorder.dll</HintPath>
     </Reference>
     <Reference Include="Unity.RenderPipelines.Universal.Runtime">
       <HintPath>C:/Git/Game-Research-Making-/BrainTrainingGame/Library/ScriptAssemblies/Unity.RenderPipelines.Universal.Runtime.dll</HintPath>
@@ -737,6 +743,9 @@
     </Reference>
     <Reference Include="Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary">
       <HintPath>C:/Git/Game-Research-Making-/BrainTrainingGame/Library/ScriptAssemblies/Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Recorder.Base">
+      <HintPath>C:/Git/Game-Research-Making-/BrainTrainingGame/Library/ScriptAssemblies/Unity.Recorder.Base.dll</HintPath>
     </Reference>
     <Reference Include="Unity.ShaderGraph.Editor">
       <HintPath>C:/Git/Game-Research-Making-/BrainTrainingGame/Library/ScriptAssemblies/Unity.ShaderGraph.Editor.dll</HintPath>

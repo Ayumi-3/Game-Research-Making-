@@ -180,6 +180,7 @@ public class PlayerController : MonoBehaviour
         anim.SetBool("Walk", false);
         anim.SetBool("Rest", true);
         isReady = false;
+        transform.position = new Vector3(transform.position.x,0.0f,transform.position.z);
     }
 
     public void Ready()

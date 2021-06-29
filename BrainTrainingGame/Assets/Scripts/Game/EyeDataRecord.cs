@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 
 public class EyeDataRecord : MonoBehaviour
 {
-    public Text FocusText;
+    //public Text FocusText;
     private static DataManager dataManager;
     private static CommunicationController communicationController;
     private static Camera mainCamera;
@@ -79,7 +79,7 @@ public class EyeDataRecord : MonoBehaviour
                     eyeTrackingData["Transform.position"] = focusInfo.transform.position.ToString();
                     eyeTrackingData["Transform.rotation"] = focusInfo.transform.rotation.ToString();
                     //ui.GetComponent<RectTransform>().InverseTransformPoint(focusInfo.point).ToString();
-                    if (focusInfo.collider.ToString().Contains("Monster"))
+                    /*if (focusInfo.collider.ToString().Contains("Monster"))
                     {
                         FocusText.text = "Monster";
                     }
@@ -94,7 +94,7 @@ public class EyeDataRecord : MonoBehaviour
                     else if (focusInfo.collider.ToString().Contains("Obstacle"))
                     {
                         FocusText.text = "Rock";
-                    }
+                    }*/
                 }
 
                 else
@@ -108,7 +108,7 @@ public class EyeDataRecord : MonoBehaviour
                     eyeTrackingData["Point"] = "0";
                     eyeTrackingData["Transform.position"] = "0";
                     eyeTrackingData["Transform.rotation"] = "0";
-                    FocusText.text = "Others";
+                    //FocusText.text = "Others";
                 }
 
                 eyeTrackingData["Camera.position"] = mainCamera.transform.position.ToString();

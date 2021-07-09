@@ -78,9 +78,9 @@ public class EyeDataRecord : MonoBehaviour
                     eyeTrackingData["Point"] = focusInfo.point.ToString();
                     eyeTrackingData["Transform.position"] = focusInfo.transform.position.ToString();
                     eyeTrackingData["Transform.rotation"] = focusInfo.transform.rotation.ToString();
-                    eyeTrackingData["LeftEyeScreenPoint"] = Camera.main.WorldToScreenPoint(focusInfo.point, Camera.MonoOrStereoscopicEye.Left).ToString();
-                    eyeTrackingData["RightEyeScreenPoint"] = Camera.main.WorldToScreenPoint(focusInfo.point, Camera.MonoOrStereoscopicEye.Right).ToString();
-                    FocusText.text = Camera.main.transform.InverseTransformPoint(focusInfo.point).ToString();
+                    //eyeTrackingData["LeftEyeScreenPoint"] = Camera.main.WorldToScreenPoint(focusInfo.point, Camera.MonoOrStereoscopicEye.Left).ToString();
+                    //eyeTrackingData["RightEyeScreenPoint"] = Camera.main.WorldToScreenPoint(focusInfo.point, Camera.MonoOrStereoscopicEye.Right).ToString();
+                    //FocusText.text = Camera.main.transform.InverseTransformPoint(focusInfo.point).ToString();
                     /*if (focusInfo.collider.ToString().Contains("Monster"))
                     {
                         FocusText.text = "Monster";
@@ -112,7 +112,7 @@ public class EyeDataRecord : MonoBehaviour
                     eyeTrackingData["Transform.rotation"] = "0";
                     eyeTrackingData["LeftEyeScreenPoint"] = "0";
                     eyeTrackingData["RightEyeScreenPoint"] = "0";
-                    FocusText.text = "Others";
+                    //FocusText.text = "Others";
                 }
 
                 eyeTrackingData["Camera.position"] = mainCamera.transform.position.ToString();
@@ -200,6 +200,46 @@ public class EyeDataRecord : MonoBehaviour
             eyeTrackingData["RightEyeSqeeze"] = eyeData.expression_data.right.eye_squeeze.ToString();
             eyeTrackingData["LeftEyeFrown"] = eyeData.expression_data.left.eye_frown.ToString();
             eyeTrackingData["RightEyeFrown"] = eyeData.expression_data.right.eye_frown.ToString();
+
+            Vector3 focusPoint = new Vector3(0, 0, 0);
+            bool getFocusPoint = false;
+            Vector3 leftGO = verboseData.left.gaze_origin_mm;
+            Vector3 rightGO = verboseData.right.gaze_origin_mm;
+            Vector3 leftGD = verboseData.left.gaze_direction_normalized;
+            Vector3 rightGD = verboseData.right.gaze_direction_normalized;
+            float a1, b1, c1, a2, b2, c2, x1, y1, z1, x2, y2, z2, k2, x=0, y=0, z=0;
+            a1 = leftGD.x;
+            b1 = leftGD.y;
+            c1 = leftGD.z;
+            a2 = rightGD.x;
+            b2 = rightGD.y;
+            c2 = rightGD.z;
+            x1 = leftGO.x;
+            y1 = leftGO.y;
+            z1 = leftGO.z;
+            x2 = rightGO.x;
+            y2 = rightGO.y;
+            z2 = rightGO.z;
+            if (a1 * b2 - a2 * b1 != 0)
+            {
+                k2 = (b1 * (x2 - x1) + a1 * (y1 - y2)) / (a1 * b2 - a2 * b1);
+                x = k2 * a2 + x2;
+                y = k2 * b2 + y2;
+                z = k2 * c2 + z2;
+                getFocusPoint = true;
+            }
+
+            if (getFocusPoint)
+            {
+                focusPoint = new Vector3(x, y, z);
+                eyeTrackingData["LeftEyeScreenPoint"] = Camera.main.WorldToScreenPoint(focusPoint, Camera.MonoOrStereoscopicEye.Left).ToString();
+                eyeTrackingData["RightEyeScreenPoint"] = Camera.main.WorldToScreenPoint(focusPoint, Camera.MonoOrStereoscopicEye.Right).ToString();
+            }
+            else
+            {
+                eyeTrackingData["LeftEyeScreenPoint"] = "0";
+                eyeTrackingData["RightEyeScreenPoint"] = "0";
+            }
 
             if (isFirst)
             {

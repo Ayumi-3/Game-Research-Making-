@@ -29,7 +29,7 @@ public class EyeDataRecord : MonoBehaviour
     {
         dataManager = GetComponent<DataManager>();
         communicationController = GetComponent<CommunicationController>();
-        mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponentInChildren<Camera>();
+        mainCamera = GameObject.FindGameObjectWithTag("VrCameraRig").GetComponentInChildren<Camera>();
 
         resetEyeTrackingData();
 
@@ -78,8 +78,10 @@ public class EyeDataRecord : MonoBehaviour
                     eyeTrackingData["Point"] = focusInfo.point.ToString();
                     eyeTrackingData["Transform.position"] = focusInfo.transform.position.ToString();
                     eyeTrackingData["Transform.rotation"] = focusInfo.transform.rotation.ToString();
-                    //ui.GetComponent<RectTransform>().InverseTransformPoint(focusInfo.point).ToString();
-                    if (focusInfo.collider.ToString().Contains("Monster"))
+                    eyeTrackingData["LeftEyeScreenPoint"] = Camera.main.WorldToScreenPoint(focusInfo.point, Camera.MonoOrStereoscopicEye.Left).ToString();
+                    eyeTrackingData["RightEyeScreenPoint"] = Camera.main.WorldToScreenPoint(focusInfo.point, Camera.MonoOrStereoscopicEye.Right).ToString();
+                    FocusText.text = Camera.main.transform.InverseTransformPoint(focusInfo.point).ToString();
+                    /*if (focusInfo.collider.ToString().Contains("Monster"))
                     {
                         FocusText.text = "Monster";
                     }
@@ -94,7 +96,7 @@ public class EyeDataRecord : MonoBehaviour
                     else if (focusInfo.collider.ToString().Contains("Obstacle"))
                     {
                         FocusText.text = "Rock";
-                    }
+                    }*/
                 }
 
                 else
@@ -108,6 +110,8 @@ public class EyeDataRecord : MonoBehaviour
                     eyeTrackingData["Point"] = "0";
                     eyeTrackingData["Transform.position"] = "0";
                     eyeTrackingData["Transform.rotation"] = "0";
+                    eyeTrackingData["LeftEyeScreenPoint"] = "0";
+                    eyeTrackingData["RightEyeScreenPoint"] = "0";
                     FocusText.text = "Others";
                 }
 
@@ -263,6 +267,8 @@ public class EyeDataRecord : MonoBehaviour
         eyeTrackingData["Point"] = "0";
         eyeTrackingData["Transform.position"] = "0";
         eyeTrackingData["Transform.rotation"] = "0";
+        eyeTrackingData["LeftEyeScreenPoint"] = "0";
+        eyeTrackingData["RightEyeScreenPoint"] = "0";
         eyeTrackingData["Camera.position"] = "0";
         eyeTrackingData["Camera.rotation"] = "0";
     }

@@ -144,7 +144,7 @@ public class GameControl : MonoBehaviour
         communicationController = GetComponent<CommunicationController>();
         udpReceiver = GetComponent<UDPReceiver>();
         loadSceneOnClick = GetComponent<LoadSceneOnClick>();
-        mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponentInChildren<Camera>();
+        mainCamera = GameObject.FindGameObjectWithTag("VrCameraRig").GetComponentInChildren<Camera>();
         eyeDataRecord = GetComponent<EyeDataRecord>();
 
         clearVariables();

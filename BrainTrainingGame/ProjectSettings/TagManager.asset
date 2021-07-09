@@ -10,6 +10,7 @@ TagManager:
   - CanvasControl
   - GameControl
   - SideObject
+  - VrCameraRig
   layers:
   - Default
   - TransparentFX

@@ -8,7 +8,7 @@ public class Billboard : MonoBehaviour
 
     private void Start()
     {
-        mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Transform>();
+        mainCamera = GameObject.FindGameObjectWithTag("VrCameraRig").GetComponent<Transform>();
     }
 
     private void LateUpdate()
